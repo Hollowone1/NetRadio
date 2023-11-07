@@ -1,46 +1,52 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <button onclick="startRecording()">Start Recording</button>
 </body>
 <script>
-    function startRecording() {
-        navigator.mediaDevices.getDisplayMedia({
-            video: true,
-            audio: true
-        })
-        .then((stream) => {
-            const recorder = new MediaRecorder(stream)
-            const buffer = []
+    async function startRecording() {
+        try {
+            const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const videoStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
 
-            recorder.start()
+            const audioTracks = audioStream.getAudioTracks();
+            const videoTracks = videoStream.getVideoTracks();
 
-            recorder.addEventListener('dataavailable', (event) => {
-                buffer.push(event.data)
-            })
+            const allTracks = [...audioTracks, ...videoTracks];
+            const mixedStream = new MediaStream(allTracks.map(track => track.clone()));
 
-            recorder.addEventListener('stop', () => {
-                const blob = new Blob(buffer, { type: 'video/mp4' })
+            const recorder = new MediaRecorder(mixedStream);
+            const chunks = [];
 
-                const a = document.createElement('a')
-                a.href = URL.createObjectURL(blob)
-                a.download = "recording.mp4"
-                a.click()
-            })
+            recorder.ondataavailable = (event) => {
+                chunks.push(event.data);
+            };
 
+            recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/mp4' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'enregistrement.mp4';
+                a.click();
+            };
+
+            recorder.start();
             setTimeout(() => {
-                recorder.stop()
-            }, 100000)
-        })
-        .catch((error) => {
+                recorder.stop();
+            }, 10000); // Durée d'enregistrement, en millisecondes (par exemple, 10 secondes)
+        } catch (error) {
             console.error('Erreur lors de la capture vidéo : ', error);
-        });
+        }
     }
+
 </script>
+
 </html>
