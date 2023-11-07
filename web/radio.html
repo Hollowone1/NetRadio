@@ -5,48 +5,57 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Enregistrement Audio</title>
 </head>
 
 <body>
-    <button onclick="startRecording()">Start Recording</button>
-</body>
+<button id="startBtn" onclick="startRecording()">Démarrer l'enregistrement</button>
+<button id="stopBtn" onclick="stopRecording()" disabled>Arrêter l'enregistrement</button>
 <script>
+    let recorder;
+    let audioStream;
+    let chunks = [];
+
     async function startRecording() {
         try {
-            const audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            const videoStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-
-            const audioTracks = audioStream.getAudioTracks();
-            const videoTracks = videoStream.getVideoTracks();
-
-            const allTracks = [...audioTracks, ...videoTracks];
-            const mixedStream = new MediaStream(allTracks.map(track => track.clone()));
-
-            const recorder = new MediaRecorder(mixedStream);
-            const chunks = [];
+            audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            recorder = new MediaRecorder(audioStream);
 
             recorder.ondataavailable = (event) => {
                 chunks.push(event.data);
             };
 
-            recorder.onstop = () => {
-                const blob = new Blob(chunks, { type: 'video/mp4' });
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'enregistrement.mp4';
-                a.click();
-            };
+            recorder.onstop = saveRecording;
 
             recorder.start();
-            setTimeout(() => {
-                recorder.stop();
-            }, 10000); // Durée d'enregistrement, en millisecondes (par exemple, 10 secondes)
+
+            // Activer le bouton d'arrêt et désactiver le bouton de démarrage
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
         } catch (error) {
-            console.error('Erreur lors de la capture vidéo : ', error);
+            console.error('Erreur lors de la capture audio : ', error);
         }
     }
 
+    function stopRecording() {
+        recorder.stop();
+        audioStream.getTracks().forEach(track => track.stop()); // Arrête la piste audio
+
+        // Désactiver le bouton d'arrêt et réactiver le bouton de démarrage
+        document.getElementById('startBtn').disabled = false;
+        document.getElementById('stopBtn').disabled = true;
+    }
+
+    function saveRecording() {
+        const blob = new Blob(chunks, { type: 'audio/mp3' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'enregistrement_audio.mp3';
+        a.click();
+
+        chunks = []; // Effacer le tableau de chunks pour le prochain enregistrement
+    }
 </script>
+</body>
 
 </html>
