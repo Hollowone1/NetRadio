@@ -7,39 +7,40 @@
     <title>Document</title>
 </head>
 <body>
-    <button onclick="start()">Start Recording</button>
+    <button onclick="startRecording()">Start Recording</button>
 </body>
 <script>
-    navigator.mediaDevices.getDisplayMedia({
-        video: true,
-        audio:true
-    })
-    .then((stream) => {
-        const recorder = new MediaRecorder(stream)
-
-        recorder.start()
-        
-        const buffer = []
-
-        recorder.addEventListener('dataavailable', (event) => {
-            buffer.push(event.data)
+    function startRecording() {
+        navigator.mediaDevices.getDisplayMedia({
+            video: true,
+            audio: true
         })
+        .then((stream) => {
+            const recorder = new MediaRecorder(stream)
+            const buffer = []
 
-        recorder.addEventListener('stop', () => {
-            const blob = new Blob(buffer, {
-                type: 'video/mp4'
+            recorder.start()
+
+            recorder.addEventListener('dataavailable', (event) => {
+                buffer.push(event.data)
             })
 
-            const a = document.createElement(a)
-            a.href = URL.createObjectURL(blob)
-            a.download = "recording.mp4"
-            a.click()
+            recorder.addEventListener('stop', () => {
+                const blob = new Blob(buffer, { type: 'video/mp4' })
+
+                const a = document.createElement('a')
+                a.href = URL.createObjectURL(blob)
+                a.download = "recording.mp4"
+                a.click()
+            })
+
+            setTimeout(() => {
+                recorder.stop()
+            }, 100000)
         })
-
-        setTimeout(() => {
-            recorder.stop()
-        }, 100000)
-
-    })
+        .catch((error) => {
+            console.error('Erreur lors de la capture vidéo : ', error);
+        });
+    }
 </script>
 </html>
