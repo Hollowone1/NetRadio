@@ -3,5 +3,20 @@
 @import 'var';
 @import 'footer';
 @import 'header';
-@import 'font';
+@import 'fonts';
 
+.titles{
+    @include text-style;
+    @include flex; 
+}
+
+.field{
+    @include text-style;
+    @include width(50em);
+
+}
+
+button{
+    @include buttonStyle($purple,$lightPurple,$lightGrey);
+
+}
