@@ -7,16 +7,18 @@
 
 .titles{
     @include text-style;
-    @include flex; 
+    @include flex ($dir: row, $gap: 20px,$justify: center); 
 }
 
 .field{
     @include text-style;
     @include width(50em);
+    @include flex;
 
 }
 
 button{
     @include buttonStyle($purple,$lightPurple,$lightGrey);
+    @include width(50em);
 
 }

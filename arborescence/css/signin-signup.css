@@ -19,10 +19,10 @@ body {
   font-size: inherit;
   color: inherit;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-wrap: wrap;
-  justify-content: start;
-  gap: 0;
+  justify-content: center;
+  gap: 20px;
   align-items: stretch;
 }
 
@@ -32,6 +32,12 @@ body {
   width: 50em;
   margin-left: auto;
   margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: start;
+  gap: 0;
+  align-items: stretch;
 }
 
 button {
@@ -51,6 +57,9 @@ button {
   margin: 0.5em 0em 0.5em 0em;
   border-radius: 0px;
   transition: border-radius 0.3s;
+  width: 50em;
+  margin-left: auto;
+  margin-right: auto;
 }
 button:hover {
   background-color: #8d4ba5;
