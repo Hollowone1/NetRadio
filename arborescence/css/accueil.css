@@ -1,6 +1,62 @@
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/Inter/Inter-VariableFont_slnt,wght.ttf");
+}
+* {
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+}
+
 body {
   margin: 0;
   padding: 0;
+}
+
+.direct {
+  color: white;
+  background-color: #3B3D3F;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 5vh;
+  align-items: stretch;
+}
+.direct-infos-titre h1 {
+  font-size: 2rem;
+  color: inherit;
+  display: inline-block;
+  margin: 0;
+  margin-right: 0.2em;
+}
+.direct-infos-titre embed {
+  height: 1.2em;
+  display: inline-block;
+}
+.direct-infos-sous-titre {
+  margin: 0;
+  font-size: 1em;
+  color: inherit;
+}
+
+@media screen and (min-width: 1024px) {
+  .direct {
+    padding: 7rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 5vw;
+    align-items: stretch;
+  }
+  .direct-infos-titre h1 {
+    font-size: 3rem;
+    color: inherit;
+    margin-right: 0.2em;
+  }
+  .direct-infos-titre embed {
+    height: 2em;
+  }
 }
 
 /*# sourceMappingURL=accueil.css.map */
