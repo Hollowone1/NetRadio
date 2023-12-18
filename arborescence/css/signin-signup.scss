@@ -12,24 +12,35 @@
 
 .field{
     @include text-style;
-    @include width(50em);
+    @include width(30em);
     @include flex;
 
 }
 
 button{
     @include buttonStyle($purple,$lightPurple,$lightGrey);
-    @include width(50em);
+    @include width(30em);
+
 }
 
 label{
     @include text-style;
+    height: 30px;
 }
 
 input{
     @include text-style;
+    height: 40px;
+    background-color: $lightField;
+    margin-bottom: 10px;
+    
 }
 
 hr{
-    width: 50em;
+    width: 30em;
+}
+
+form{
+    margin-top: 40px;
+    margin-bottom: 40px;
 }

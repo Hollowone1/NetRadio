@@ -25,13 +25,13 @@ body {
 .field {
   font-size: inherit;
   color: inherit;
-  width: 50em;
+  width: 30em;
   margin-left: auto;
   margin-right: auto;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  justify-content: start;
+  justify-content: center;
   gap: 0;
   align-items: stretch;
 }
@@ -53,7 +53,7 @@ button {
   margin: 0.5em 0em 0.5em 0em;
   border-radius: 0px;
   transition: border-radius 0.3s;
-  width: 50em;
+  width: 30em;
   margin-left: auto;
   margin-right: auto;
 }
@@ -67,15 +67,24 @@ button:hover {
 label {
   font-size: inherit;
   color: inherit;
+  height: 30px;
 }
 
 input {
   font-size: inherit;
   color: inherit;
+  height: 40px;
+  background-color: #E9E9E9;
+  margin-bottom: 10px;
 }
 
 hr {
-  width: 50em;
+  width: 30em;
+}
+
+form {
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 /*# sourceMappingURL=signin-signup.css.map */

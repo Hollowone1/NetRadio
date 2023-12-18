@@ -9,7 +9,7 @@ body {
     margin-right: auto;
   }
 
-@mixin flex($dir : column, $wrap : wrap, $gap : 0, $justify : start, $align : stretch) {
+@mixin flex($dir : column, $wrap : wrap, $gap : 0, $justify : center, $align : stretch) {
     display: flex;
     flex-direction: $dir;
     flex-wrap: $wrap;
