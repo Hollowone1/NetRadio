@@ -1,0 +1,39 @@
+.direct {
+  color: white;
+  background-color: $lightBlack;
+  padding: 2rem;
+  @include flex(column, nowrap, 5vh, space-between);
+  &-infos-titre {
+    h1 {
+      @include text-style(2rem);
+      display: inline-block;
+      margin: 0;
+      margin-right: .2em;
+    }
+    embed {
+      height: 1.2em;
+      display: inline-block;
+    }
+  }
+  &-infos-sous-titre {
+    margin: 0;
+    @include text-style(1em, inherit, 100)
+  }
+}
+
+
+@media screen and (min-width: 1024px) {
+  .direct {
+    padding: 7rem;
+    @include flex(row, nowrap, 5vw, space-between);
+    &-infos-titre {
+      h1 {
+        @include text-style(3rem);
+        margin-right: .2em;
+      }
+      embed {
+        height: 2em;
+      }
+    }
+  }
+}

@@ -1,0 +1,120 @@
+@import "var";
+@import "fonts";
+@import "layout";
+@import "buttons";
+@import "footer";
+@import "form";
+
+
+
+
+
+a {
+    text-decoration: none;
+    &:visited {
+      text-decoration: none;
+    }
+  }
+  
+  .header1 {
+    @include flex(row, nowrap, 0, space-between, center);
+    @include text-style(1em, $black);
+    padding: 3em;
+    background-color:$white;
+    .logo {
+      @include flex(row, nowrap, 0, start, center);
+      @include text-style(1.5em);
+      &-1 {
+        font-weight: bolder;
+      }
+      &-2 {
+        font-weight: 100;
+        color: $purple;
+      }
+    }
+    .header-boutons {
+      @include flex(row, nowrap, 1em, start, center);
+      &-item {
+        @include text-style(inherit, lighten($black, 50%));
+        &>a, a:hover, a:active {
+          text-decoration: none;
+          color: inherit;
+        }
+        &:hover {
+          cursor: pointer;
+          @include text-style(inherit, $black);
+        }
+      }
+
+  
+    }
+    .header-boutons-connecter{
+        @include buttonStyle;
+    }
+    @media screen and (max-width:800px){
+      .nav{
+        display: none;
+      }
+    }
+  }
+
+  nav {
+    @include flex(row, nowrap, 1em, center);
+    &-item {
+      @include text-style(inherit, lighten($black, 50%));
+      &>a, a:hover, a:active {
+        text-decoration: none;
+        color: inherit;
+      }
+      &:hover {
+        cursor: pointer;
+        @include text-style(inherit, $black);
+      }
+    }
+    background-color: #F2F4F8;
+    padding: 1em;
+  }
+
+
+  @media screen and (max-width:800px){
+    .nav{
+      display: none;
+    }
+  }
+
+  
+  .topnav {
+    overflow: hidden;
+    background-color: $lightGrey;
+    position: relative;
+    display: none;
+  }
+  
+  .gg-menu{
+    float: right;
+  }
+  @media screen and (max-width:800px){
+    .topnav{
+      display: block;
+    }
+  }
+  
+  .topnav #myLinks {
+    display: none;
+  }
+  
+  .topnav a {
+    color: $purple;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    display: block;
+  }
+  
+  .topnav .nav-item {
+    color: $purple;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    display: block;
+  }
