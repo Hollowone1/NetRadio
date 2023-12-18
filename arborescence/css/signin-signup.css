@@ -68,4 +68,18 @@ button:hover {
   border-radius: 5px;
 }
 
+label {
+  font-size: inherit;
+  color: inherit;
+}
+
+input {
+  font-size: inherit;
+  color: inherit;
+}
+
+hr {
+  width: 50em;
+}
+
 /*# sourceMappingURL=signin-signup.css.map */

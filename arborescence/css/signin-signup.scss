@@ -20,5 +20,16 @@
 button{
     @include buttonStyle($purple,$lightPurple,$lightGrey);
     @include width(50em);
+}
 
+label{
+    @include text-style;
+}
+
+input{
+    @include text-style;
+}
+
+hr{
+    width: 50em;
 }
