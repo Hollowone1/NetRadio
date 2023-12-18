@@ -14,6 +14,7 @@ body {
 .titles {
   font-size: inherit;
   color: inherit;
+  font-weight: inherit;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -25,6 +26,7 @@ body {
 .field {
   font-size: inherit;
   color: inherit;
+  font-weight: inherit;
   width: 30em;
   margin-left: auto;
   margin-right: auto;
@@ -67,12 +69,14 @@ button:hover {
 label {
   font-size: inherit;
   color: inherit;
+  font-weight: inherit;
   height: 30px;
 }
 
 input {
   font-size: inherit;
   color: inherit;
+  font-weight: inherit;
   height: 40px;
   background-color: #E9E9E9;
   margin-bottom: 10px;

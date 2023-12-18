@@ -17,3 +17,11 @@ body {
     gap : $gap;
     align-items: $align;
   }
+
+@mixin grid($columns : 1fr, $gap : 0, $justify : center, $align : center) {
+    display: grid;
+    grid-template-columns: $columns;
+    gap : $gap;
+    justify-content: $justify;
+    align-items: $align;
+  }
