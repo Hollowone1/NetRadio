@@ -4,6 +4,7 @@
     display: flex;
     align-items: center; 
     justify-content: space-between; 
+    padding: 1%;
   }
   
   .header-logo {
@@ -39,5 +40,40 @@
   
   .header-boutons-connecter {
     margin-right: 10px; 
+  }
+  @media (max-width: 768px) {
+    .header {
+      flex-direction: column;
+      padding: 20px;
+    }
+  
+    .header-logo {
+      width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+    }
+  
+    .header-boutons {
+      flex-direction: row;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+  
+    .header-user-co {
+      height: 40px;
+      width: auto;
+      margin-right: 10px;
+    }
+  
+    .header-boutons-connecter {
+      font-size: 0.8em;
+      padding: 5px 10px;
+    }
+  
+    .search {
+      width: 100%;
+      font-size: 0.8em;
+      padding: 5px 10px;
+    }
   }
   
