@@ -1,5 +1,7 @@
 <?php
 
+namespace radio\net\domaine\dto;
+
 abstract class DTO
 {
     public function toJSON(): string {

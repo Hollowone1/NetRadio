@@ -3,11 +3,10 @@ p {
 }
 
 .podcasts-liste, .emissions-liste {
-  @include flex(row, wrap, 1em, center, center);
+  @include grid(1fr, auto, 1em, center, center)
 }
 
   .podcast {
-    flex-basis: 100%;
     background-color: $lightField;
     border-radius: 10px;
     padding: 1em;
@@ -25,7 +24,6 @@ p {
   }
 
   .emission {
-    flex-basis: 100%;
     background-color: $lightGrey;
     border-radius: 10px;
     padding: 3em 1em 1em;
@@ -38,16 +36,17 @@ p {
     }
   }
 
-@media screen and (min-width: 1024px) {
-  .podcasts-liste, .emissions-liste {
-    @include flex(row, wrap, 1em, space-between, center);
+@media screen and (min-width: 700px) {
+ .podcasts-liste {
+    @include grid (repeat(auto-fit, minmax(20em, 1fr)), auto, 1em, center, center);
+  }
+  .emissions-liste {
+    @include grid (repeat(auto-fit, minmax(13em, 1fr)), auto, 1em, center, center);
   }
   .emission {
     box-sizing: border-box;
-    flex-basis: 13em;
     height: 13em;
     padding: 1em;
-  }
-
-
+    @include flex(column, nowrap, 0, flex-end, flex-start);
+    }
 }
