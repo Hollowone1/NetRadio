@@ -5,20 +5,21 @@ body {
 
 .header {
   display: flex;
-  align-items: center; /* Align the logo and buttons vertically */
-  justify-content: space-between; /* Add spacing between the logo and buttons */
+  align-items: center;
+  justify-content: space-between;
 }
 
 .header-logo {
-  margin-right: 20px; /* Add margin to the right of the logo */
+  margin-left: 20px;
 }
 
 .header-boutons {
-  display: flex; /* Align the buttons horizontally */
+  display: flex;
 }
 .header-boutons .header-user-co {
-  height: 16px;
+  height: 50px;
   width: auto;
+  margin: 0.5em 0em 0.5em 0em;
 }
 .header-boutons .header-boutons-connecter {
   cursor: pointer;
@@ -38,6 +39,7 @@ body {
   border-radius: 0px;
   transition: border-radius 0.3s;
   font-weight: 500;
+  margin-right: 10px;
 }
 .header-boutons .header-boutons-connecter:hover {
   background-color: #8d4ba5;
@@ -50,10 +52,13 @@ body {
   border-bottom-color: #dcdcdc;
   border-right-color: #dcdcdc;
   border-radius: 5px;
+  width: auto;
+  font-size: 1em;
+  margin: 0.5em 0em 0.5em 0em;
 }
 
 .header-boutons-connecter {
-  margin-right: 10px; /* Add margin to the right of the connect button */
+  margin-right: 10px;
 }
 
 @font-face {
@@ -142,6 +147,4 @@ hr {
 form {
   margin-top: 40px;
   margin-bottom: 40px;
-}
-
-/*# sourceMappingURL=signin-signup.css.map */
+}/*# sourceMappingURL=signin-signup.css.map */

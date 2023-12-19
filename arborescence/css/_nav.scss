@@ -21,8 +21,17 @@
     padding: 1em;
   }
   
-  .nav-item {
+  .nav-item a{
     margin: 0 10px;
     text-decoration: none;
+    color: black;
+    font-weight: bold;
   }
+
+  a:hover{
+    
+    color: $purple;
+  }
+
+
   
