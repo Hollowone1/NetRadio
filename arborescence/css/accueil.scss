@@ -5,6 +5,15 @@
 @import "footer";
 @import "layout";
 @import "direct";
+@import 'listeEmissionsPodcasts';
 
+.podcasts, .emissions {
+  padding: 1.5em;
+}
 
-
+.titre-fleche {
+  @include flex(row, nowrap, .7em, flex-start, center);
+  embed {
+    height: 1em;
+  }
+}
