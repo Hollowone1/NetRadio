@@ -3,6 +3,59 @@ body {
   padding: 0;
 }
 
+.header {
+  display: flex;
+  align-items: center; /* Align the logo and buttons vertically */
+  justify-content: space-between; /* Add spacing between the logo and buttons */
+}
+
+.header-logo {
+  margin-right: 20px; /* Add margin to the right of the logo */
+}
+
+.header-boutons {
+  display: flex; /* Align the buttons horizontally */
+}
+.header-boutons .header-user-co {
+  height: 16px;
+  width: auto;
+}
+.header-boutons .header-boutons-connecter {
+  cursor: pointer;
+  font-family: "Inter", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  display: flex;
+  width: auto;
+  justify-content: center;
+  align-items: center;
+  flex: 1 0 0;
+  border: 2px solid #A568BB;
+  background-color: #A568BB;
+  color: white;
+  font-size: 1em;
+  padding: 0.5em 1em 0.5em 1em;
+  margin: 0.5em 0em 0.5em 0em;
+  border-radius: 0px;
+  transition: border-radius 0.3s;
+  font-weight: 500;
+}
+.header-boutons .header-boutons-connecter:hover {
+  background-color: #8d4ba5;
+  border: 2px solid #8d4ba5;
+  transition: border-radius 0.3s;
+  border-radius: 5px;
+}
+.header-boutons .search {
+  border-color: transparent;
+  border-bottom-color: #dcdcdc;
+  border-right-color: #dcdcdc;
+  border-radius: 5px;
+}
+
+.header-boutons-connecter {
+  margin-right: 10px; /* Add margin to the right of the connect button */
+}
+
 @font-face {
   font-family: "Inter";
   src: url("../fonts/Inter/Inter-VariableFont_slnt,wght.ttf");
@@ -89,6 +142,4 @@ hr {
 form {
   margin-top: 40px;
   margin-bottom: 40px;
-}
-
-/*# sourceMappingURL=signin-signup.css.map */
+}/*# sourceMappingURL=signin-signup.css.map */
