@@ -1,6 +1,6 @@
 <?php
 
-namespace entities;
+namespace radio\net\domaine\entities;
 
 class User
 {
