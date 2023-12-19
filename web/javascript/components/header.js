@@ -1,4 +1,4 @@
-Vue.component('navbar', {
+Vue.component('header', {
     data: function () {
       return {
         

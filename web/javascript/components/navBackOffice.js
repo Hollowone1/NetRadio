@@ -1,4 +1,4 @@
-Vue.component('navbar', {
+Vue.component('navbarBack', {
     data: function () {
       return {
         
