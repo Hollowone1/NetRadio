@@ -11,5 +11,6 @@
 @mixin text-style($size : inherit, $color : inherit, $weight : inherit) {
   font-size: $size;
   color: $color;
+  font-weight: $weight;
 }
 
