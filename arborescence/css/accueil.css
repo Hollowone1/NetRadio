@@ -111,6 +111,30 @@ body {
     font-weight: normal;
     margin-bottom: 1em;
   }
+  .direct button {
+    cursor: pointer;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    display: flex;
+    width: auto;
+    justify-content: center;
+    align-items: center;
+    flex: 1 0 0;
+    border: 2px solid #A568BB;
+    background-color: #A568BB;
+    color: white;
+    font-size: 1em;
+    padding: 0.5em 1em 0.5em 1em;
+    margin: 0.5em 0em 0.5em 0em;
+    border-radius: 0px;
+    transition: border-radius 0.3s;
+  }
+  .direct button:hover {
+    background-color: #8d4ba5;
+    border: 2px solid #8d4ba5;
+    transition: border-radius 0.3s;
+    border-radius: 5px;
+  }
   .direct img {
     width: 45vw;
     height: auto;
@@ -152,6 +176,30 @@ body {
     color: inherit;
     font-weight: normal;
     margin-bottom: 2em;
+  }
+  .direct button {
+    cursor: pointer;
+    font-family: "Inter", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    display: flex;
+    width: auto;
+    justify-content: center;
+    align-items: center;
+    flex: 1 0 0;
+    border: 2px solid #A568BB;
+    background-color: #A568BB;
+    color: white;
+    font-size: 1.5vw;
+    padding: 0.5em 1em 0.5em 1em;
+    margin: 0.5em 0em 0.5em 0em;
+    border-radius: 0px;
+    transition: border-radius 0.3s;
+  }
+  .direct button:hover {
+    background-color: #8d4ba5;
+    border: 2px solid #8d4ba5;
+    transition: border-radius 0.3s;
+    border-radius: 5px;
   }
   .direct img {
     width: 40vw;
