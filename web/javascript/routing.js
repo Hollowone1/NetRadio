@@ -7,9 +7,7 @@ const Presentation_Emission = { template: '<div>Presentation-emission</div>'}
 const Resultat_Emission = { template: '<div>Resultat-emission</div>'}
 const Resultat_Podcast = { template: '<div>Resultat-podcast</div>'}
 const Connect = { template: '<div>Se-connecter</div>'}
-
-
-
+const Profil = { template: '<div>Profil</div>'}
 
 
 const routes = [
@@ -21,7 +19,7 @@ const routes = [
   { path:'/resultat-emission', component: Resultat_Emission},
   { path:'/resultat-podcast', component: Resultat_Podcast},
   { path:'/se-connecter', component: Connect},
-
+  { path:'/profil', component: Profil},
 
 
 ]
