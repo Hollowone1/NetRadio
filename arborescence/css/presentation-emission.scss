@@ -1,0 +1,65 @@
+@import "var";
+@import "buttons";
+@import "fonts";
+@import "header";
+@import "footer";
+@import "layout";
+@import "direct";
+@import "nav";
+@import 'listeEmissionsPodcasts';
+
+.podcasts-emission, .si-direct {
+  padding: 1.5em
+}
+
+.si-direct {
+  &-titre {
+    h2, embed {
+      display: inline-block;
+    }
+    h2 {
+      font-size: 2em
+    }
+    embed {
+      height: 1.3em;
+      margin-left: .5em;
+    }
+  }
+  &-infos {
+    @include flex(row, nowrap, 2em, space-between, stretch);
+    embed {
+      width: 25vw;
+      border-radius: 10px
+    }
+    &-texte {
+      @include flex(column, nowrap, 1em, space-between, flex-start);
+      h3 {
+        margin: 0;
+        @include text-style(1.5em, inherit, 600);
+      }
+    }
+  }
+}
+
+.podcasts-emission {
+  h2{
+    @include text-style(2em, inherit, bold);
+  }
+  .episode {
+    padding: .7em 1em .7em 1.5em;
+    border: 2px solid $purple;
+    border-radius: 10px;
+    @include grid(1fr 5fr 1fr, auto, 1em, space-between, center);
+    &-info {
+      @include flex(row, nowrap, 0, space-between, center);
+    }
+  }
+
+}
+
+
+
+
+
+
+
