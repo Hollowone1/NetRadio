@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS `Emission`;
 CREATE TABLE `Emission` (
                             `id` int(3) NOT NULL AUTO_INCREMENT,
                             `titre` varchar(128) NOT NULL,
-                            `description` varchar(128) NOT NULL,
+                            `description` varchar(512) NOT NULL,
                             `theme` varchar(128) NOT NULL,
                             `photo` varchar(128) DEFAULT NULL,
                             `user_mail` varchar(128) DEFAULT NULL,
@@ -37,17 +37,38 @@ CREATE TABLE `InvitesPodcast` (
                                   `emailInvite` varchar(128) NOT NULL,
                                   `idPodcast` int(4) NOT NULL,
                                   KEY `idPodcast` (`idPodcast`),
-                                  KEY `emailInvite` (`emailInvite`),
-                                  CONSTRAINT `InvitesPodcast_ibfk_1` FOREIGN KEY (`idPodcast`) REFERENCES `Podcast` (`id`),
-                                  CONSTRAINT `InvitesPodcast_ibfk_2` FOREIGN KEY (`emailInvite`) REFERENCES `User` (`email`)
+                                  KEY `emailInvite` (`emailInvite`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+
+DROP TABLE IF EXISTS `Playlist`;
+CREATE TABLE `Playlist` (
+                            `id` int(11) NOT NULL AUTO_INCREMENT,
+                            `name` varchar(256) NOT NULL,
+                            `description` varchar(256) NOT NULL,
+                            `emailUser` varchar(128) NOT NULL,
+                            PRIMARY KEY (`id`),
+                            KEY `emailUser` (`emailUser`),
+                            CONSTRAINT `Playlist_ibfk_1` FOREIGN KEY (`emailUser`) REFERENCES `User` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+
+DROP TABLE IF EXISTS `PlaylistSon`;
+CREATE TABLE `PlaylistSon` (
+                               `idPlaylist` int(11) NOT NULL,
+                               `idSon` int(11) NOT NULL,
+                               KEY `idPlaylist` (`idPlaylist`),
+                               KEY `idSon` (`idSon`),
+                               CONSTRAINT `PlaylistSon_ibfk_1` FOREIGN KEY (`idPlaylist`) REFERENCES `Playlist` (`id`),
+                               CONSTRAINT `PlaylistSon_ibfk_2` FOREIGN KEY (`idSon`) REFERENCES `Son` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 
 DROP TABLE IF EXISTS `Podcast`;
 CREATE TABLE `Podcast` (
                            `id` int(4) NOT NULL AUTO_INCREMENT,
-                           `titre` varchar(128) NOT NULL,
-                           `description` varchar(128) DEFAULT NULL,
+                           `titre` varchar(512) NOT NULL,
+                           `description` varchar(1024) DEFAULT NULL,
                            `duree` time NOT NULL,
                            `date` date NOT NULL,
                            `audio` varchar(512) NOT NULL,
@@ -55,7 +76,17 @@ CREATE TABLE `Podcast` (
                            `emission_id` int(3) DEFAULT NULL,
                            PRIMARY KEY (`id`),
                            KEY `emission_id` (`emission_id`),
-                           CONSTRAINT `Podcast_ibfk_1` FOREIGN KEY (`emission_id`) REFERENCES `Emission` (`id`)
+                           CONSTRAINT `Podcast_ibfk_2` FOREIGN KEY (`emission_id`) REFERENCES `Emission` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+
+
+DROP TABLE IF EXISTS `Son`;
+CREATE TABLE `Son` (
+                       `id` int(11) NOT NULL AUTO_INCREMENT,
+                       `titre` varchar(128) NOT NULL,
+                       `nomArtiste` varchar(128) NOT NULL,
+                       `audio` varchar(256) NOT NULL,
+                       PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 
@@ -76,4 +107,4 @@ CREATE TABLE `User` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 
--- 2023-12-19 12:47:58
+-- 2023-12-20 11:02:35
