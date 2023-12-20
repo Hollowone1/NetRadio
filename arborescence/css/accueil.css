@@ -6,6 +6,10 @@
   font-family: "Inter", Helvetica, Arial, sans-serif;
 }
 
+p {
+  text-align: justify;
+}
+
 .header {
   display: flex;
   align-items: center;
