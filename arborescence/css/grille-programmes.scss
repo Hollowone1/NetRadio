@@ -1,0 +1,40 @@
+@import "var";
+@import "buttons";
+@import "fonts";
+@import "header";
+@import "footer";
+@import "layout";
+@import "direct";
+@import "nav";
+@import "listeEmissionsPodcasts";
+
+
+.programme {
+  padding: 1em
+}
+
+h2 {
+  @include text-style(1.7em, inherit, bold);
+  margin: 0;
+
+}
+
+h3 {
+  @include text-style(1.3em, inherit, 400);
+  margin: 0;
+}
+
+.dates {
+  width: 70vw;
+  margin: 2em auto;
+  @include flex(row, nowrap, .5em, space-between, center);
+  p {
+    @include text-style(1em, white, 400);
+    background-color: $purple;
+    padding: .8em;
+    border-radius: 1000px;
+  }
+  img:hover {
+    cursor: pointer;
+  }
+}
