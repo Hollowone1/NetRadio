@@ -1,3 +1,4 @@
+import { App } from "App.js"
 
 const Accueil = { template: '<div>Accueil</div>' }
 const Grille = { template: '<div>Grille</div>' }
@@ -29,7 +30,7 @@ const router = VueRouter.createRouter({
   routes,
 })
 
-const app = Vue.createApp({})
+const app = Vue.createApp({App})
 app.use(router)
 
 app.mount('#app')
