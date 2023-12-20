@@ -173,6 +173,8 @@ body {
 .direct button:hover {
   background-color: #8d4ba5;
   border: 2px solid #8d4ba5;
+  transition: border-radius 0.3s;
+  border-radius: 5px;
 }
 .direct img {
   border-radius: 10px;
@@ -238,6 +240,8 @@ body {
   .direct button:hover {
     background-color: #8d4ba5;
     border: 2px solid #8d4ba5;
+    transition: border-radius 0.3s;
+    border-radius: 5px;
   }
   .direct img {
     width: 45vw;
@@ -303,6 +307,8 @@ body {
   .direct button:hover {
     background-color: #8d4ba5;
     border: 2px solid #8d4ba5;
+    transition: border-radius 0.3s;
+    border-radius: 5px;
   }
   .direct img {
     width: 40vw;

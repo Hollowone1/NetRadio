@@ -336,8 +336,6 @@ body {
   justify-content: center;
   align-items: center;
   color: black;
-  padding: 1em;
-  background-color: rgba(0, 0, 0, 0.081);
 }
 
 a:hover {
@@ -374,6 +372,21 @@ footer .copyright {
 }
 footer .copyright a {
   color: #D9D9D9;
+}
+
+section .aside-compte {
+  float: left;
+  height: 100vh;
+  width: 35%;
+  background-color: #3B3D3F;
+  color: #FFF;
+  position: relative;
+  text-align: center;
+  padding-top: 5vh;
+}
+section .aside-compte h3 {
+  padding-top: 5vh;
+  padding-bottom: 5vh;
 }
 
 p {
@@ -461,6 +474,24 @@ p {
     align-items: flex-start;
   }
 }
+.reste {
+  float: right;
+  margin-left: 50px;
+}
+
+.podcast-list {
+  margin-left: 2em;
+}
+
+a {
+  text-decoration: none;
+  color: #FFF;
+}
+
+a :hover {
+  background-color: rgba(154, 154, 154, 0.542);
+}
+
 .podcasts, .emissions {
   padding: 1.5em;
 }
@@ -475,6 +506,4 @@ p {
 }
 .titre-fleche embed {
   height: 1em;
-}
-
-/*# sourceMappingURL=accueil.css.map */
+}/*# sourceMappingURL=accueil.css.map */
