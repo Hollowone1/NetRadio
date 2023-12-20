@@ -456,165 +456,42 @@ p {
     align-items: flex-start;
   }
 }
-.podcasts-emission, .si-direct {
+.programme {
   padding: 1em;
 }
 
-.si-direct-titre h2, .si-direct-titre embed {
-  display: inline-block;
-}
-.si-direct-titre h2 {
-  font-size: 1.8em;
+h2 {
+  font-size: 1.7em;
   color: inherit;
   font-weight: bold;
+  margin: 0;
 }
-.si-direct-titre embed {
-  height: 1em;
-  margin-left: 0.5em;
-}
-.si-direct-infos embed {
-  width: 100%;
-  border-radius: 10px;
-  margin-bottom: 0.5em;
-}
-.si-direct-infos-texte {
-  text-align: justify;
-}
-.si-direct-infos-texte h3 {
-  margin-bottom: 0.2em;
+
+h3 {
   font-size: 1.3em;
   color: inherit;
-  font-weight: 600;
+  font-weight: 400;
+  margin: 0;
 }
 
-.podcasts-emission h2 {
-  font-size: 1.8em;
-  color: inherit;
-  font-weight: bold;
-}
-.podcasts-emission .episode {
-  margin-bottom: 1em;
-  padding: 0.7em 1em 0.7em 1em;
-  border: 3px solid #A568BB;
-  border-radius: 10px;
-}
-.podcasts-emission .episode-infos {
-  font-size: 1.1em;
+.dates {
+  width: 70vw;
+  margin: 2em auto;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
-  gap: 0.2em;
+  gap: 0.5em;
   align-items: center;
 }
-.podcasts-emission .episode-infos div {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  gap: 1em;
-  align-items: center;
+.dates p {
+  font-size: 1em;
+  color: white;
+  font-weight: 400;
+  background-color: #A568BB;
+  padding: 0.8em;
+  border-radius: 1000px;
 }
-.podcasts-emission .episode-infos embed {
-  height: 1.7em;
-}
-.podcasts-emission .episode-infos .titre {
-  font-size: inherit;
-  color: inherit;
-  font-weight: 500;
-}
-.podcasts-emission .episode-infos-plus {
-  margin-top: 0.8em;
-  display: none;
-}
-.podcasts-emission .episode-infos-plus p {
-  margin-top: 0.5em;
-}
-.podcasts-emission .episode-infos-plus .date {
-  font-size: inherit;
-  color: inherit;
-  font-weight: 200;
-}
-
-@media screen and (min-width: 700px) {
-  .podcasts-emission, .si-direct {
-    padding: 1.5em;
-  }
-  .si-direct-titre h2 {
-    font-size: 2.3em;
-    color: inherit;
-    font-weight: bold;
-  }
-  .si-direct-titre embed {
-    height: 1.5em;
-  }
-  .si-direct-infos {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    gap: 1em;
-    align-items: center;
-  }
-  .si-direct-infos embed {
-    width: 25vw;
-  }
-  .si-direct-infos-texte {
-    font-size: 1.1em;
-  }
-  .si-direct-infos-texte h3 {
-    margin: 0 0 0.2em;
-    font-size: 1.5em;
-    color: inherit;
-    font-weight: 600;
-  }
-  .podcasts-emission h2 {
-    font-size: 2.3em;
-    color: inherit;
-    font-weight: bold;
-  }
-  .podcasts-emission .episodes {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(22em, 1fr));
-    grid-template-rows: auto;
-    gap: 1em;
-    justify-content: center;
-    align-items: stretch;
-  }
-  .podcasts-emission .episodes .episode {
-    margin: 0;
-  }
-  .podcasts-emission .episodes .episode embed:hover {
-    cursor: pointer;
-  }
-  .podcasts-emission .episodes .episode-infos {
-    font-size: 1.1em;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    gap: 0.2em;
-    align-items: center;
-  }
-  .podcasts-emission .episodes .episode-infos div {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    gap: 1em;
-    align-items: center;
-  }
-  .podcasts-emission .episodes .episode-infos-plus {
-    font-size: 1em;
-    display: none;
-    margin-top: 0.8em;
-  }
-  .podcasts-emission .episodes .episode-infos-plus p {
-    margin-top: 0.5em;
-  }
-  .podcasts-emission .episodes .episode-infos-plus .date {
-    font-size: inherit;
-    color: inherit;
-    font-weight: 200;
-  }
-}/*# sourceMappingURL=presentation-emission.css.map */
+.dates img:hover {
+  cursor: pointer;
+}/*# sourceMappingURL=grille-programmes.css.map */
