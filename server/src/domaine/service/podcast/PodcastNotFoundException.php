@@ -1,6 +1,6 @@
 <?php
 
-namespace radio\net\app\service\podcast;
+namespace radio\net\domaine\service\podcast;
 
 class PodcastNotFoundException extends \Exception
 {

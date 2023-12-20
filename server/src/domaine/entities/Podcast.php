@@ -3,7 +3,6 @@
 namespace radio\net\domaine\entities;
 
 use Illuminate\Database\Eloquent\Model;
-use radio\net\domaine\dto\EmissionDTO;
 use radio\net\domaine\dto\PodcastDTO;
 
 class Podcast extends Model
