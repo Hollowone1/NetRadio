@@ -1,0 +1,70 @@
+@import "var";
+@import "buttons";
+@import "fonts";
+@import "header";
+@import "footer";
+@import "layout";
+@import "direct";
+@import "nav";
+@import "listeEmissionsPodcasts";
+
+.podcasts-emission, .si-direct {
+  padding: 1em
+}
+
+.si-direct {
+  &-titre {
+    h2, embed {
+      display: inline-block;
+    }
+    h2 {
+      @include text-style(1.8em, inherit, bold);
+    }
+    embed {
+      height: 1em;
+      margin-left: .5em;
+    }
+  }
+  &-infos {
+    embed {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: .5em;
+    }
+    &-texte {
+      text-align: justify;
+      h3 {
+        margin-bottom: .2em;
+        @include text-style(1.3em, inherit, 600);
+      }
+    }
+  }
+}
+
+.podcasts-emission {
+  h2{
+    @include text-style(1.8em, inherit, bold);
+  }
+  .episode {
+    margin-bottom: 1em;
+    padding: .7em 1em .7em 1em;
+    border: 3px solid $purple;
+    border-radius: 10px;
+    @include flex(row, nowrap, .2em, space-between, center);
+    embed {
+      height: 1.7em
+    }
+    p:nth-of-type(1) {
+        @include text-style(inherit, inherit, 500);
+    }
+
+  }
+
+}
+
+
+
+
+
+
+

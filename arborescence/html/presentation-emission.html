@@ -4,38 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/accueil.css">
-    <title>Net-Radio Présentations-émissions </title>
-    <link rel="stylesheet" type="text/css" href="../css/">
+    <title>NetRadio - Accueil </title>
+    <link rel="stylesheet" type="text/css" href="../css/presentation-emission.css">
 </head>
 
 <body>
-    <header>
-        <div class="header">
-            <img class="header-logo" src="../assets/logo.png" alt="Logo NET RADIO">
-            <div class="header-boutons">
-                <input class="search" type="search" src="../assets/search.svg" placeholder="Search for...">
-                <!--si on est  connecté-->
-                <embed class="header-user-co" src="../assets/user.svg"/>
-                <!--si on n'est pas connecté-->
-                <button class="header-boutons-connecter">Se connecter</button>
-            </div>
-        </div>
-        <nav class="nav">
-            <div class="nav-item"><a href="./podcasts.html">Podcasts</a></div>
-            <div class="nav-item"><a href="./emissions.html">Émissions</a></div>
-            <div class="nav-item"><a href="./programmation.html">Grille des programmes</a></div>
-        </nav>
-    </header>
-    <div class="topnav">
-        <div id="myLinks">
-            <div class="nav-item"><a href="./podcasts.html">Podcasts</a></div>
-            <div class="nav-item"><a href="./emissions.html">Émissions</a></div>
-            <div class="nav-item"><a href="./programmation.html">Grille des programmes</a></div>
-        </div>
-        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-            <i class="gg-menu"></i>
-        </a>
-    </div>
     <main>
         <section>
             <i></i>
@@ -59,35 +32,57 @@
                     eius similique a maxime dolor unde fugiat facere, 
                     placeat vel ab expedita exercitationem.</p>
             </div>
+            <p class="direct-infos-sous-titre">EN DIRECT</p>
+            <p class="direct-infos-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <button class="direct-infos-ecouter">Écouter</button>
+        </div>
+        <img class="direct-image" src="../assets/Desktop.png" alt="image de l'émission en direct">
+    </section>
+
+
+    <section class="si-direct">
+        <div class="si-direct-titre">
+            <h2>En direct</h2>
+            <embed src="../assets/direct.svg"/>
+        </div>
+        <div class="si-direct-infos">
+            <embed src="../assets/Desktop.png"/>
+            <div class="si-direct-infos-texte">
+                <h3>Nom de l'émission</h3>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Et magnam optio iusto, eaque quos impedit hic perferendis eius similique a maxime dolor unde fugiat facere, placeat vel ab expedita exercitationem.
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Et magnam optio iusto, eaque quos impedit hic perferendis eius similique a maxime dolor unde fugiat facere, placeat vel ab expedita exercitationem.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="podcasts-emission">
+        <h2>Podcasts</h2>
+
+        <section class="episode">
+            <embed class="play" src="../assets/miniplay.svg">
+            <p>Nom de l'épisode</p>
+            <p>00:00</p>
+            <embed class="plus" src="../assets/plus.svg">
+            <embed class="croix" src="../assets/plus.svg">
         </section>
-        <section>
-            <h2>Podcast</h2>
-            <div class="episode">
-                <img src="" alt="play">
-                <span>nom de l'épisode</span>
-                <p>Durée: </p>
-                <img src="" alt="add">
-            </div>
-            <div class="episode">
-                <img src="" alt="play">
-                <span>nom de l'épisode</span>
-                <p>Durée: </p>
-                <img src="" alt="add">
-            </div>
-            <div class="episode">
-                <img src="" alt="play">
-                <span>nom de l'épisode</span>
-                <p>Durée: </p>
-                <img src="" alt="add">
-            </div>
-            <div class="episode">
-                <img src="" alt="play">
-                <span>nom de l'épisode</span>
-                <p>Durée: </p>
-                <img src="" alt="add">
-            </div>
+
+        <section class="episode">
+            <embed class="play" src="../assets/miniplay.svg">
+            <p>Nom de l'épisode</p>
+            <p>00:00</p>
+            <embed class="plus" src="../assets/plus.svg">
         </section>
-        <a href="emission.html">Découvrir d'autres émissions</a>
-    </main>
+
+        <section class="episode">
+            <embed class="play" src="../assets/miniplay.svg">
+            <p>Nom de l'épisode</p>
+            <p>00:00</p>
+            <embed class="plus" src="../assets/plus.svg">
+        </section>
+    </section>
+    <a href="emission.html">Découvrir d'autres émissions</a>
+</main>
 </body>
 </html>
