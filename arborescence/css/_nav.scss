@@ -14,7 +14,28 @@
   font-weight: bold;
 }
 
+.topnav i{
+  margin: 0 10px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+.topnav i{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  padding: 1em;
+  background-color: rgba(0, 0, 0, 0.081);
+}
+
+
 a:hover{
+  
+  color: $purple;
+}
+i:hover{
   
   color: $purple;
 }
@@ -25,5 +46,14 @@ a:hover{
   }
 }
 
+#myLinks{
+  margin-bottom: 1em;
+  display: none;
+}
 
+@media (min-width: 658px) {
+  .topnav a{
+    display: none;
+  }
+}
 

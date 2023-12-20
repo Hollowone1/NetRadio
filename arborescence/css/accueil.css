@@ -332,12 +332,42 @@ body {
   font-weight: bold;
 }
 
+.topnav i {
+  margin: 0 10px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+.topnav i {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  padding: 1em;
+  background-color: rgba(0, 0, 0, 0.081);
+}
+
 a:hover {
+  color: #A568BB;
+}
+
+i:hover {
   color: #A568BB;
 }
 
 @media (max-width: 658px) {
   .nav {
+    display: none;
+  }
+}
+#myLinks {
+  margin-bottom: 1em;
+  display: none;
+}
+
+@media (min-width: 658px) {
+  .topnav a {
     display: none;
   }
 }
@@ -453,6 +483,4 @@ p {
 }
 .titre-fleche embed {
   height: 1em;
-}
-
-/*# sourceMappingURL=accueil.css.map */
+}/*# sourceMappingURL=accueil.css.map */
