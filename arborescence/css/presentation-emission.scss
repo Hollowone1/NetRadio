@@ -6,10 +6,10 @@
 @import "layout";
 @import "direct";
 @import "nav";
-@import 'listeEmissionsPodcasts';
+@import "listeEmissionsPodcasts";
 
 .podcasts-emission, .si-direct {
-  padding: 1.5em
+  padding: 1em
 }
 
 .si-direct {
@@ -18,24 +18,24 @@
       display: inline-block;
     }
     h2 {
-      font-size: 2em
+      @include text-style(1.8em, inherit, bold);
     }
     embed {
-      height: 1.3em;
+      height: 1em;
       margin-left: .5em;
     }
   }
   &-infos {
-    @include flex(row, nowrap, 2em, space-between, stretch);
     embed {
-      width: 25vw;
-      border-radius: 10px
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: .5em;
     }
     &-texte {
-      @include flex(column, nowrap, 1em, space-between, flex-start);
+      text-align: justify;
       h3 {
-        margin: 0;
-        @include text-style(1.5em, inherit, 600);
+        margin-bottom: .2em;
+        @include text-style(1.3em, inherit, 600);
       }
     }
   }
@@ -43,16 +43,21 @@
 
 .podcasts-emission {
   h2{
-    @include text-style(2em, inherit, bold);
+    @include text-style(1.8em, inherit, bold);
   }
   .episode {
-    padding: .7em 1em .7em 1.5em;
-    border: 2px solid $purple;
+    margin-bottom: 1em;
+    padding: .7em 1em .7em 1em;
+    border: 3px solid $purple;
     border-radius: 10px;
-    @include grid(1fr 5fr 1fr, auto, 1em, space-between, center);
-    &-info {
-      @include flex(row, nowrap, 0, space-between, center);
+    @include flex(row, nowrap, .2em, space-between, center);
+    embed {
+      height: 1.7em
     }
+    p:nth-of-type(1) {
+        @include text-style(inherit, inherit, 500);
+    }
+
   }
 
 }
