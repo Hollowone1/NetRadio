@@ -23,7 +23,6 @@ Vue.component('navbar', {
   });
 
   function myFunction() {
-    // Bascule la visibilité du menu
     if ($('#myLinks').is(":visible")) {
       $('#myLinks').hide();
     } else {

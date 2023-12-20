@@ -329,6 +329,11 @@ a:hover {
   color: #A568BB;
 }
 
+@media (max-width: 658px) {
+  .nav {
+    display: none;
+  }
+}
 footer {
   background-color: #3B3D3F;
   padding: 20px 0;
