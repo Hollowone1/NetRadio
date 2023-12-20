@@ -9,6 +9,8 @@ class User extends Model
 {
     public $connection= 'radio' ;
     protected $table = 'User';
+    protected $primaryKey = 'email';
+    protected $keyType = 'string';
     protected $fillable = [
         'email',
         'password',

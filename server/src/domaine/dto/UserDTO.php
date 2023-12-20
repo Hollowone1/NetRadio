@@ -2,8 +2,6 @@
 
 namespace radio\net\domaine\dto;
 
-use function Symfony\Component\Translation\t;
-
 class UserDTO
 {
     public string $email;
@@ -12,10 +10,10 @@ class UserDTO
 
     public string $nom;
     public string $role;
-    public string $refresh_token;
-    public string $refresh_token_expiration_date;
-    public string $reset_password_token;
-    public string $reset_password_token_expiration_date;
+    public ?string $refresh_token;
+    public ?string $refresh_token_expiration_date;
+    public ?string $reset_password_token;
+    public ?string $reset_password_token_expiration_date;
 
     public function __construct ($p_email, $p_password, $p_prenom, $p_nom, $p_role, $p_refresh_token, $p_refresh_token_expiration_date, $p_reset_password_token, $p_reset_password_token_expiration_date){
         $this->email = $p_email;
