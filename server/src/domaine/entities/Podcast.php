@@ -22,8 +22,12 @@ class Podcast extends Model
         'emission_id'
     ];
 
+    public function emission () {
+        return $this->belongsTo(Emission::class, 'emission_id')->first();
+    }
+
     public function toDTO () {
-        $emissionDTO = new EmissionDTO($this->emission_id);
+        $emissionDTO = $this->emission()->toDTO();
         $podcastDTO = new PodcastDTO($this->id, $this->titre, $this->description, $this->duree, $this->date, $this->audio, $this->photo, $emissionDTO);
         return $podcastDTO;
     }
