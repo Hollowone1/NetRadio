@@ -8,22 +8,20 @@ use radio\net\domaine\service\podcast\iPodcastService;
 use radio\net\domaine\service\podcast\PodcastNotFoundException;
 use Slim\Exception\HttpNotFoundException;
 
-class GetPodcastByIdAction extends Action
+class GetPodcastByDate extends Action
 {
     private iPodcastService $servicePodcast;
     public function __construct(iPodcastService $service_podcast)
     {
         $this->servicePodcast = $service_podcast;
     }
-
     function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $id = $args['id_podcast'] ?? 0;
         try {
-            $podcast = $this->servicePodcast->getPodcastById($id);
+            $podcast = $this->servicePodcast->GetPodcastByDate();
             $data = [
-              'type' => 'resource',
-              'podcast' => $podcast
+                'type' => 'resource',
+                'podcast' => $podcast
             ];
             $response->getBody()->write(json_encode($data));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
