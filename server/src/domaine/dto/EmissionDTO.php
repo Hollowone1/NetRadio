@@ -2,8 +2,6 @@
 
 namespace radio\net\domaine\dto;
 
-use radio\net\domaine\entities\User;
-
 class EmissionDTO extends DTO
 {
     public int $id;
@@ -11,7 +9,7 @@ class EmissionDTO extends DTO
     public string $description;
     public string $theme;
     public string $photo;
-    public User $user;
+    public UserDTO $user;
 
     public function __construct ($p_id, $p_titre, $p_description, $p_theme, $p_photo, $p_user) {
         $this->id = $p_id;
