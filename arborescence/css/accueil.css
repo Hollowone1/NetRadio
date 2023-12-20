@@ -19,6 +19,9 @@ p {
 
 .header-logo {
   margin-left: 20px;
+  border-radius: 5px;
+  height: 80px;
+  width: auto;
 }
 
 .header-boutons {
@@ -75,7 +78,7 @@ p {
     padding: 20px;
   }
   .header-logo {
-    width: 100%;
+    width: 20%;
     height: auto;
     margin-bottom: 20px;
   }
@@ -333,6 +336,11 @@ a:hover {
   color: #A568BB;
 }
 
+@media (max-width: 658px) {
+  .nav {
+    display: none;
+  }
+}
 footer {
   background-color: #3B3D3F;
   padding: 20px 0;

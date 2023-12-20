@@ -19,4 +19,11 @@ a:hover{
   color: $purple;
 }
 
+@media (max-width: 658px) {
+  .nav {
+    display: none;
+  }
+}
+
+
 
