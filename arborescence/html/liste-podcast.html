@@ -4,10 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/accueil.css">
-    <title>NetRadio - Accueil </title>
+    <title>NetRadio - Liste des podcasts </title>
     <link rel="stylesheet" type="text/css" href="../css/">
 </head>
 <body>
+    <header>
+        <div class="header">
+            <img class="header-logo" src="../assets/logo.png" alt="Logo NET RADIO">
+            <div class="header-boutons">
+                <input class="search" type="search" src="../assets/search.svg" placeholder="Search for...">
+                <!--si on est  connecté-->
+                <embed class="header-user-co" src="../assets/user.svg"/>
+                <!--si on n'est pas connecté-->
+                <button class="header-boutons-connecter">Se connecter</button>
+            </div>
+        </div>
+        <nav class="nav">
+            <div class="nav-item"><a href="./podcasts.html">Podcasts</a></div>
+            <div class="nav-item"><a href="./emissions.html">Émissions</a></div>
+            <div class="nav-item"><a href="./programmation.html">Grille des programmes</a></div>
+        </nav>
+    </header>
+    <div class="topnav">
+        <div id="myLinks">
+            <div class="nav-item"><a href="./podcasts.html">Podcasts</a></div>
+            <div class="nav-item"><a href="./emissions.html">Émissions</a></div>
+            <div class="nav-item"><a href="./programmation.html">Grille des programmes</a></div>
+        </div>
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+            <i class="gg-menu"></i>
+        </a>
+    </div>
     <main>
         <section>
             <i></i>

@@ -1,28 +1,29 @@
-
-
-.topnav{
-    display: none;
-}
-
-.nav{
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-      
-}
-
 .nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: black;
-    padding: 1em;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  padding: 1em;
+  background-color: rgba(0, 0, 0, 0.081);
+}
+
+.nav-item a{
+  margin: 0 10px;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}
+
+a:hover{
   
-  .nav-item {
-    margin: 0 10px;
-    text-decoration: none;
+  color: $purple;
+}
+
+@media (max-width: 658px) {
+  .nav {
+    display: none;
   }
-  
+}
+
+
+

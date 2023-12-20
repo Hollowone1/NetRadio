@@ -20,4 +20,13 @@ Vue.component('navbar', {
     <i class="gg-menu"></i>
 </a>
 </div>`
-  })
+  });
+
+  function myFunction() {
+    if ($('#myLinks').is(":visible")) {
+      $('#myLinks').hide();
+    } else {
+      $('#myLinks').show();
+    }
+  }
+  

@@ -4,10 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/accueil.css">
-    <title>NetRadio - Accueil </title>
-    <link rel="stylesheet" type="text/css" href="../css/">
+    <title>NetRadio - Grille des émissions </title>
+    <link rel="stylesheet" type="text/css" href="../css/grille-programmes.scss">
 </head>
 <body>
+    <header>
+        <div class="header">
+            <img class="header-logo" src="../assets/logo.png" alt="Logo NET RADIO">
+            <div class="header-boutons">
+                <input class="search" type="search" src="../assets/search.svg" placeholder="Search for...">
+                <!--si on est  connecté-->
+                <embed class="header-user-co" src="../assets/user.svg"/>
+                <!--si on n'est pas connecté-->
+                <button class="header-boutons-connecter">Se connecter</button>
+            </div>
+        </div>
+        <nav class="nav">
+            <div class="nav-item"><a href="./podcasts.html">Podcasts</a></div>
+            <div class="nav-item"><a href="./emissions.html">Émissions</a></div>
+            <div class="nav-item"><a href="./programmation.html">Grille des programmes</a></div>
+        </nav>
+    </header>
+    <div class="topnav">
+        <div id="myLinks">
+            <div class="nav-item"><a href="./podcasts.html">Podcasts</a></div>
+            <div class="nav-item"><a href="./emissions.html">Émissions</a></div>
+            <div class="nav-item"><a href="./programmation.html">Grille des programmes</a></div>
+        </div>
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+            <i class="gg-menu"></i>
+        </a>
+    </div>
     <main>
         <section class="direct">
             <div class="direct-infos">
@@ -20,15 +47,15 @@
                 <button class="direct-infos-ecouter">Écouter</button>
             </div>
             <img class="direct-image" src="../assets/Desktop.png" alt="image de l'émission en direct">
-        </section>        <section>
-            <h2>Grille des programmes</h2>
-            <h4>Net Radio</h4>
-            <div class="dates">
-                <i></i>
-                <button>Jeudi 9 novembre 2023</button>
-                <i></i>
-            </div>
         </section>
+
+        <h2>Grille des programmes</h2>
+        <h4>Net Radio</h4>
+        <div class="dates">
+            <
+            <p>Jeudi 9 novembre 2023</p>
+        </div>
+
         <section>
             <h4>Heure 1</h4>
             <div class="corner">
