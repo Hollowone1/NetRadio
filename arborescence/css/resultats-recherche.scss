@@ -1,0 +1,42 @@
+@import "var";
+@import "buttons";
+@import "fonts";
+@import "header";
+@import "footer";
+@import "layout";
+@import "direct";
+@import "nav";
+@import "footer";
+@import "listeEmissionsPodcasts";
+@import "recherche";
+
+.resultats {
+  padding: 1em;
+  .barre-recherche {
+    padding: .5em .5em .5em 1em;
+    background-color: $lightLightGrey;
+    margin-bottom: 2em;
+    border-bottom: 1px solid $lightGrey;
+    @include flex(row, nowrap, .5em, space-between, center);
+  }
+  h2 {
+    @include text-style(2em, inherit, bold);
+  }
+  input {
+    background-color: $lightLightGrey;
+    border: none;
+    padding: 1em;
+    width: 85%;
+    @include text-style(1em, inherit, 400);
+
+  }
+}
+
+@media screen and (min-width: 700px) {
+  .resultats {
+    padding: 1.5em;
+    h2 {
+      @include text-style(2.5em, inherit, bold);
+    }
+  }
+}
