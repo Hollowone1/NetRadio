@@ -22,11 +22,3 @@ Vue.component('navbar', {
 </div>`
   });
 
-  function myFunction() {
-    if ($('#myLinks').is(":visible")) {
-      $('#myLinks').hide();
-    } else {
-      $('#myLinks').show();
-    }
-  }
-  

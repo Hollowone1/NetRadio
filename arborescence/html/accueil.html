@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/accueil.css">
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/menu.css' rel='stylesheet'>
     <title>NetRadio - Accueil </title>
     <link rel="stylesheet" type="text/css" href="../css/accueil.css">
+    <script src="../../web/javascript/components/menu.js" defer></script>
 </head>
 
 <body>
@@ -27,14 +29,15 @@
     </nav>
 </header>
 <div class="topnav">
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <i class="gg-menu"></i>
+    </a>
     <div id="myLinks">
         <div class="nav-item"><a href="./podcasts.html">Podcasts</a></div>
         <div class="nav-item"><a href="./emissions.html">Émissions</a></div>
         <div class="nav-item"><a href="./programmation.html">Grille des programmes</a></div>
     </div>
-    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-        <i class="gg-menu"></i>
-    </a>
+
 </div>
 
 <main>
@@ -141,8 +144,8 @@
 <footer>
     <p class="copyright">© Copyright IUT Nancy-Charlemagne, 2023</p>
 </footer>
-<script src="../js/menu.js"></script>
-<script type="module" src="../js/main.js"></script>
-<script type="module" src="../js/accueil.js"></script>
+<script src="../../web/javascript/components/nav.js"></script>
+<script type="module" src="../../web/javascript/components/header.js"></script>
+<script type="module" src="../../web/javascript/routing.js"></script>
 </body>
 </html>
