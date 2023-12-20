@@ -489,11 +489,174 @@ h3 {
   color: white;
   font-weight: 400;
   background-color: #A568BB;
-  padding: 0.8em;
-  border-radius: 15px;
+  padding: 1em;
+  border-radius: 100px;
 }
 .dates img:hover {
   cursor: pointer;
+}
+
+h4 {
+  text-align: center;
+  font-size: 1.4em;
+  color: inherit;
+  font-weight: 600;
+  width: 70vw;
+  margin-right: auto;
+  margin-left: auto;
+  padding-top: 1em;
+  border-top: 1px solid black;
+}
+
+.prog-infos {
+  padding: 1.5em 1em 1.5em 1em;
+  background-color: #E9E9E9;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 1.5em;
+  align-items: center;
+}
+.prog img {
+  width: 15vw;
+}
+.prog h5 {
+  margin: 0 0 0.5em 0;
+  font-size: 1.2em;
+  color: #A568BB;
+  font-weight: 600;
+}
+
+@media screen and (min-width: 700px) and (max-width: 1024px) {
+  .programme {
+    padding: 1.5em;
+  }
+  .programme h2 {
+    font-size: 2.3em;
+    color: inherit;
+    font-weight: bold;
+  }
+  .programme h3 {
+    font-size: 1.8em;
+    color: inherit;
+    font-weight: 400;
+  }
+  .programme .dates {
+    width: 50vw;
+  }
+  .programme .dates p {
+    font-size: 1.3em;
+    color: white;
+    font-weight: 400;
+    border-radius: 100px;
+  }
+  h4 {
+    text-align: left;
+    width: 100%;
+    font-size: 1.8em;
+    color: inherit;
+    font-weight: 600;
+    border: none;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+    padding-top: 0;
+  }
+  .prog {
+    border-left: 1px solid black;
+    padding: 2em;
+    margin-left: 3em;
+    margin-right: 3em;
+    display: inline-block;
+  }
+  .prog-infos {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 10em;
+    align-items: center;
+  }
+  .prog-infos h5 {
+    font-size: 1.5em;
+    color: #A568BB;
+    font-weight: 600;
+  }
+  .prog-infos p {
+    font-size: 1.2em;
+    color: inherit;
+    font-weight: 400;
+    margin-top: 0.2em;
+  }
+  .prog-infos img {
+    width: 5em;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .programme {
+    background-color: lightblue;
+    padding: 2em;
+  }
+  .programme h2 {
+    font-size: 2.3em;
+    color: inherit;
+    font-weight: bold;
+  }
+  .programme h3 {
+    font-size: 1.8em;
+    color: inherit;
+    font-weight: 400;
+  }
+  .programme .dates {
+    width: 35vw;
+  }
+  .programme .dates p {
+    font-size: 1.3em;
+    color: white;
+    font-weight: 400;
+    border-radius: 100px;
+  }
+  h4 {
+    text-align: left;
+    width: 100%;
+    font-size: 1.8em;
+    color: inherit;
+    font-weight: 600;
+    border: none;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
+    padding-top: 0;
+  }
+  .prog {
+    border-left: 1px solid black;
+    padding: 2em;
+    margin-left: 3em;
+    margin-right: 3em;
+    display: inline-block;
+  }
+  .prog-infos {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 10em;
+    align-items: center;
+  }
+  .prog-infos h5 {
+    font-size: 1.5em;
+    color: #A568BB;
+    font-weight: 600;
+  }
+  .prog-infos p {
+    font-size: 1.2em;
+    color: inherit;
+    font-weight: 400;
+    margin-top: 0.2em;
+  }
+  .prog-infos img {
+    width: 7em;
+  }
 }
 
 /*# sourceMappingURL=grille-programmes.css.map */
