@@ -12,10 +12,12 @@
 
 .resultats {
   padding: 1em;
+  .recherche {
+    margin-bottom: 2em;
+  }
   .barre-recherche {
     padding: .5em .5em .5em 1em;
     background-color: $lightLightGrey;
-    margin-bottom: 2em;
     border-bottom: 1px solid $lightGrey;
     @include flex(row, nowrap, .5em, space-between, center);
   }
@@ -28,7 +30,20 @@
     padding: 1em;
     width: 85%;
     @include text-style(1em, inherit, 400);
-
+  }
+  .genres {
+    margin-top: 1em;
+    button {
+      display: inline-block !important;
+      padding: .5em 1em .5em 1em;
+      @include buttonStyle($transparent, $purple, $purple, auto, 1em, .2em);
+      flex-grow: 2;
+      &:hover {
+        background-color: $purple;
+        color: white;
+        transition: background-color 0.3s;
+      }
+    }
   }
 }
 
@@ -36,7 +51,11 @@
   .resultats {
     padding: 1.5em;
     h2 {
-      @include text-style(2.5em, inherit, bold);
+      @include text-style(2em, inherit, bold);
     }
+    input {
+      width: 95%
+    }
+
   }
 }
