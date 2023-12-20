@@ -18,8 +18,8 @@
     &:hover {
       background-color: darken($backColor, 10%);
       border: 2px solid darken($borderColor, 10%);
-      transition: border-radius 0.3s;
-      border-radius: calc($radius + 5px) ;
+      //transition: border-radius 0.3s;
+      //border-radius: calc($radius + 5px) ;
     }
 
 }

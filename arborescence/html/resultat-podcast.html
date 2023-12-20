@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/accueil.css">
     <title>NetRadio - Résultat des podcasts </title>
-    <link rel="stylesheet" type="text/css" href="../css/">
+    <link rel="stylesheet" type="text/css" href="../css/resultats-recherche.css">
 </head>
 <body>
     <header>
@@ -36,41 +36,59 @@
         </a>
     </div>
     <main>
-        <section>
-            <i></i>
-            <h2>Nom Emission</h2>
-            <span>En direct</span>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. 
-                Nostrum minima in rem natus non expedita, 
-                saepe commodi neque facere molestiae ipsam harum. 
-                Inventore voluptatum praesentium adipisci numquam deleniti totam sapiente!
-            </p>
-            <button><i></i>Ecoutez</button>
-            <img src="../assets/Desktop.png" alt="emission en direct">
-        </section>
-        <section>
-            <h2>Résultats de votre recherche</h2>
-            <input type="text" placeholder="Rechercher">
-        </section>
-        <section>
-            <div class="allPodcast">
-                <div class="podcast">
-                    <h3>Titre du podcast</h3>
-                    <span>Nom d'émission</span>
-                    <img src="" alt="play" href="">
+        <section class="direct">
+            <div class="direct-infos">
+                <div class="direct-infos-titre">
+                    <embed src="../assets/direct.svg"/>
+                    <h1>Nom émission</h1>
                 </div>
-                <div class="podcast">
-                    <h3>Titre du podcast</h3>
-                    <span>Nom d'émission</span>
-                    <img src="" alt="play" href="">
-                </div>
-                <div class="podcast">
-                    <h3>Titre du podcast</h3>
-                    <span>Nom d'émission</span>
-                    <img src="" alt="play" href="">
-                </div>
+                <p class="direct-infos-sous-titre">EN DIRECT</p>
+                <p class="direct-infos-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <button class="direct-infos-ecouter">Écouter</button>
             </div>
+            <img class="direct-image" src="../assets/Desktop.png" alt="image de l'émission en direct">
         </section>
+
+        <div class="resultats">
+            <h2>Résultats de votre recherche</h2>
+            <div class="barre-recherche">
+                <img src="../assets/loupe.svg" alt="icone recherche">
+                <input type="text" placeholder="Rechercher">
+            </div>
+            <div class="podcasts-liste">
+                <section class="podcast">
+                    <div class="podcast-info">
+                        <p>Nom de l'émission</p>
+                        <p>Titre du podcast</p>
+                    </div>
+                    <embed src="../assets/play.svg">
+                </section>
+
+                <section class="podcast">
+                    <div class="podcast-info">
+                        <p>Nom de l'émission</p>
+                        <p>Titre du podcast</p>
+                    </div>
+                    <embed src="../assets/play.svg">
+                </section>
+
+                <section class="podcast">
+                    <div class="podcast-info">
+                        <p>Nom de l'émission</p>
+                        <p>Titre du podcast</p>
+                    </div>
+                    <embed src="../assets/play.svg">
+                </section>
+
+                <section class="podcast">
+                    <div class="podcast-info">
+                        <p>Nom de l'émission</p>
+                        <p>Titre du podcast</p>
+                    </div>
+                    <embed src="../assets/play.svg">
+                </section>
+            </div>
+        </div>
     </main>     
 </body>
         

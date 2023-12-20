@@ -4,7 +4,6 @@ function myFunction() {
 
   
     if (myLinks.style.display === 'block') {
-    
       burgerIcon.classList.add('gg-menu');
       myLinks.style.display = 'none';
     } else {
