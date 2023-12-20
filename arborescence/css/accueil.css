@@ -15,6 +15,9 @@
 
 .header-logo {
   margin-left: 20px;
+  border-radius: 5px;
+  height: 80px;
+  width: auto;
 }
 
 .header-boutons {
@@ -71,7 +74,7 @@
     padding: 20px;
   }
   .header-logo {
-    width: 100%;
+    width: 20%;
     height: auto;
     margin-bottom: 20px;
   }
