@@ -8,6 +8,7 @@ class SonDTO
     public string $titre;
     public string $nomArtiste;
     public string $audio;
+
     public function __construct ($p_id, $p_titre, $p_nomArtiste, $p_audio) {
         $this->id = $p_id;
         $this->titre = $p_titre;
