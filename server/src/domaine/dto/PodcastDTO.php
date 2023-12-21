@@ -11,7 +11,7 @@ class PodcastDTO extends DTO
     public string $date;
     public string $audio;
     public string $photo;
-    public EmissionDTO $emissionDTO;
+    public int $idEmission;
 
     public function __construct($p_id, $p_titre, $p_description, $p_duree, $p_date, $p_audio, $p_photo, $p_emmission) {
         $this->id = $p_id;
@@ -21,7 +21,7 @@ class PodcastDTO extends DTO
         $this->date = $p_date;
         $this->audio = $p_audio;
         $this->photo = $p_photo;
-        $this->emissionDTO = $p_emmission;
+        $this->idEmission = $p_emmission;
     }
 
     public function toArray () : array {
@@ -33,7 +33,7 @@ class PodcastDTO extends DTO
             'date' => $this->date,
             'audio' => $this->audio,
             'photo' => $this->photo,
-            'emission' => $this->emissionDTO
+            'idEmission' => $this->idEmission
         ];
     }
 }

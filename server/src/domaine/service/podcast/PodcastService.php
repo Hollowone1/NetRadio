@@ -2,6 +2,7 @@
 
 namespace radio\net\domaine\service\podcast;
 use radio\net\domaine\entities\Podcast;
+use radio\net\domaine\service\emission\EmissionNotFoundException;
 
 class PodcastService implements iPodcastService
 {
@@ -39,4 +40,17 @@ class PodcastService implements iPodcastService
             throw new PodcastNotFoundException("Podcast not found");
         }
     }
+
+    public function GetPodcastByEmission ($id_emission) {
+        try {
+            $podcasts = Podcast::where('emission_id' ,$id_emission)->get();
+            $podcastDTO = [];
+            foreach ($podcasts as $podcast) {
+                $podcastDTO [] = $podcast->toDTO();
+            }
+            return $podcastDTO;
+        } catch (\Exception) {
+            throw new EmissionNotFoundException("Emission not found");
+        }
     }
+}
