@@ -173,8 +173,6 @@ body {
 .direct button:hover {
   background-color: #8d4ba5;
   border: 2px solid #8d4ba5;
-  transition: border-radius 0.3s;
-  border-radius: 5px;
 }
 .direct img {
   border-radius: 10px;
@@ -240,8 +238,6 @@ body {
   .direct button:hover {
     background-color: #8d4ba5;
     border: 2px solid #8d4ba5;
-    transition: border-radius 0.3s;
-    border-radius: 5px;
   }
   .direct img {
     width: 45vw;
@@ -307,8 +303,6 @@ body {
   .direct button:hover {
     background-color: #8d4ba5;
     border: 2px solid #8d4ba5;
-    transition: border-radius 0.3s;
-    border-radius: 5px;
   }
   .direct img {
     width: 40vw;
@@ -342,8 +336,6 @@ body {
   justify-content: center;
   align-items: center;
   color: black;
-  padding: 1em;
-  background-color: rgba(0, 0, 0, 0.081);
 }
 
 a:hover {
@@ -593,7 +585,6 @@ h4 {
 }
 @media screen and (min-width: 1024px) {
   .programme {
-    background-color: lightblue;
     padding: 2em;
   }
   .programme h2 {
