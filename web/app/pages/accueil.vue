@@ -1,8 +1,6 @@
 <template>
-    <header>
-    </header>
-    <navbar>
-    </navbar>
+    <header></header>
+    <navbar></navbar>
     <main>
     <section class="direct">
         <div class="direct-infos">
