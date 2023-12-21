@@ -1,9 +1,10 @@
 <?php
 
-namespace radio\net\app\action;
+namespace radio\net\app\action\podcast;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use radio\net\app\action\Action;
 use radio\net\domaine\service\podcast\iPodcastService;
 use radio\net\domaine\service\podcast\PodcastNotFoundException;
 use Slim\Exception\HttpNotFoundException;
@@ -17,16 +18,7 @@ class GetPodcastByDate extends Action
     }
     function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        try {
-            $podcast = $this->servicePodcast->GetPodcastByDate();
-            $data = [
-                'type' => 'resource',
-                'podcast' => $podcast
-            ];
-            $response->getBody()->write(json_encode($data));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
-        } catch (PodcastNotFoundException $e) {
-            throw new HttpNotFoundException($request, $e->getMessage());
-        }
+        $podcastGenerator = new PodcastGenerator();
+        return $podcastGenerator->generateActionResponse($request, $response, $this->servicePodcast->getPodcastByDate());
     }
 }
