@@ -29,7 +29,7 @@ class PodcastGenerator extends GenerateAction
                         'date' => $podcastsDTO->date,
                         'audio' => $podcastsDTO->audio,
                         'photo' => $podcastsDTO->photo,
-                        'emission' => $router->urlFor('emission', ['id_emission' => $podcastsDTO->idEmission])
+                        'emission' => $router->urlFor('/emission/{id_emission}[/]', ['id_emission' => $podcastsDTO->idEmission])
                     ];
                 }
                 // mise en forme des données pour le json
@@ -47,7 +47,7 @@ class PodcastGenerator extends GenerateAction
                     'date' => $podcastsDTO->date,
                     'audio' => $podcastsDTO->audio,
                     'photo' => $podcastsDTO->photo,
-                    'emission' => $router->urlFor('emission', ['id_emission' => $podcastsDTO->idEmission])
+                    'emission' => $router->urlFor('/emission/{id_emission}[/]', ['id_emission' => $podcastsDTO->idEmission])
                 ];
                 // mise en forme des données pour le json
                 // 'emission' => $router ... -> renvoie une uri vers laquelle il faut se diriger pour obtenir toutes les emissions
