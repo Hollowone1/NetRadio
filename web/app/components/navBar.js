@@ -1,10 +1,10 @@
-const navbar = {
-    template: `<nav class="nav">
+const navBar = {
+    template: `
+<nav class="nav">
     <div class="nav-item"><router-link to="./podcasts.html">Podcasts</router-link></div>
     <div class="nav-item"><router-link to="./emissions.html">Émissions</router-link></div>
     <div class="nav-item"><router-link to="./programmation.html">Grille des programmes</router-link></div>
 </nav>
-</header>
 <div class="topnav">
 <div id="myLinks">
     <div class="nav-item"><router-link to="./podcasts.html">Podcasts</router-link></div>
@@ -17,5 +17,5 @@ const navbar = {
 </div>`,
 }
 
-export default navbar;
+export default navBar;
 

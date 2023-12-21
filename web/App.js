@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 
 import entete from './app/components/entete.js';
-import navbar from './app/components/nav.js';
+import navBar from './app/components/navBar.js';
 import basPage from './app/components/basPage.js';
 import direct from "./app/components/direct";
 
@@ -9,7 +9,7 @@ window.addEventListener('load', () => {
     Vue.createApp({
         components: {
             entete,
-            navbar,
+            navBar,
             direct,
             basPage
         },

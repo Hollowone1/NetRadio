@@ -66,7 +66,7 @@
 </template>
 
 <script setup>
-    import navbar from '../components/nav'
+    import navbar from '../components/navBar.js'
     import header from '../components/entete.js'
     import footer from '../components/basPage.js'
 </script>

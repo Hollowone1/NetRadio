@@ -1,5 +1,5 @@
 const basPage = {
-    template: `<div> BONJOUE </div>`,
+    template: ``,
 }
 
 export default basPage;
