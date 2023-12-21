@@ -1,9 +1,4 @@
-Vue.component('navbar', {
-    data: function () {
-      return {
-        
-      }
-    },
+const navbar = {
     template: `<nav class="nav">
     <div class="nav-item"><router-link to="./podcasts.html">Podcasts</router-link></div>
     <div class="nav-item"><router-link to="./emissions.html">Émissions</router-link></div>
@@ -19,6 +14,8 @@ Vue.component('navbar', {
 <a href="javascript:void(0);" class="icon" onclick="myFunction()">
     <i class="gg-menu"></i>
 </a>
-</div>`
-  });
+</div>`,
+}
+
+export default navbar;
 

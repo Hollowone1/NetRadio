@@ -1,8 +1,5 @@
-Vue.component('footer', {
-    data: function () {
-      return {
-        
-      }
-    },
-    template:``
-})
+const footer = {
+    template: ``,
+}
+
+export default footer;

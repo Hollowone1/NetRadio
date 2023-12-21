@@ -1,10 +1,5 @@
-Vue.component('navbarBack', {
-    data: function () {
-      return {
-        
-      }
-    },
-    template:`<section>
+const navbarBack = {
+    template: `<section>
     <aside>
         <router-link to="">Mon compte</router-link>
         <router-link to="">Enregistrements</router-link>
@@ -29,5 +24,8 @@ Vue.component('navbarBack', {
             <p>Mot de passe</p>
         </div>
     </section>
-</section>`
-})
+</section>`,
+}
+
+export default navbarBack;
+
