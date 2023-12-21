@@ -15,6 +15,7 @@ class Emission extends Model
         'titre',
         'description',
         'theme',
+        'onDirect',
         'photo',
         'user_mail'
     ];
@@ -29,14 +30,14 @@ class Emission extends Model
 
 
     public function toDTO () {
-        $userDTO = $this->user()->toDTO();
         return new EmissionDTO(
             $this->id,
             $this->titre,
             $this->description,
             $this->theme,
             $this->photo,
-            $userDTO
+            $this->onDirect,
+            $this->user_mail
         );
     }
 }

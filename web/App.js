@@ -1,20 +1,17 @@
 import { createApp } from "vue";
 
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
-import header from './app/components/header.js';
-import navbar from './app/components/nav.js';
-import footer from './app/components/footer.js';
-app.component('VueDatePicker', VueDatePicker);
-
-
-
+import entete from './app/components/entete.js';
+import navBar from './app/components/navBar.js';
+import basPage from './app/components/basPage.js';
+import direct from "./app/components/direct";
 
 window.addEventListener('load', () => {
     Vue.createApp({
         components: {
-            header,
-            navbar,
+            entete,
+            navBar,
+            direct,
+            basPage
         },
         data() {
         return {

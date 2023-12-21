@@ -8,6 +8,7 @@ use radio\net\app\action\Action;
 use radio\net\domaine\service\emission\EmissionNotFoundException;
 use radio\net\domaine\service\emission\iEmissionService;
 use Slim\Exception\HttpNotFoundException;
+use Slim\Routing\RouteContext;
 
 class GetEmissionById extends Action
 {
@@ -21,11 +22,21 @@ class GetEmissionById extends Action
     {
         $id = $args['id_emission'];
         try {
-            $emission = $this->emissionService->getEmissionById($id);
+            $router = RouteContext::fromRequest($request);
+            $route = $router->getRouteParser();
 
+            $emission = $this->emissionService->getEmissionById($id);
+            $emissionResponse = [
+                'id' => $emission->id,
+                'titre' => $emission->titre,
+                'description'=> $emission->description,
+                'theme' => $emission->theme,
+                'photo' => $emission->photo,
+                'user' => $route->urlFor('/user/{id_user}[/]', ['id_user' => $emission->user])
+            ];
             $data = [
                 'type' => 'resource',
-                'emission' => $emission
+                'emission' => $emissionResponse
             ];
             $response->getBody()->write(json_encode($data));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
