@@ -5,7 +5,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use radio\net\app\action\GenerateAction;
 use radio\net\domaine\entities\Son;
 
-class GetSon extends \radio\net\app\action\Action
+class GetSonByIdAction extends \radio\net\app\action\Action
 {
     function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
