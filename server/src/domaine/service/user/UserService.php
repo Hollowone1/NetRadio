@@ -20,9 +20,9 @@ class UserService implements iUserService
         }
     }
 
-    public function GetInfoUserById ($id) {
+    public function GetInfoUserByMail ($mail) {
         try {
-            $user = User::find($id);
+            $user = User::find($mail)->first();
             return $user->toDTO();
         } catch (\Exception $e) {
             throw new UserNotFoundException("User not found");

@@ -22,6 +22,9 @@ return array(
     \radio\net\app\action\emission\GetEmissionById::class => function (ContainerInterface $container) {
         return new \radio\net\app\action\emission\GetEmissionById($container->get('EmissionService'));
     },
+    \radio\net\app\action\emission\GetEmissionsAction::class => function (ContainerInterface $container) {
+        return new \radio\net\app\action\emission\GetEmissionsAction($container->get('EmissionService'));
+    },
 
     \radio\net\app\action\user\GetUserAllInfo::class => function (ContainerInterface $container) {
         return new \radio\net\app\action\user\GetUserAllInfo($container->get('UserService'));
