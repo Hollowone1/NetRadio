@@ -4,14 +4,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use radio\net\app\action\Action;
 use radio\net\domaine\entities\Son;
+use radio\net\domaine\service\son\SonService;
 
 class GetAllSons extends Action
 {
 
     function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $son = new Son();
-        $sons = $son->findAll();
+        $sonService = new SonService();
+        $sons = $sonService->getAllSons();
         $data = [
             'type' => 'resource',
             'sons' => $sons

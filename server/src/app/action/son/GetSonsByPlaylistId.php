@@ -4,15 +4,16 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use radio\net\app\action\Action;
 use radio\net\domaine\entities\Son;
+use radio\net\domaine\service\son\SonService;
 
-class GetSonsByPlaylist extends Action
+class GetSonsByPlaylistId extends Action
 {
 
     function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         $idPlaylist = $args['id_playlist'];
-        $son = new Son();
-        $sons = $son->findByPlaylist($idPlaylist);
+        $sonService = new SonService();
+        $sons = $sonService->getSonsByPlaylistId($idPlaylist);
         $data = [
             'type' => 'resource',
             'sons' => $sons

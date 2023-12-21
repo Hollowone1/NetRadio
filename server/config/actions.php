@@ -32,4 +32,6 @@ return array(
     \radio\net\app\action\user\GetUserByMail::class => function (ContainerInterface $container) {
         return new \radio\net\app\action\user\GetUserByMail($container->get('UserService'));
     }
+
+
 );
