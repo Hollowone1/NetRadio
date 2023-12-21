@@ -26,6 +26,10 @@ return array(
         return new \radio\net\app\action\emission\GetEmissionsAction($container->get('EmissionService'));
     },
 
+    \radio\net\app\action\emission\GetEmissionByTheme::class => function (ContainerInterface $container) {
+        return new \radio\net\app\action\emission\GetEmissionByTheme($container->get('EmissionService'));
+    },
+
     \radio\net\app\action\user\GetUserAllInfo::class => function (ContainerInterface $container) {
         return new \radio\net\app\action\user\GetUserAllInfo($container->get('UserService'));
     },

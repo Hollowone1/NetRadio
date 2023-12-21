@@ -26,4 +26,18 @@ class EmissionService implements iEmissionService
             throw new EmissionNotFoundException('Emission not found');
         }
     }
+
+    public function getEmissionByTheme ($theme)
+    {
+        try {
+            $emissionsDTO = [];
+            $emissions = Emission::where('theme', $theme)->get();
+            foreach ($emissions as $emission) {
+                $emissionsDTO [] = $emission->toDTO();
+            }
+            return $emissionsDTO;
+        } catch (EmissionNotFoundException $e) {
+            throw new EmissionNotFoundException("Emission not found");
+        }
+    }
 }
