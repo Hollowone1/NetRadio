@@ -5,6 +5,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import header from './app/components/header.js';
 import navbar from './app/components/nav.js';
 import footer from './app/components/footer.js';
+import direct from "./app/components/direct";
 app.component('VueDatePicker', VueDatePicker);
 
 
@@ -15,6 +16,8 @@ window.addEventListener('load', () => {
         components: {
             header,
             navbar,
+            direct,
+            footer
         },
         data() {
         return {
