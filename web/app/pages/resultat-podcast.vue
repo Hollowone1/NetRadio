@@ -1,4 +1,10 @@
 <template>
+    <header>
+
+    </header>
+    <navbar>
+
+    </navbar>
     <main>
         <section class="direct">
             <div class="direct-infos">
@@ -54,4 +60,13 @@
             </div>
         </div>
     </main>
+    <footer>
+        
+    </footer>
 </template>
+
+<script setup>
+    import navbar from '../components/nav'
+    import header from '../components/header'
+    import footer from '../components/footer'
+</script>
