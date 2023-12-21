@@ -110,6 +110,6 @@
 
 <script setup>
     import navbar from '../components/nav'
-    import header from '../components/header'
-    import footer from '../components/footer'
+    import header from '../components/entete.js'
+    import footer from '../components/basPage.js'
 </script>
