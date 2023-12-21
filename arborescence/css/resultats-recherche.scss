@@ -10,6 +10,11 @@
 @import "listeEmissionsPodcasts";
 @import "recherche";
 
+
+h2 {
+  @include text-style(2em, inherit, bold);
+}
+
 .resultats {
   padding: 1em;
   .recherche {
@@ -20,9 +25,7 @@
     background-color: $lightLightGrey;
     border-bottom: 1px solid $lightGrey;
     @include flex(row, nowrap, .5em, space-between, center);
-  }
-  h2 {
-    @include text-style(2em, inherit, bold);
+    margin-bottom: 1em;
   }
   input {
     background-color: $lightLightGrey;
@@ -47,12 +50,26 @@
   }
 }
 
+.theme {
+  margin-bottom: 3em;
+  h3 {
+    @include text-style(1.5em, $purple, 500);
+  }
+}
+
+.jour {
+  margin-bottom: 3em;
+  h3 {
+    @include text-style(1.5em, $purple, 500);
+  }
+}
+
 @media screen and (min-width: 700px) {
+  h2 {
+    @include text-style(2em, inherit, bold);
+  }
   .resultats {
     padding: 1.5em;
-    h2 {
-      @include text-style(2em, inherit, bold);
-    }
     input {
       width: 95%
     }
