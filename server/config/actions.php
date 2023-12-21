@@ -1,9 +1,10 @@
 <?php
 
 use Psr\Container\ContainerInterface;
-use radio\net\app\action\GetAllPodcasts;
-use radio\net\app\action\GetPodcastByDate;
-use radio\net\app\action\GetPodcastByIdAction;
+use radio\net\app\action\podcast\GetAllPodcasts;
+use radio\net\app\action\podcast\GetPodcastByDate;
+use radio\net\app\action\podcast\GetPodcastByEmission;
+use radio\net\app\action\podcast\GetPodcastByIdAction;
 
 return array(
     GetPodcastByIdAction::class => function (ContainerInterface $container) {
@@ -13,6 +14,16 @@ return array(
         return new GetPodcastByDate($container->get('PodcastService'));
     },
     GetAllPodcasts::class => function (ContainerInterface $container) {
-        return new GetPodcastByDate($container->get('PodcastService'));
+        return new GetAllPodcasts($container->get('PodcastService'));
+    },
+    GetPodcastByEmission::class => function (ContainerInterface $container) {
+        return new GetPodcastByEmission($container->get('PodcastService'));
+    },
+    \radio\net\app\action\emission\GetEmissionById::class => function (ContainerInterface $container) {
+        return new \radio\net\app\action\emission\GetEmissionById($container->get('EmissionService'));
+    },
+
+    \radio\net\app\action\user\GetUserAllInfo::class => function (ContainerInterface $container) {
+        return new \radio\net\app\action\user\GetUserAllInfo($container->get('UserService'));
     }
 );

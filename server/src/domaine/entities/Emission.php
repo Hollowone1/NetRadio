@@ -19,9 +19,15 @@ class Emission extends Model
         'user_mail'
     ];
 
+    public function podcasts () {
+        return $this->hasMany(Podcast::class, 'emission_id');
+    }
+
     public function user () {
         return $this->belongsTo(User::class, 'user_mail')->first();
     }
+
+
     public function toDTO () {
         $userDTO = $this->user()->toDTO();
         return new EmissionDTO(

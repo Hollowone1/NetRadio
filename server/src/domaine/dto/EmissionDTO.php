@@ -11,6 +11,7 @@ class EmissionDTO extends DTO
     public string $photo;
     public UserDTO $user;
 
+
     public function __construct ($p_id, $p_titre, $p_description, $p_theme, $p_photo, $p_user) {
         $this->id = $p_id;
         $this->titre = $p_titre;

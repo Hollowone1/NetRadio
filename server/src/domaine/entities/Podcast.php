@@ -26,8 +26,7 @@ class Podcast extends Model
     }
 
     public function toDTO () {
-        $emissionDTO = $this->emission()->toDTO();
-        $podcastDTO = new PodcastDTO($this->id, $this->titre, $this->description, $this->duree, $this->date, $this->audio, $this->photo, $emissionDTO);
+        $podcastDTO = new PodcastDTO($this->id, $this->titre, $this->description, $this->duree, $this->date, $this->audio, $this->photo, $this->emission_id);
         return $podcastDTO;
     }
 }
