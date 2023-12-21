@@ -1,10 +1,5 @@
-Vue.component('header', {
-    data: function () {
-      return {
-        
-      }
-    },
-    template:` <div class="header">
+const header = {
+    template: `<div class="header">
     <img class="header-logo" src="..." alt="Logo NET RADIO">
     <div class="header-boutons">
         <input class="search" type="search" src="../assets/search.svg" placeholder="Search for...">
@@ -13,5 +8,7 @@ Vue.component('header', {
         <!--si on n'est pas connecté-->
         <button class="header-boutons-connecter">Se connecter</button>
     </div>
-</div>`
-})
+</div>`,
+}
+
+export default header;
