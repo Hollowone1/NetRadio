@@ -16,8 +16,9 @@ return function (App $app) {
 
     //emission
     $app->get("/emission/{id_emission}/podcasts", GetPodcastByEmission::class);
-    $app->get("/emission/{id_emission}[/]", \radio\net\app\action\emission\GetEmissionById::class);
+    $app->get("/emission/{id_emission}[/]", \radio\net\app\action\emission\GetEmissionById::class)->setName('/emission/{id_emission}[/]');
 
     //users
     $app->get("/users", \radio\net\app\action\user\GetUserAllInfo::class);
+    $app->get("/user/{id_user}[/]", \radio\net\app\action\user\GetUserByMail::class)->setName('/user/{id_user}[/]');
 };
