@@ -8,6 +8,7 @@ use radio\net\domaine\dto\SonDTO;
 class Son extends Model
 {
     public $connection = 'radio';
+    protected $primaryKey = 'id';
     protected $table = 'Son';
     protected $fillable = [
         'id',
@@ -29,7 +30,7 @@ class Son extends Model
         return $this->belongsToMany(Playlist::class, 'PlaylistSon', 'idSon', 'idPlaylist');
     }
 
-    public function findByPlaylist($idPlaylist) {
+    public function findByPlaylistId($idPlaylist) {
         return $this->playlist()->where('idPlaylist', $idPlaylist)->get();
     }
 

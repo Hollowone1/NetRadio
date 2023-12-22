@@ -10,7 +10,7 @@ class PlaylistService implements iPlaylistService
     public function getPlaylistById($id)
     {
         try {
-            $playlist = Playlist::findById($id);
+            $playlist = Playlist::find($id);
             if ($playlist == null) {
                 throw new PlaylistNotFoundException();
             }

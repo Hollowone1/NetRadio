@@ -7,11 +7,12 @@ use radio\net\domaine\dto\PlaylistDTO;
 
 class Playlist extends Model
 {
-    public $connection = 'id';
+    public $connection = 'radio';
+    protected $primaryKey='id';
     protected $table = 'Playlist';
     protected $fillable = [
         'id',
-        'nom',
+        'name',
         'description',
         'emailUser'
     ];
@@ -19,7 +20,7 @@ class Playlist extends Model
     public function toDTO () {
         return new PlaylistDTO(
             $this->id,
-            $this->nom,
+            $this->name,
             $this->description,
             $this->emailUser
         );

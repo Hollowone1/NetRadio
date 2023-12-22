@@ -5,6 +5,7 @@ use radio\net\app\action\podcast\GetAllPodcasts;
 use radio\net\app\action\podcast\GetPodcastByDate;
 use radio\net\app\action\podcast\GetPodcastByEmission;
 use radio\net\app\action\podcast\GetPodcastByIdAction;
+use radio\net\app\action\son\GetAllSons;
 use Slim\App;
 
 return function (App $app) {
@@ -23,4 +24,12 @@ return function (App $app) {
     //users
     $app->get("/users", \radio\net\app\action\user\GetUserAllInfo::class);
     $app->get("/user/{id_user}[/]", \radio\net\app\action\user\GetUserByMail::class)->setName('/user/{id_user}[/]');
+
+    //sons
+    $app->get("/sons[/]", GetAllSons::class);
+    $app->get("/son/{id_son}[/]", \radio\net\app\action\son\GetSonByIdAction::class)->setName('/son/{id_son}[/]');
+    $app->get("/son/playlist/{id_playlist}[/]", \radio\net\app\action\son\GetSonsByPlaylistId::class)->setName('/son/playlist/{id_playlist}[/]');
+
+    //playlist
+    $app->get("/playlist/{id_playlist}[/]", \radio\net\app\action\playlist\GetPlaylistByIdAction::class)->setName('/playlist/{id_playlist}[/]');
 };
