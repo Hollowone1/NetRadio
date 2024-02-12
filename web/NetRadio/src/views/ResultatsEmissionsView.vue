@@ -1,5 +1,18 @@
 <script>
-
+export default {
+  data() {
+    return {
+      emissions: [
+        { title: "Titre de l'émission 1", presenter: "Présentateur 1" },
+        { title: "Titre de l'émission 2", presenter: "Présentateur 2" },
+        { title: "Titre de l'émission 3", presenter: "Présentateur 3" },
+        { title: "Titre de l'émission 4", presenter: "Présentateur 4" },
+        { title: "Titre de l'émission 5", presenter: "Présentateur 5" },
+        { title: "Titre de l'émission 6", presenter: "Présentateur 6" },
+      ],
+    };
+  },
+};
 </script>
 
 <template>
@@ -34,29 +47,9 @@
                 </div>
             </div>
             <div class="emissions-liste">
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
-                </section>
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
-                </section>
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
-                </section>
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
-                </section>
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
-                </section>
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
+                <section class="emission" v-for="(emission, index) in emissions" :key="index">
+                    <p>{{ emission.title }}</p>
+                    <p>{{ emission.presenter }}</p>
                 </section>
             </div>
         </div>
