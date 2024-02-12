@@ -14,6 +14,9 @@ import ListeUtilisateursView from '@/views/Liste-utilisateurView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+
+
+
     {
       path: '/',
       name: 'accueil',
