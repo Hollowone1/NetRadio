@@ -14,7 +14,6 @@ export default {
 </script>
 
 <template>
-  <header-component></header-component>
   <main>
     <en-direct></en-direct>
 
