@@ -14,8 +14,6 @@
 </template>
 
 <style scoped lang="scss">
-//Pour le bandeau avec l'émission en direct qu'on retrouve partout
-
 .direct {
   color: white;
   background-color: $lightBlack;

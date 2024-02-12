@@ -1,4 +1,5 @@
 <script >
+import css from '@/assets/main.css'
 import {RouterView } from 'vue-router'
 
 export default {
@@ -12,5 +13,6 @@ export default {
   <RouterView />
 </template>
 
-<style scoped>
+<style>
+@import url("./assets/main.css");
 </style>
