@@ -1,15 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AccueilView from '@/views/AccueilView.vue'
-import GrilleDesProgrammesViewVue from '@/views/GrilleProgrammesView.vue'
-import ListeEmissionViewVue from '@/views/ListeEmissionsView.vue'
-import ListePodcastsViewVue from '@/views/Liste-podcastsView.vue'
-import PresentationEmissionViewVue from '@/views/PresentationEmissionView.vue'
-import ResultatEmissionViewVue from '@/views/ResultatsEmissionsView.vue'
-import ResultatPodcastViewVue from '@/views/ResultatsPodcastsView.vue'
-import ToutesLesEmissionsViewVue from '@/views/ToutesEmissionsView.vue'
-import ProfilUtilisateurViewVue from '@/views/ProfilUtilisateurView.vue'
-import MonCompteViewVue from '@/views/MonCompteView.vue'
-import ListeUtilisateursView from '@/views/Liste-utilisateurView.vue'
+import Accueil from '@/views/AccueilView.vue'
+import GrilleDesProgrammes from '@/views/GrilleProgrammesView.vue'
+import ListeEmission from '@/views/ListeEmissionsView.vue'
+import ListePodcasts from '@/views/Liste-podcastsView.vue'
+import PresentationEmission from '@/views/PresentationEmissionView.vue'
+import ResultatEmission from '@/views/ResultatsEmissionsView.vue'
+import ResultatPodcast from '@/views/ResultatsPodcastsView.vue'
+import ToutesLesEmissions from '@/views/ToutesEmissionsView.vue'
+import ProfilUtilisateur from '@/views/ProfilUtilisateurView.vue'
+import MonCompte from '@/views/MonCompteView.vue'
+import ListeUtilisateurs from '@/views/Liste-utilisateurView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,60 +20,61 @@ const router = createRouter({
     {
       path: '/',
       name: 'accueil',
-      component: AccueilView
+      component: Accueil
     },
     {
       path: '/grille-des-programmes',
       name: 'grille des programmes',
-      component: GrilleDesProgrammesViewVue
+      component: GrilleDesProgrammes
     },
     {
       path: '/liste-des-emissions',
       name: 'liste des emissions',
-      component: ListeEmissionViewVue
+      component: ListeEmission
     },
     {
       path: '/liste-des-podcasts',
       name: 'liste des podcasts',
-      component: ListePodcastsViewVue
+      component: ListePodcasts
     },
     {
       path: '/presentation-emission',
       name: 'presentation des émissions',
-      component: PresentationEmissionViewVue
+      component: PresentationEmission
     },
     {
       path: '/resultat-emission',
       name: 'résultat des émissions',
-      component: ResultatEmissionViewVue
+      component: ResultatEmission
     },
     {
       path: '/resultat-podcast',
       name: 'résultat des podcast',
-      component: ResultatPodcastViewVue
+      component: ResultatPodcast
     },
     {
       path: '/toutes-les-emissions',
       name: 'résultat des emissions',
-      component: ToutesLesEmissionsViewVue
+      component: ToutesLesEmissions
     },
     {
       path: '/profil',
       name: 'profil-utilisateurs',
-      component: ProfilUtilisateurViewVue
+      component: ProfilUtilisateur
     },
     {
       path: '/mon-compte',
       name: 'mon compte',
-      component: MonCompteViewVue
+      component: MonCompte
     },
     {
       path: '/liste-utilisateur',
       name: 'liste des utilisateurs',
-      component: ListeUtilisateursView
+      component: ListeUtilisateurs
     },
 
   ]
 })
 
 export default router
+

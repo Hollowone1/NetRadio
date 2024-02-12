@@ -1,8 +1,11 @@
+Grille prog
 <script>
 import EnDirect from '@/components/EnDirect.vue'
+import HeaderComponent from "@/components/HeaderComponent.vue";
 export default {
   components: {
-    EnDirect
+    EnDirect,
+    HeaderComponent
   },
   data() {
     return {
@@ -10,36 +13,9 @@ export default {
     }
   }
 }
-
 </script>
 <template>
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/accueil.css">
-    <title>NetRadio - Grille des émissions </title>
-    <link rel="stylesheet" type="text/css" href="../css/grille-programmes.css">
-  </head>
-  <body>
-  <header>
-    <div class="header">
-      <img class="header-logo" src="/icons/logo.png" alt="Logo NET RADIO">
-      <div class="header-boutons">
-        <input class="search" type="search" src="../assets/search.svg" placeholder="Search for...">
-        <!--si on est  connecté-->
-        <embed class="header-user-co" src="/icons/user.svg"/>
-        <!--si on n'est pas connecté-->
-        <button class="header-boutons-connecter">Se connecter</button>
-      </div>
-    </div>
-    <nav class="nav">
-      <div class="nav-item"><a href="./podcasts.html">Podcasts</a></div>
-      <div class="nav-item"><a href="./emissions.html">Émissions</a></div>
-      <div class="nav-item"><a href="./programmation.html">Grille des programmes</a></div>
-    </nav>
-  </header>
+  <header-component></header-component>
   <div class="topnav">
     <div id="myLinks">
       <div class="nav-item"><a href="./podcasts.html">Podcasts</a></div>
@@ -103,6 +79,4 @@ export default {
       <a href="">Découvrir toutes les émissions</a>
     </div>
   </main>
-  </body>
-  </html>
 </template>

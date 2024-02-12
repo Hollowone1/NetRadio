@@ -1,3 +1,4 @@
+Direct
 <template>
   <section class="direct">
     <div class="direct-infos">
@@ -14,6 +15,13 @@
 </template>
 
 <style scoped lang="scss">
+@import "@/assets/var";
+@import "@/assets/layout";
+@import "@/assets/fonts";
+@import "@/assets/buttons";
+
+
+
 .direct {
   color: white;
   background-color: $lightBlack;
