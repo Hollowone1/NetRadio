@@ -1,17 +1,16 @@
 <template>
-  <div id="app">
-    <RouterView />
-  </div>
-</template>
+    <div id="app">
+      <Header />
+      <Emission :emission="emission" />
+      <Podcast :podcast="podcast" />
+      <Footer />
+    </div>
+  </template>
+  
+  <script>
+  import Header from "./components/Header.vue";
+  import Footer from "./components/Footer.vue";
+  import Emission from "./components/Emission.vue";
+  import Podcast from "./components/Podcast.vue";
 
-<script>
-
-export default {
-  components: {
-  },
-}
-</script>
-
-<style>
-@import './assets/main.css';
-</style>
+  </script>
