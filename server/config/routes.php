@@ -33,3 +33,5 @@ return function (App $app) {
     //playlist
     $app->get("/playlist/{id_playlist}[/]", \radio\net\app\action\playlist\GetPlaylistByIdAction::class)->setName('/playlist/{id_playlist}[/]');
 };
+
+
