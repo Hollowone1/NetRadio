@@ -9,6 +9,7 @@ import ResultatPodcastViewVue from '@/views/ResultatsPodcastsView.vue'
 import ToutesLesEmissionsViewVue from '@/views/ToutesEmissionsView.vue'
 import ProfilUtilisateurViewVue from '@/views/ProfilUtilisateurView.vue'
 import MonCompteViewVue from '@/views/MonCompteView.vue'
+import ListeUtilisateursView from '@/views/Liste-utilisateurView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -62,6 +63,11 @@ const router = createRouter({
       path: '/mon-compte',
       name: 'mon compte',
       component: MonCompteViewVue
+    },
+    {
+      path: '/liste-utilisateur',
+      name: 'liste des utilisateurs',
+      component: ListeUtilisateursView
     },
 
   ]
