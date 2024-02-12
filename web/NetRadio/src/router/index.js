@@ -8,6 +8,7 @@ import ResultatEmissionViewVue from '@/views/Resultat-emissionView.vue'
 import ResultatPodcastViewVue from '@/views/Resultat-podcastView.vue'
 import ToutesLesEmissionsViewVue from '@/views/Toutes-les-emissionsView.vue'
 import ProfilUtilisateurViewVue from '@/views/Profil-utilisateurView.vue'
+import MonCompteViewVue from '@/views/Mon-compteView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -56,6 +57,11 @@ const router = createRouter({
       path: '/profil',
       name: 'profil-utilisateurs',
       component: ProfilUtilisateurViewVue
+    },
+    {
+      path: '/mon-compte',
+      name: 'mon compte',
+      component: MonCompteViewVue
     },
 
   ]
