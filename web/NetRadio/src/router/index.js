@@ -1,14 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AccueilView from '../views/HomeView.vue'
-import GrilleDesProgrammesViewVue from '@/views/Grille-des-programmesView.vue'
-import ListeEmissionViewVue from '@/views/Liste-emission-view.vue'
+import AccueilView from '@/views/AccueilView.vue'
+import GrilleDesProgrammesViewVue from '@/views/GrilleProgrammesView.vue'
+import ListeEmissionViewVue from '@/views/ListeEmissionsView.vue'
 import ListePodcastsViewVue from '@/views/Liste-podcastsView.vue'
-import PresentationEmissionViewVue from '@/views/Presentation-emissionView.vue'
-import ResultatEmissionViewVue from '@/views/Resultat-emissionView.vue'
-import ResultatPodcastViewVue from '@/views/Resultat-podcastView.vue'
-import ToutesLesEmissionsViewVue from '@/views/Toutes-les-emissionsView.vue'
-import ProfilUtilisateurViewVue from '@/views/Profil-utilisateurView.vue'
-import MonCompteViewVue from '@/views/Mon-compteView.vue'
+import PresentationEmissionViewVue from '@/views/PresentationEmissionView.vue'
+import ResultatEmissionViewVue from '@/views/ResultatsEmissionsView.vue'
+import ResultatPodcastViewVue from '@/views/ResultatsPodcastsView.vue'
+import ToutesLesEmissionsViewVue from '@/views/ToutesEmissionsView.vue'
+import ProfilUtilisateurViewVue from '@/views/ProfilUtilisateurView.vue'
+import MonCompteViewVue from '@/views/MonCompteView.vue'
+import ListeUtilisateursView from '@/views/Liste-utilisateurView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -62,6 +63,11 @@ const router = createRouter({
       path: '/mon-compte',
       name: 'mon compte',
       component: MonCompteViewVue
+    },
+    {
+      path: '/liste-utilisateur',
+      name: 'liste des utilisateurs',
+      component: ListeUtilisateursView
     },
 
   ]
