@@ -14,17 +14,6 @@ export default {
 }
 </script>
 <template>
-  <header-component></header-component>
-  <div class="topnav">
-    <div id="myLinks">
-      <div class="nav-item"><a href="./podcasts.html">Podcasts</a></div>
-      <div class="nav-item"><a href="./emissions.html">Émissions</a></div>
-      <div class="nav-item"><a href="./programmation.html">Grille des programmes</a></div>
-    </div>
-    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-      <i class="gg-menu"></i>
-    </a>
-  </div>
   <main>
 
     <en-direct></en-direct>
