@@ -1,11 +1,14 @@
-<script>
-
-</script>
-
 <template>
 
-</template>
+  </template>
 
-<style scoped lang="scss">
-
-</style>
+  <script>
+  export default {
+    props: {
+      podcast: {
+        type: Object,
+        required: true,
+      },
+    },
+  };
+  </script>

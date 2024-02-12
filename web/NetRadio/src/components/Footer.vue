@@ -1,3 +1,8 @@
+<template>
+    <footer>
+    </footer>
+  </template>
+  
 
 <script>
 
