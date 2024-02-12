@@ -12,7 +12,7 @@
       <img class="direct-image" :src="emission.image" alt="image de l'émission en direct" />
     </section>
   </template>
-  
+
   <script>
   export default {
     props: {

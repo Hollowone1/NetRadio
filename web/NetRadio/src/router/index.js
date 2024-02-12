@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AccueilView from '../views/AccueilView.vue'
+import AccueilView from '@/views/AccueilView.vue'
 import GrilleDesProgrammesViewVue from '@/views/GrilleProgrammesView.vue'
 import ListeEmissionViewVue from '@/views/ListeEmissionsView.vue'
 import ListePodcastsViewVue from '@/views/Liste-podcastsView.vue'
