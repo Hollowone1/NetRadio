@@ -2,14 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Accueil from '@/views/AccueilView.vue'
 import GrilleDesProgrammes from '@/views/GrilleProgrammesView.vue'
 import ListeEmission from '@/views/ListeEmissionsView.vue'
-import ListePodcasts from '@/views/Liste-podcastsView.vue'
+import ListePodcasts from '@/views/ListePodcastsView.vue'
 import PresentationEmission from '@/views/PresentationEmissionView.vue'
 import ResultatEmission from '@/views/ResultatsEmissionsView.vue'
 import ResultatPodcast from '@/views/ResultatsPodcastsView.vue'
 import ToutesLesEmissions from '@/views/ToutesEmissionsView.vue'
 import ProfilUtilisateur from '@/views/ProfilUtilisateurView.vue'
 import MonCompte from '@/views/MonCompteView.vue'
-import ListeUtilisateurs from '@/views/Liste-utilisateurView.vue'
+import ListeUtilisateurs from '@/views/ListeUtilisateursView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -77,3 +77,4 @@ const router = createRouter({
 })
 
 export default router
+
