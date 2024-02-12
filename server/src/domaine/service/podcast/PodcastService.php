@@ -1,6 +1,7 @@
 <?php
 
 namespace radio\net\domaine\service\podcast;
+use radio\net\domaine\dto\PodcastDTO;
 use radio\net\domaine\entities\Podcast;
 use radio\net\domaine\service\emission\EmissionNotFoundException;
 
@@ -50,7 +51,61 @@ class PodcastService implements iPodcastService
             }
             return $podcastDTO;
         } catch (\Exception) {
-            throw new EmissionNotFoundException("Emission not found");
+            throw new PodcastNotFoundException("Podcast not found");
         }
     }
+
+    public function postPodcast (PodcastDTO $podcastDTO)
+    {
+        try {
+            $titre = filter_var($podcastDTO->titre, FILTER_SANITIZE_SPECIAL_CHARS);
+            $description = filter_var($podcastDTO->description, FILTER_SANITIZE_SPECIAL_CHARS);
+            $duree = $this->validateDuration($podcastDTO->duree);
+            $date = $this->validateDate($podcastDTO->date);
+            $audio = filter_var($podcastDTO->audio,FILTER_SANITIZE_SPECIAL_CHARS);
+            $photo = filter_var($podcastDTO->photo,FILTER_SANITIZE_SPECIAL_CHARS);
+            $idEmission = filter_var($podcastDTO->idEmission, FILTER_SANITIZE_NUMBER_INT);
+
+            $podcast = new Podcast();
+            $podcast->titre = $titre;
+            $podcast->description = $description;
+            $podcast->duree = $duree;
+            $podcast->date = $date;
+            $podcast->audio = $audio;
+            $podcast->photo = $photo;
+            $podcast->emission_id = $idEmission;
+            $podcast->save();
+
+            return $podcast->toDTO();
+        } catch (\Exception $exception) {
+            throw new PodcastNotFoundException("Le podcast n'a pas pu se créer");
+        }
+    }
+
+    // Validation de la date
+    private function validateDate($date)
+    {
+        // Expression régulière pour valider le format YYYY-MM-DD
+        $pattern = '/^\d{4}-\d{2}-\d{2}$/';
+
+        // Vérifier si la date correspond au format attendu
+        if (!preg_match($pattern, $date)) {
+            throw new PodcastNotFoundException('Invalid date format. Expected format: YYYY-MM-DD');
+        }
+
+        // Retourner la date si la validation réussit
+        return $date;
+    }
+
+    private function validateDuration($duration)
+    {
+        // Si la durée est au format hh:mm:ss
+        if (!preg_match('/^\d{2}:\d{2}:\d{2}$/', $duration)) {
+            throw new InvalidArgumentException('Invalid duration format');
+        }
+
+        // Retourner la durée si la validation réussit
+        return $duration;
+    }
+
 }
