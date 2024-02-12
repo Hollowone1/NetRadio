@@ -21,10 +21,10 @@ export default {
     <section class="si-direct">
       <div class="si-direct-titre">
         <h2>En direct</h2>
-        <embed src="../assets/direct.svg"/>
+        <embed src="/icons/direct.svg"/>
       </div>
       <div class="si-direct-infos">
-        <embed src="../assets/Desktop.png"/>
+        <embed src="/icons/Desktop.png"/>
         <div class="si-direct-infos-texte">
           <h3>Nom de l'émission</h3>
           <p>
@@ -43,14 +43,14 @@ export default {
         <section class="episode">
           <div class="episode-infos">
             <div>
-              <embed class="play" src="../assets/miniplay.svg">
+              <embed class="play" src="/icons/miniplay.svg">
               <p class="titre">Nom de l'épisode</p>
             </div>
             <div>
               <p>00:00</p>
-              <embed class="plus" src="../assets/plus.svg">
+              <embed class="plus" src="/icons/plus.svg">
             </div>
-            <!--<embed class="croix" src="../assets/croix.svg">-->
+            <!--<embed class="croix" src="/icons/croix.svg">-->
           </div>
           <div class="episode-infos-plus">
             <p><strong>Présentateur : </strong> Nom Prénom</p>
@@ -67,14 +67,14 @@ export default {
         <section class="episode">
           <div class="episode-infos">
             <div>
-              <embed class="play" src="../assets/miniplay.svg">
+              <embed class="play" src="/icons/miniplay.svg">
               <p class="titre">Nom de l'épisode</p>
             </div>
             <div>
               <p>00:00</p>
-              <embed class="plus" src="../assets/plus.svg">
+              <embed class="plus" src="/icons/plus.svg">
             </div>
-            <!--<embed class="croix" src="../assets/croix.svg">-->
+            <!--<embed class="croix" src="/icons/croix.svg">-->
           </div>
           <div class="episode-infos-plus">
             <p><strong>Présentateur : </strong> Nom Prénom</p>
@@ -91,14 +91,14 @@ export default {
         <section class="episode">
           <div class="episode-infos">
             <div>
-              <embed class="play" src="../assets/miniplay.svg">
+              <embed class="play" src="/icons/miniplay.svg">
               <p class="titre">Nom de l'épisode</p>
             </div>
             <div>
               <p>00:00</p>
-              <embed class="plus" src="../assets/plus.svg">
+              <embed class="plus" src="/icons/plus.svg">
             </div>
-            <!--<embed class="croix" src="../assets/croix.svg">-->
+            <!--<embed class="croix" src="/icons/croix.svg">-->
           </div>
           <div class="episode-infos-plus">
             <p><strong>Présentateur : </strong> Nom Prénom</p>
@@ -122,6 +122,8 @@ export default {
 @import "@/assets/layout";
 @import "@/assets/fonts";
 @import "@/assets/buttons";
+@import "@/assets/listeEmissionsPodcasts";
+
 
 .podcasts-emission, .si-direct {
   padding: 1em
