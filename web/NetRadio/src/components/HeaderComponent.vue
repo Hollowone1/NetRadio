@@ -1,7 +1,7 @@
 <template>
   <header>
     <div class="header">
-      <img class="header-logo" src="/icons/logo.png" alt="Logo NET RADIO">
+      <router-link to="/"><img class="header-logo" src="/icons/logo.png" alt="Logo NET RADIO"></router-link>
       <div class="header-boutons">
         <input class="search" type="search" src="/icons/search.svg" placeholder="Search for...">
         <!--si on est  connecté-->
