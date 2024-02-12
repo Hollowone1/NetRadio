@@ -1,5 +1,16 @@
 <script>
-
+export default {
+  data() {
+    return {
+      emissions: [
+        { title: "Le titre de l'émission 1", presenter: "PRÉSENTATEUR 1" },
+        { title: "Le titre de l'émission 2", presenter: "PRÉSENTATEUR 2" },
+        { title: "Le titre de l'émission 3", presenter: "PRÉSENTATEUR 3" },
+        { title: "Le titre de l'émission 4", presenter: "PRÉSENTATEUR 4" },
+      ],
+    };
+  },
+};
 </script>
 
 <template>
@@ -22,29 +33,11 @@
             <div class="theme">
                 <h3>Thématique 1</h3>
                 <div class="emissions-liste">
-                    <section class="emission">
-                        <p>Le titre de l'émission</p>
-                        <p>PRÉSENTATEUR</p>
-                    </section>
-                    <section class="emission">
-                        <p>Le titre de l'émission</p>
-                        <p>PRÉSENTATEUR</p>
-                    </section>
-                    <section class="emission">
-                        <p>Le titre de l'émission</p>
-                        <p>PRÉSENTATEUR</p>
-                    </section>
-                    <section class="emission">
-                        <p>Le titre de l'émission</p>
-                        <p>PRÉSENTATEUR</p>
-                    </section>
-                    <section class="emission">
-                        <p>Le titre de l'émission</p>
-                        <p>PRÉSENTATEUR</p>
-                    </section>
-                    <section class="emission">
-                        <p>Le titre de l'émission</p>
-                        <p>PRÉSENTATEUR</p>
+                    <section v-for="(emission, index) in emissions"
+                    :key="index"
+                    class="emission">
+                        <p>{{ emission.titre }}</p>
+                        <p>{{ emission.presenter }}</p>
                     </section>
                 </div>
             </div>

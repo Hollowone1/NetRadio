@@ -1,5 +1,14 @@
 <script>
-
+export default {
+  data() {
+    return {
+      podcasts: [
+        { emission: "Nom de l'émission 1", title: "Titre du podcast 1" },
+        { emission: "Nom de l'émission 2", title: "Titre du podcast 2" },
+      ],
+    };
+  },
+};
 </script>
 
 <template>
@@ -22,18 +31,12 @@
             <div class="jour">
                 <h3>Récemment</h3>
                 <div class="podcasts-liste">
-                    <section class="podcast">
+                    <section v-for="(podcast, index) in podcasts"
+                        :key="index"
+                        class="podcast">
                         <div class="podcast-info">
-                            <p>Nom de l'émission</p>
-                            <p>Titre du podcast</p>
-                        </div>
-                        <embed src="../assets/play.svg">
-                    </section>
-
-                    <section class="podcast">
-                        <div class="podcast-info">
-                            <p>Nom de l'émission</p>
-                            <p>Titre du podcast</p>
+                            <p>{{ podcast.emission }}</p>
+                            <p>{{ podcast.title }}</p>
                         </div>
                         <embed src="../assets/play.svg">
                     </section>
