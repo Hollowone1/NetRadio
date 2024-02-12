@@ -5,7 +5,7 @@
       <div class="header-boutons">
         <input class="search" type="search" src="/icons/search.svg" placeholder="Search for...">
         <!--si on est  connecté-->
-        <embed class="header-user-co" src="/icons/user.svg"/>
+        <router-link to="profil"><embed class="header-user-co" src="/icons/user.svg"/></router-link>
         <!--si on n'est pas connecté-->
         <button class="header-boutons-connecter">Se connecter</button>
       </div>
