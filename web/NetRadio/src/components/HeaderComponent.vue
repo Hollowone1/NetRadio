@@ -11,9 +11,9 @@
       </div>
     </div>
     <nav class="nav">
-      <div class="nav-item"><a href="">Podcasts</a></div>
-      <div class="nav-item"><a href="">Émissions</a></div>
-      <div class="nav-item"><a href="">Grille des programmes</a></div>
+      <div class="nav-item"><router-link to="/liste-des-podcasts">Podcasts</router-link></div>
+      <div class="nav-item"><router-link to="/liste-des-emissions">Emissions</router-link></div>
+      <div class="nav-item"><router-link to="/grille-des-programmes">Grille des programmes</router-link></div>
     </nav>
   </header>
   <div class="topnav">
