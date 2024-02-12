@@ -1,5 +1,16 @@
 <script>
-
+export default {
+  data() {
+    return {
+      podcasts: [
+        { emission: "Nom de l'émission 1", title: "Titre du podcast 1" },
+        { emission: "Nom de l'émission 2", title: "Titre du podcast 2" },
+        { emission: "Nom de l'émission 3", title: "Titre du podcast 3" },
+        { emission: "Nom de l'émission 4", title: "Titre du podcast 4" },
+      ],
+    };
+  },
+};
 </script>
 
 <template>
@@ -24,34 +35,10 @@
                 <input type="text" placeholder="Rechercher">
             </div>
             <div class="podcasts-liste">
-                <section class="podcast">
+                <section class="podcast" v-for="(podcast, index) in podcasts" :key="index">
                     <div class="podcast-info">
-                        <p>Nom de l'émission</p>
-                        <p>Titre du podcast</p>
-                    </div>
-                    <embed src="../assets/play.svg">
-                </section>
-
-                <section class="podcast">
-                    <div class="podcast-info">
-                        <p>Nom de l'émission</p>
-                        <p>Titre du podcast</p>
-                    </div>
-                    <embed src="../assets/play.svg">
-                </section>
-
-                <section class="podcast">
-                    <div class="podcast-info">
-                        <p>Nom de l'émission</p>
-                        <p>Titre du podcast</p>
-                    </div>
-                    <embed src="../assets/play.svg">
-                </section>
-
-                <section class="podcast">
-                    <div class="podcast-info">
-                        <p>Nom de l'émission</p>
-                        <p>Titre du podcast</p>
+                        <p>{{ podcast.emission }}</p>
+                        <p>{{ podcast.title }}</p>
                     </div>
                     <embed src="../assets/play.svg">
                 </section>
