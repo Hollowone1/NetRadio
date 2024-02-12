@@ -33,4 +33,16 @@ class PlaylistService implements iPlaylistService
             throw $e;
         }
     }
+
+    public function getPlaylistsByEmailUser($emailUser) {
+        try {
+            $playlists = Playlist::where('emailUser', $emailUser)->get();
+            if ($playlists == null) {
+                throw new PlaylistNotFoundException();
+            }
+            return $playlists;
+        } catch (PlaylistNotFoundException $e) {
+            throw $e;
+        }
+    }
 }
