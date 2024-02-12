@@ -16,8 +16,8 @@ return array(
     GetPodcastByIdAction::class => function (ContainerInterface $container) {
         return new GetPodcastByIdAction($container->get('PodcastService'));
     },
-    GetPodcastByDate::class => function (ContainerInterface $container) {
-        return new GetPodcastByDate($container->get('PodcastService'));
+    \radio\net\app\action\podcast\PostPodcast::class => function (ContainerInterface $container) {
+        return new \radio\net\app\action\podcast\PostPodcast($container->get('PodcastService'));
     },
     GetAllPodcasts::class => function (ContainerInterface $container) {
         return new GetAllPodcasts($container->get('PodcastService'));

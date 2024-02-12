@@ -4,7 +4,7 @@ namespace radio\net\domaine\dto;
 
 class PodcastDTO extends DTO
 {
-    public int $id;
+    public ?int $id=null;
     public string $titre;
     public string $description;
     public string $duree;
@@ -13,8 +13,7 @@ class PodcastDTO extends DTO
     public string $photo;
     public int $idEmission;
 
-    public function __construct($p_id, $p_titre, $p_description, $p_duree, $p_date, $p_audio, $p_photo, $p_emmission) {
-        $this->id = $p_id;
+    public function __construct($p_titre, $p_description, $p_duree, $p_date, $p_audio, $p_photo, $p_emmission) {
         $this->titre = $p_titre;
         $this->description = $p_description;
         $this->duree = $p_duree;
@@ -22,6 +21,11 @@ class PodcastDTO extends DTO
         $this->audio = $p_audio;
         $this->photo = $p_photo;
         $this->idEmission = $p_emmission;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     public function toArray () : array {
