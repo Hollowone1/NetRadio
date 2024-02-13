@@ -1,12 +1,10 @@
 <script>
 import EnDirect from '@/components/EnDirect.vue'
 import Emission from '@/components/Emission.vue'
-import HeaderComponent from "@/components/HeaderComponent.vue";
 
 export default {
   components: {
     EnDirect,
-    HeaderComponent,
     Emission
   },
   data() {
