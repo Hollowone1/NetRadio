@@ -5,6 +5,7 @@
       <h3>Thématique 1</h3>
       <div class="emissions-liste">
         <section class="emission" v-for="emission in emissionsData" :key="emission.id">
+          <img :src="emission.photo" alt="photo de l'émission" >
           <p>{{ emission.titre }}</p>
           <p>{{ emission.theme }}</p>
           <p>{{ emission.user_mail }}</p>
@@ -30,7 +31,7 @@ export default {
         console.log(response)
         if (response.data) {
           console.log(response.data)
-          this.emissionsData = response.data;
+          this.emissionsData = response.data.emission;
         } else {
           throw new Error('Emissions data not found');
         }
@@ -46,3 +47,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+img{
+  width:10px;
+}
+
+</style>
