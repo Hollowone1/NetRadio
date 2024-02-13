@@ -1,4 +1,5 @@
 <script>
+<<<<<<< HEAD
 export default {
   data() {
     return {
@@ -11,9 +12,25 @@ export default {
     };
   },
 };
-</script>
+=======
+import EnDirect from '@/components/EnDirect.vue'
+import Emission from '@/components/Emission.vue'
+import HeaderComponent from "@/components/HeaderComponent.vue";
 
+export default {
+  components: {
+    EnDirect,
+    HeaderComponent,
+    Emission
+  },
+  data() {
+    return {}
+  }
+}
+>>>>>>> feat/front
+</script>
 <template>
+<<<<<<< HEAD
 <main>
         <section class="direct">
             <div class="direct-infos">
@@ -43,8 +60,19 @@ export default {
             </div>
         </div>
     </main>
+=======
+  <main>
+    <en-direct></en-direct>
+    <emission></emission>
+    
+  </main>
+>>>>>>> feat/front
 </template>
 
 <style scoped lang="scss">
-
+.emissions {
+  padding-top: 1em;
+  padding-left: 3em;
+  padding-right: 3em;
+}
 </style>

@@ -16,7 +16,7 @@ export default {
 <template>
   <header-component></header-component>
   <RouterView />
-  <footer-component></footer-component>
+  <FooterComponent></FooterComponent>
 </template>
 
 <style>
