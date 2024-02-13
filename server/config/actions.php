@@ -19,6 +19,9 @@ return array(
     \radio\net\app\action\podcast\PostPodcast::class => function (ContainerInterface $container) {
         return new \radio\net\app\action\podcast\PostPodcast($container->get('PodcastService'));
     },
+    \radio\net\app\action\podcast\PutPodcast::class => function (ContainerInterface $container) {
+        return new \radio\net\app\action\podcast\PutPodcast($container->get('PodcastService'));
+    },
     GetAllPodcasts::class => function (ContainerInterface $container) {
         return new GetAllPodcasts($container->get('PodcastService'));
     },
@@ -57,6 +60,5 @@ return array(
     GetPlaylistByIdAction::class => function (ContainerInterface $container) {
         return new GetPlaylistByIdAction($container->get(PlaylistService::class));
     },
-
 
 );

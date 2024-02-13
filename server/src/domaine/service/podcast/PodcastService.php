@@ -55,6 +55,46 @@ class PodcastService implements iPodcastService
         }
     }
 
+    public function putPodcast(PodcastDTO $podcastDTO)
+    {
+        try {
+            //vérification des données qui viennent d'une requete put
+            $id = $podcastDTO->getId();
+            $titre = filter_var($podcastDTO->titre, FILTER_SANITIZE_SPECIAL_CHARS);
+            $description = filter_var($podcastDTO->description, FILTER_SANITIZE_SPECIAL_CHARS);
+            $duree = $this->validateDuration($podcastDTO->duree);
+            $date = $this->validateDate($podcastDTO->date);
+            $audio = filter_var($podcastDTO->audio,FILTER_SANITIZE_SPECIAL_CHARS);
+            $photo = filter_var($podcastDTO->photo,FILTER_SANITIZE_SPECIAL_CHARS);
+            $idEmission = filter_var($podcastDTO->idEmission, FILTER_SANITIZE_NUMBER_INT);
+
+            $data = [
+                "id" => $id,
+                "titre" => $titre,
+                "description" => $description,
+                "duree" => $duree,
+                "date" => $date,
+                "audio" => $audio,
+                "photo" => $photo,
+                "emission_id" => $idEmission
+            ];
+
+            $affected = Podcast::where('id', $id)->update($data);
+
+            if ($affected > 0) {
+                // Si au moins une ligne a été mise à jour, vous pouvez récupérer le podcast mis à jour
+                $podcast = Podcast::find($id);
+                return $podcast->toDTO();
+            } else {
+                // Si aucun enregistrement n'a été mis à jour, lancez une exception
+                throw new PodcastNotFoundException("Vous avez déjà modifier ce podcast");
+            }
+
+        } catch (\Exception) {
+            throw new PodcastNotFoundException("Vous avez déjà modifier ce podcast");
+        }
+    }
+
     public function postPodcast (PodcastDTO $podcastDTO)
     {
         try {
