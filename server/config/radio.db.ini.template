@@ -3,6 +3,6 @@ driver=mysql
 username=
 password=
 host=radio.db
-database=radio.db
+database=radio_net
 charset=utf8
 collation=utf8_unicode_ci
