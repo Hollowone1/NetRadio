@@ -28,3 +28,7 @@ docker compose up
 docker compose exec api.radio composer install
 ```
 
+## obtenir les données de bdd : 
+aller sur le localhost:8080 
+Se connecter avec les données du radio.db
+Ajouter les données en important les données sql qui se trouve dans le dossier server/sql 

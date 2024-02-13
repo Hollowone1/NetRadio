@@ -14,7 +14,8 @@ return function (App $app) {
     $app->group('/podcasts', function ($app) {
         $app->get("/{id_podcast}[/]", GetPodcastByIdAction::class)->setName('podcast.show');
         $app->get("[/]", GetAllPodcasts::class)->setName('podcast.index');
-        $app->post("[/]", \radio\net\app\action\podcast\PostPodcast::class)->setName('');
+        $app->post("[/]", \radio\net\app\action\podcast\PostPodcast::class)->setName('podcast.create');
+        $app->put('/{id}[/]', \radio\net\app\action\podcast\PutPodcast::class)->setName('podcast.update');
     });
 
     //emission
