@@ -8,7 +8,7 @@ import ResultatEmission from '@/views/ResultatsEmissionsView.vue'
 import ResultatPodcast from '@/views/ResultatsPodcastsView.vue'
 import ToutesLesEmissions from '@/views/ToutesEmissionsView.vue'
 import ProfilUtilisateur from '@/views/ProfilUtilisateurView.vue'
-import MonCompte from '@/views/MonCompteView.vue'
+import Compte from '@/views/Compte.vue'
 import ListeUtilisateurs from '@/views/ListeUtilisateursView.vue'
 
 const router = createRouter({
@@ -63,9 +63,9 @@ const router = createRouter({
       component: ProfilUtilisateur
     },
     {
-      path: '/mon-compte',
+      path: '/mon-compte/:id',
       name: 'mon compte',
-      component: MonCompte
+      component: Compte
     },
     {
       path: '/liste-utilisateur',
