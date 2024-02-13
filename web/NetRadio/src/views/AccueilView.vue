@@ -1,10 +1,14 @@
 <script>
 import EnDirect from '@/components/EnDirect.vue'
+import Emission from '@/components/Emission.vue'
+import Podcast from '@/components/Podcast.vue'
 import HeaderComponent from "@/components/HeaderComponent.vue";
 export default {
   components: {
     EnDirect,
-    HeaderComponent
+    HeaderComponent,
+    Emission,
+    Podcast
   },
   data() {
     return {
@@ -15,7 +19,10 @@ export default {
 </script>
 
 <template>
-<en-direct></en-direct>
+
+<EnDirect></EnDirect>
+<Emission></Emission>
+<Podcast></Podcast>
         <RouterView />
   </template>
 
@@ -31,7 +38,17 @@ export default {
     justify-content: space-between; 
     padding: 1%;
   }
-  
+  .podcasts {
+  padding-top: 1em;
+  padding-left: 3em;
+  padding-right: 3em;
+}
+
+.emissions {
+  padding-top: 1em;
+  padding-left: 3em;
+  padding-right: 3em;
+}
   .header-logo {
     margin-left: 20px; 
     border-radius: 5px;

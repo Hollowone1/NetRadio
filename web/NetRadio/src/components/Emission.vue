@@ -1,16 +1,36 @@
 <template>
-    <section class="direct">
-      <div class="direct-infos">
-        <div class="direct-infos-titre">
-          <embed src="../assets/direct.svg" />
-          <h1>{{}}</h1>
+<div class="emissions">
+      <h2>Toutes les émissions</h2>
+      <div class="theme">
+        <h3>Thématique 1</h3>
+        <div class="emissions-liste">
+          <section class="emission">
+            <p>Le titre de l'émission</p>
+            <p>PRÉSENTATEUR</p>
+          </section>
+          <section class="emission">
+            <p>Le titre de l'émission</p>
+            <p>PRÉSENTATEUR</p>
+          </section>
+          <section class="emission">
+            <p>Le titre de l'émission</p>
+            <p>PRÉSENTATEUR</p>
+          </section>
+          <section class="emission">
+            <p>Le titre de l'émission</p>
+            <p>PRÉSENTATEUR</p>
+          </section>
+          <section class="emission">
+            <p>Le titre de l'émission</p>
+            <p>PRÉSENTATEUR</p>
+          </section>
+          <section class="emission">
+            <p>Le titre de l'émission</p>
+            <p>PRÉSENTATEUR</p>
+          </section>
         </div>
-        <p class="direct-infos-sous-titre">EN DIRECT</p>
-        <p class="direct-infos-desc">{{}}</p>
-        <button class="direct-infos-ecouter">Écouter</button>
       </div>
-      <img class="direct-image" :src="emission.image" alt="image de l'émission en direct" />
-    </section>
+    </div>
   </template>
 
   <script>

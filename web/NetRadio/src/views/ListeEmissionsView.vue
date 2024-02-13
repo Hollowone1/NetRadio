@@ -1,11 +1,13 @@
 <script>
 import EnDirect from '@/components/EnDirect.vue'
+import Emission from '@/components/Emission.vue'
 import HeaderComponent from "@/components/HeaderComponent.vue";
 
 export default {
   components: {
     EnDirect,
-    HeaderComponent
+    HeaderComponent,
+    Emission
   },
   data() {
     return {}
@@ -15,39 +17,8 @@ export default {
 <template>
   <main>
     <en-direct></en-direct>
-
-    <div class="emissions">
-      <h2>Toutes les émissions</h2>
-      <div class="theme">
-        <h3>Thématique 1</h3>
-        <div class="emissions-liste">
-          <section class="emission">
-            <p>Le titre de l'émission</p>
-            <p>PRÉSENTATEUR</p>
-          </section>
-          <section class="emission">
-            <p>Le titre de l'émission</p>
-            <p>PRÉSENTATEUR</p>
-          </section>
-          <section class="emission">
-            <p>Le titre de l'émission</p>
-            <p>PRÉSENTATEUR</p>
-          </section>
-          <section class="emission">
-            <p>Le titre de l'émission</p>
-            <p>PRÉSENTATEUR</p>
-          </section>
-          <section class="emission">
-            <p>Le titre de l'émission</p>
-            <p>PRÉSENTATEUR</p>
-          </section>
-          <section class="emission">
-            <p>Le titre de l'émission</p>
-            <p>PRÉSENTATEUR</p>
-          </section>
-        </div>
-      </div>
-    </div>
+    <emission></emission>
+    
   </main>
 </template>
 
