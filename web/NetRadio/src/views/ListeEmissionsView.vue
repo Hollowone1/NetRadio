@@ -9,17 +9,46 @@ export default {
   },
   data() {
     return {
-      currentEmission: {} 
+      emissions: [],
+      themes: []
+    }
+  },
+  created() {
+    this.$api.get("emissions")
+        .then((response) => {
+          this.emissions = response.data.emission
+          console.log(this.emissions)
+          let themes = []
+          this.emissions.forEach(emission => {
+            if (!themes.includes(emission.theme)) {
+              themes.push(emission.theme)
+            }
+          });
+          this.themes = themes;
+          console.log(this.themes)
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+  },
+  methods: {
+    getEmissionsTheme(theme) {
+      return this.emissions.filter(emission => emission.theme === theme);
     }
   }
 }
 </script>
 <template>
-  <main>
     <en-direct></en-direct>
-    <emission></emission>
-    
-  </main>
+    <div class="emissions">
+      <h2>Toutes les émissions</h2>
+      <div v-for="theme in themes" class="theme">
+        <h3>{{ theme }}</h3>
+        <div class="emissions-liste">
+          <emission v-for="emission in getEmissionsTheme(theme)" :emission="emission" :key="emission.id"></emission>
+        </div>
+      </div>
+    </div>
 </template>
 
 <style scoped lang="scss">

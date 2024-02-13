@@ -29,16 +29,7 @@ export default {
   created() {
     this.$api.get("emissions")
         .then((response) => {
-          this.emissions = response.data.emission
-          console.log(this.emissions)
-          let themes = []
-          this.emissions.forEach(emission => {
-            if (!themes.includes(emission.theme)) {
-              themes.push(emission.theme)
-            }
-          });
-          this.themes = themes;
-          console.log(this.themes)
+          this.emissions = response.data.emission.slice(0,5)
         })
         .catch((error) => {
           console.log(error)
@@ -61,13 +52,10 @@ export default {
   <en-direct></en-direct>
 
   <div class="emissions">
-    <h2>Toutes les émissions</h2>
-    <div v-for="theme in themes" class="theme">
-      <h3>{{ theme }}</h3>
+    <h2>Émissions (manque le truc flèche là)</h2>
       <div class="emissions-liste">
-        <emission v-for="emission in getEmissionsTheme(theme)" :emission="emission" :key="emission.id"></emission>
+        <emission v-for="emission in emissions" :emission="emission" :key="emission.id"></emission>
       </div>
-    </div>
   </div>
 
   <div class="podcasts">
