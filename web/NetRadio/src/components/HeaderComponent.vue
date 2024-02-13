@@ -84,6 +84,16 @@ export default {
   width: auto;
 }
 
+@media screen and (max-width:750px) {
+  .header-logo {
+  align-content: center;
+  margin-left: 40%;
+  border-radius: 5px;
+  height: 50px;
+  width: auto;
+}
+}
+
 .header-boutons {
   display: flex;
 
