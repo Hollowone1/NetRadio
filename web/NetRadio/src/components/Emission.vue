@@ -16,8 +16,6 @@
 </template>
 
 <script>
-import axios from 'axios';
-import instance from '@/plugin/api'
 
 export default {
   data(){
@@ -26,7 +24,7 @@ export default {
     }
   },
   created() {
-    axios.get("http://localhost:8081/emissions")
+    this.$api.get("emissions")
       .then((response) => {
         console.log(response)
         if (response.data) {
