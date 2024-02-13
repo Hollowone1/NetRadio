@@ -1,20 +1,4 @@
 <script>
-<<<<<<< HEAD
-export default {
-  data() {
-    return {
-      emissions: [
-        { title: "Titre de l'émission 1", presenter: "Présentateur 1" },
-        { title: "Titre de l'émission 2", presenter: "Présentateur 2" },
-        { title: "Titre de l'émission 3", presenter: "Présentateur 3" },
-        { title: "Titre de l'émission 4", presenter: "Présentateur 4" },
-        { title: "Titre de l'émission 5", presenter: "Présentateur 5" },
-        { title: "Titre de l'émission 6", presenter: "Présentateur 6" },
-      ],
-    };
-  },
-};
-=======
 import {RouterView } from 'vue-router'
 import EnDirect from '@/components/EnDirect.vue';
 
@@ -35,7 +19,6 @@ export default {
     }
   }
 }
->>>>>>> feat/front
 </script>
 
 <template>
@@ -59,15 +42,11 @@ export default {
                 </div>
             </div>
             <div class="emissions-liste">
-<<<<<<< HEAD
-                <section class="emission" v-for="(emission, index) in emissions" :key="index">
-=======
                 <section
                     v-for="(emission, index) in emissions"
                     :key="index"
                     class="emission"
                     >
->>>>>>> feat/front
                     <p>{{ emission.title }}</p>
                     <p>{{ emission.presenter }}</p>
                 </section>
