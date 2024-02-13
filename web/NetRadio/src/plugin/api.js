@@ -1,11 +1,12 @@
 import axios from 'axios';
 
-const instance = axios.create({
-    baseURL: 'http://localhost:8081',
-    headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin' : '*'
+export default {
+    install: function (app) {
+        app.config.globalProperties.$api = axios.create({
+            baseURL : 'http://localhost:2080/',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
     }
-});
-
-export default instance;
+}
