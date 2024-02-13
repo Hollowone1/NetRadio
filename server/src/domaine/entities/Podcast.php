@@ -10,6 +10,7 @@ class Podcast extends Model
     public $connection = 'radio';
     protected $primaryKey='id';
     protected $table='Podcast';
+    public $timestamps = false;
     protected $fillable = [
         'id',
         'titre',

@@ -9,6 +9,7 @@ class InvitesPodcast extends Model
 
     public $connection = 'radio';
     protected $table = 'InvitesPodcast';
+    public $timestamps = false;
     protected $fillable = [
         'emailInvite',
         'idPodcast'

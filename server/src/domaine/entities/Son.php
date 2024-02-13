@@ -10,6 +10,7 @@ class Son extends Model
     public $connection = 'radio';
     protected $primaryKey = 'id';
     protected $table = 'Son';
+    public $timestamps = false;
     protected $fillable = [
         'id',
         'titre',
