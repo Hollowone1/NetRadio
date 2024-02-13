@@ -1,8 +1,0 @@
-connection=radio
-driver=mysql
-username=radio.db
-password=radio.db
-host=radio.db
-database=radio_net
-charset=utf8
-collation=utf8_unicode_ci
