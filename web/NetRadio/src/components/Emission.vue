@@ -51,7 +51,8 @@ export default {
 <style scoped>
 
 img{
-  width:10px;
+  width: auto;
+  
 }
 
 </style>
