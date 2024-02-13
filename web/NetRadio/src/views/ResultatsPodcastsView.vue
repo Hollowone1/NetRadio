@@ -8,7 +8,14 @@ export default {
     EnDirect
   },
   data() {
-    return {}
+    return {
+        podcasts: [
+        { emissionName: "Nom de l'émission", podcastTitle: "Titre du podcast", playIcon: "../assets/play.svg" },
+        { emissionName: "Nom de l'émission", podcastTitle: "Titre du podcast", playIcon: "../assets/play.svg" },
+        { emissionName: "Nom de l'émission", podcastTitle: "Titre du podcast", playIcon: "../assets/play.svg" },
+        { emissionName: "Nom de l'émission", podcastTitle: "Titre du podcast", playIcon: "../assets/play.svg" },
+      ],
+    }
   }
 }
 </script>
@@ -25,36 +32,16 @@ export default {
                 <input type="text" placeholder="Rechercher">
             </div>
             <div class="podcasts-liste">
-                <section class="podcast">
-                    <div class="podcast-info">
-                        <p>Nom de l'émission</p>
-                        <p>Titre du podcast</p>
+                <section
+                v-for="(podcast, index) in podcasts"
+                :key="index"
+                class="podcast"
+                >                    
+                <div class="podcast-info">
+                    <p>{{ podcast.emissionName }}</p>
+                    <p>{{ podcast.podcastTitle }}</p>
                     </div>
-                    <embed src="../assets/play.svg">
-                </section>
-
-                <section class="podcast">
-                    <div class="podcast-info">
-                        <p>Nom de l'émission</p>
-                        <p>Titre du podcast</p>
-                    </div>
-                    <embed src="../assets/play.svg">
-                </section>
-
-                <section class="podcast">
-                    <div class="podcast-info">
-                        <p>Nom de l'émission</p>
-                        <p>Titre du podcast</p>
-                    </div>
-                    <embed src="../assets/play.svg">
-                </section>
-
-                <section class="podcast">
-                    <div class="podcast-info">
-                        <p>Nom de l'émission</p>
-                        <p>Titre du podcast</p>
-                    </div>
-                    <embed src="../assets/play.svg">
+                    <embed :src="podcast.playIcon" />
                 </section>
             </div>
         </div>
