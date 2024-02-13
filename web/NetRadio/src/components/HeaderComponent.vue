@@ -62,16 +62,6 @@ export default {
   </div>
 </template>
 
-  <script>
-  export default {
-    methods: {
-      myFunction() {
-        // la fonction ici
-      },
-    },
-  };
-  </script>
-
 <style scoped lang="scss">
 
 @import "@/assets/var";
