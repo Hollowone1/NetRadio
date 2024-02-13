@@ -45,10 +45,10 @@ p {
 
 @media screen and (min-width: 700px) {
   .podcasts-liste {
-    @include grid(repeat(auto-fit, minmax(20em, 1fr)), auto, 2em, center, center);
+    @include grid(repeat(auto-fill, minmax(20em, 1fr)), auto, 2em, center, center);
   }
   .emissions-liste {
-    @include grid(repeat(auto-fit, minmax(13em, 1fr)), auto, 1em, center, center);
+    @include grid(repeat(auto-fill, minmax(13em, 1fr)), auto, 1em, center, center);
   }
   .emission {
     box-sizing: border-box;

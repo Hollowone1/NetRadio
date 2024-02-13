@@ -14,19 +14,31 @@ export default {
       emissions: [],
       podcasts: [],
       podcastsToday: [],
-      recentPodcasts: []
+      recentPodcasts: [],
+      themes: []
     }
   },
   methods: {
     getPodcastsDate(date) {
-      //const today = new Date().toISOString().split('T')[0];
       return this.podcasts.filter(podcast => podcast.date === date);
+    },
+    getEmissionsTheme(theme) {
+      return this.emissions.filter(emission => emission.theme === theme);
     }
   },
   created() {
     this.$api.get("emissions")
         .then((response) => {
           this.emissions = response.data.emission
+          console.log(this.emissions)
+          let themes = []
+          this.emissions.forEach(emission => {
+            if (!themes.includes(emission.theme)) {
+              themes.push(emission.theme)
+            }
+          });
+          this.themes = themes;
+          console.log(this.themes)
         })
         .catch((error) => {
           console.log(error)
@@ -35,7 +47,6 @@ export default {
     this.$api.get("podcasts")
         .then((response) => {
           this.podcasts = response.data.podcasts
-          console.log(this.podcasts)
           this.podcastsToday = this.getPodcastsDate(new Date().toISOString().split('T')[0]);
           this.recentPodcasts = this.podcasts.slice(-5)
         })
@@ -51,10 +62,10 @@ export default {
 
   <div class="emissions">
     <h2>Toutes les émissions</h2>
-    <div class="theme">
-      <h3>Thématique 1</h3>
+    <div v-for="theme in themes" class="theme">
+      <h3>{{ theme }}</h3>
       <div class="emissions-liste">
-        <emission v-for="emission in emissions" :emission="emission" :key="emission.id"></emission>
+        <emission v-for="emission in getEmissionsTheme(theme)" :emission="emission" :key="emission.id"></emission>
       </div>
     </div>
   </div>

@@ -27,12 +27,8 @@ export default {
 
 <template>
   <section v-image="emission.photo" class="emission">
-<!--
-    <img :src="emission.photo" alt="emission">
--->
     <p>{{ emission.titre }}</p>
-    <p>{{ emission.theme }}</p>
-    <p>{{ emission.user_mail }}</p>
+    <p>{{ emission.user }}</p>
   </section>
 </template>
 
