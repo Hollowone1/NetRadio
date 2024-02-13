@@ -9,7 +9,7 @@ export default {
   data() {
     return {
       edit: false,
-      editedEmission : {
+      editedEmission: {
         titre: this.emission.titre,
         presentateur: this.emission.presentateur,
         theme: this.emission.theme,
@@ -17,7 +17,7 @@ export default {
       }
     }
   },
-  methods : {
+  methods: {
     stopEditing() {
       this.edit = false
       this.$emit('close')
@@ -46,7 +46,7 @@ export default {
         </div>
       </div>
 
-      <div v-if="edit === true" class="popup-emission">
+      <div v-if="edit === true" class="popup-emission-edit">
         <img @click="stopEditing" src="/icons/check.svg" alt="edit icon"/>
         <div class="titre">
           <label for="titre">Titre de l'émission :</label>
@@ -62,11 +62,7 @@ export default {
         </div>
         <div class="description">
           <label for="description">Description :</label>
-          <input type="textarea" id="description" v-model="editedEmission.theme">
-        </div>
-        <div class="infos">
-          <p>{{ emission.theme }}</p>
-          <p>{{ emission.description }}</p>
+          <textarea id="description" v-model="editedEmission.description"/>
         </div>
       </div>
 
@@ -98,7 +94,7 @@ export default {
   vertical-align: middle;
 }
 
-.popup-emission {
+.popup-emission, .popup-emission-edit {
   width: fit-content;
   max-width: 60vw;
   background-color: $white;
@@ -107,7 +103,9 @@ export default {
   border-radius: 10px;
   padding: 1em;
   margin: 0px auto;
+}
 
+.popup-emission {
   .top {
     @include flex(row, nowrap, 1em, space-between, center);
     padding-bottom: .5em;
@@ -122,6 +120,28 @@ export default {
     }
   }
 
+  .infos {
+    @include flex(column, nowrap, .5em, start);
+
+    p:nth-child(1) {
+      @include text-style(1.1em, inherit, inherit);
+    }
+
+    p:nth-child(2) {
+      @include text-style(1.2em, inherit, 200);
+      text-transform: uppercase;
+    }
+
+    p:nth-child(3) {
+      @include text-style(1em, inherit, 400);
+    }
+  }
+}
+
+.popup-emission-edit {
+  img {
+    height: 2em;
+  }
   .infos {
     @include flex(column, nowrap, .5em, start);
 
