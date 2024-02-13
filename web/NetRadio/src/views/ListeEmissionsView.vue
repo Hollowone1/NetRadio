@@ -10,7 +10,9 @@ export default {
     Emission
   },
   data() {
-    return {}
+    return {
+      currentEmission: {} 
+    }
   }
 }
 </script>

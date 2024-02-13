@@ -25,10 +25,11 @@ export default {
     }
   },
   created() {
-    axios.get(`${instance}/emissions`)
+    axios.get("http://localhost:8081/emissions")
       .then((response) => {
         console.log(response)
         if (response.data) {
+          console.log(response.data)
           this.emissionsData = response.data;
         } else {
           throw new Error('Emissions data not found');
