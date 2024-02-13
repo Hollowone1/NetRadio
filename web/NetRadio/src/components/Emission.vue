@@ -16,7 +16,8 @@ export default {
   directives : {
     image : {
       mounted(el, binding) {
-        el.style.backgroundImage = `url('${binding.value}')`;
+        el.style.background =  `linear-gradient( transparent,black), url('${binding.value}')`;
+        //el.style.background = `url('${binding.value}')`;
       }
     }
   }
