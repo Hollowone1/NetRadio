@@ -11,14 +11,14 @@ p {
   background-color: $lightField;
   border-radius: 10px;
   padding: 1em;
-  @include flex(row, nowrap, 0, space-between, center);
+  @include flex(row, nowrap, 1.5em, space-between, center);
 
   &-info p:nth-child(1) {
     @include text-style(1em, $purple, 200);
   }
 
   &-info p:nth-child(2) {
-    @include text-style(1.3em, inherit, 450);
+    @include text-style(1.2em, inherit, 450);
     margin-top: .2em;
   }
 

@@ -12,14 +12,21 @@ export default {
   data() {
     return {
       emissions: [],
-      podcasts: []
+      podcasts: [],
+      podcastsToday: [],
+      recentPodcasts: []
+    }
+  },
+  methods: {
+    getPodcastsDate(date) {
+      //const today = new Date().toISOString().split('T')[0];
+      return this.podcasts.filter(podcast => podcast.date === date);
     }
   },
   created() {
     this.$api.get("emissions")
         .then((response) => {
           this.emissions = response.data.emission
-          //console.log(this.emissions)
         })
         .catch((error) => {
           console.log(error)
@@ -29,11 +36,13 @@ export default {
         .then((response) => {
           this.podcasts = response.data.podcasts
           console.log(this.podcasts)
+          this.podcastsToday = this.getPodcastsDate(new Date().toISOString().split('T')[0]);
+          this.recentPodcasts = this.podcasts.slice(-5)
         })
         .catch((error) => {
           console.log(error)
         });
-  }
+  },
 }
 </script>
 
@@ -52,21 +61,15 @@ export default {
 
   <div class="podcasts">
     <div class="jour">
-      <h2>Récemment</h2>
-      <div class="podcasts-liste">
-        <podcast v-for="podcast in podcasts" :podcast="podcast" :key="podcast.id"></podcast>
-      </div>
-    </div>
-
-    <div class="jour">
       <h2>Aujourd'hui</h2>
       <div class="podcasts-liste">
+        <podcast v-for="podcast in podcastsToday" :podcast="podcast" :key="podcast.id"></podcast>
       </div>
     </div>
-
     <div class="jour">
-      <h2>Cette semaine</h2>
+      <h2>Récemment</h2>
       <div class="podcasts-liste">
+        <podcast v-for="podcast in recentPodcasts" :podcast="podcast" :key="podcast.id"></podcast>
       </div>
     </div>
   </div>
