@@ -2,12 +2,10 @@
 import EnDirect from '@/components/EnDirect.vue'
 import Emission from '@/components/Emission.vue'
 import Podcast from '@/components/Podcast.vue'
-import HeaderComponent from "@/components/HeaderComponent.vue";
 
 export default {
   components: {
     EnDirect,
-    HeaderComponent,
     Emission,
     Podcast
   },
@@ -21,7 +19,16 @@ export default {
     this.$api.get("emissions")
         .then((response) => {
           this.emissions = response.data.emission
-          console.log(this.emissions)
+          //console.log(this.emissions)
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+
+    this.$api.get("podcasts")
+        .then((response) => {
+          this.podcasts = response.data.podcasts
+          console.log(this.podcasts)
         })
         .catch((error) => {
           console.log(error)
@@ -43,7 +50,26 @@ export default {
     </div>
   </div>
 
-  <podcast></podcast>
+  <div class="podcasts">
+    <div class="jour">
+      <h2>Récemment</h2>
+      <div class="podcasts-liste">
+        <podcast v-for="podcast in podcasts" :podcast="podcast" :key="podcast.id"></podcast>
+      </div>
+    </div>
+
+    <div class="jour">
+      <h2>Aujourd'hui</h2>
+      <div class="podcasts-liste">
+      </div>
+    </div>
+
+    <div class="jour">
+      <h2>Cette semaine</h2>
+      <div class="podcasts-liste">
+      </div>
+    </div>
+  </div>
   <RouterView/>
 </template>
 
