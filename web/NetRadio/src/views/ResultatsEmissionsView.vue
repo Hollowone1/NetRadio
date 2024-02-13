@@ -1,22 +1,30 @@
 <script>
+import {RouterView } from 'vue-router'
+import EnDirect from '@/components/EnDirect.vue';
 
+export default {
+  components: {
+    RouterView,
+    EnDirect
+  },
+  data() {
+    return {
+        emissions: [
+        { title: "Le titre de l'émission", presenter: "PRÉSENTATEUR" },
+        { title: "Le titre de l'émission", presenter: "PRÉSENTATEUR" },
+        { title: "Le titre de l'émission", presenter: "PRÉSENTATEUR" },
+        { title: "Le titre de l'émission", presenter: "PRÉSENTATEUR" },
+        { title: "Le titre de l'émission", presenter: "PRÉSENTATEUR" },
+      ],
+    }
+  }
+}
 </script>
 
 <template>
     <main>
-        <section class="direct">
-            <div class="direct-infos">
-                <div class="direct-infos-titre">
-                    <embed src="../assets/direct.svg"/>
-                    <h1>Nom émission</h1>
-                </div>
-                <p class="direct-infos-sous-titre">EN DIRECT</p>
-                <p class="direct-infos-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                <button class="direct-infos-ecouter">Écouter</button>
-            </div>
-            <img class="direct-image" src="../assets/Desktop.png" alt="image de l'émission en direct">
-        </section>
-
+        <en-direct></en-direct>
+        <RouterView />
         <div class="resultats">
             <h2>Résultats de votre recherche</h2>
             <div class="recherche">
@@ -34,29 +42,13 @@
                 </div>
             </div>
             <div class="emissions-liste">
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
-                </section>
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
-                </section>
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
-                </section>
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
-                </section>
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
-                </section>
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
+                <section
+                    v-for="(emission, index) in emissions"
+                    :key="index"
+                    class="emission"
+                    >
+                    <p>{{ emission.title }}</p>
+                    <p>{{ emission.presenter }}</p>
                 </section>
             </div>
         </div>
