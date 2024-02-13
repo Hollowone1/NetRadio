@@ -9,6 +9,7 @@ class Creneau extends Model
 {
     public $connection = 'radio';
     protected $table = 'creneau';
+    public $timestamps = false;
     protected $fillable = [
         'id',
         'jourSemaine',

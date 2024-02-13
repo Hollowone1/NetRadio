@@ -10,6 +10,7 @@ class Playlist extends Model
     public $connection = 'radio';
     protected $primaryKey='id';
     protected $table = 'Playlist';
+    public $timestamps = false;
     protected $fillable = [
         'id',
         'name',

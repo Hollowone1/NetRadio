@@ -8,6 +8,7 @@ class PlaylistSon extends Model
 {
     public $connection = 'radio';
     protected $table = 'PlaylistSon';
+    public $timestamps = false;
     protected $fillable = [
         'idPlaylist',
         'idSon'

@@ -9,8 +9,7 @@ export default {
     SearchBar,
     Podcast
   },
-}
-
+};
 </script>
 
 <template>
