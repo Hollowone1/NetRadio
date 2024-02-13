@@ -21,6 +21,8 @@ export default {
     stopEditing() {
       this.edit = false
       this.$emit('close')
+      //console.log(this.editedEmission)
+      this.editEmission()
     },
     editEmission() {
       //faire un put sur l'API avec les valeurs du v-model
@@ -47,7 +49,7 @@ export default {
       </div>
 
       <div v-if="edit === true" class="popup-emission-edit">
-        <img @click="stopEditing" src="/icons/check.svg" alt="edit icon"/>
+        <div><img @click="stopEditing" src="/icons/check.svg" alt="edit icon"/></div>
         <div class="titre">
           <label for="titre">Titre de l'émission :</label>
           <input type="text" id="titre" v-model="editedEmission.titre">
@@ -77,6 +79,9 @@ export default {
 @import "@/assets/fonts";
 @import "@/assets/buttons";
 
+$widthPopup : 60vw;
+$widthPopupEm: 30em;
+
 .modal-mask {
   width: 100%;
   height: 100%;
@@ -95,8 +100,10 @@ export default {
 }
 
 .popup-emission, .popup-emission-edit {
-  width: fit-content;
-  max-width: 60vw;
+  width:$widthPopup;
+  max-width: calc($widthPopupEm * 1.5);
+  min-width: calc($widthPopupEm / 1.5);
+
   background-color: $white;
   font-size: 1.1em;
   border: 3px solid $purple;
@@ -116,7 +123,7 @@ export default {
 
     h3 {
       margin: 0;
-      @include text-style(1.4em, inherit, 500);
+      @include text-style(1.5em, $lightBlack, 500);
     }
   }
 
@@ -124,7 +131,11 @@ export default {
     @include flex(column, nowrap, .5em, start);
 
     p:nth-child(1) {
+
       @include text-style(1.1em, inherit, inherit);
+      strong {
+        @include text-style(1em, inherit, 500);
+      }
     }
 
     p:nth-child(2) {
@@ -139,25 +150,42 @@ export default {
 }
 
 .popup-emission-edit {
-  img {
-    height: 2em;
+  @include flex(column, nowrap, 1em, start, flex-start);
+  div {
+    @include flex(column, nowrap, .5em, start, flex-start);
   }
-  .infos {
-    @include flex(column, nowrap, .5em, start);
-
-    p:nth-child(1) {
-      @include text-style(1.1em, inherit, inherit);
-    }
-
-    p:nth-child(2) {
-      @include text-style(1.2em, inherit, 200);
-      text-transform: uppercase;
-    }
-
-    p:nth-child(3) {
-      @include text-style(1em, inherit, 400);
+  label {
+    @include text-style(1.2em, $lightBlack, 500);
+  }
+  input, textarea {
+    width:calc($widthPopup - 1em);
+    max-width: calc($widthPopupEm * 1.5);
+    min-width: calc($widthPopupEm / 1.5);
+    resize: none;
+    border-color: transparent;
+    border-bottom-color: #dcdcdc;
+    background-color: $lightLightGrey;
+    height: auto;
+    font-size: 1em;
+    padding: .3em .5em;
+    @include text-style(.95em, $darkGrey, 300);
+  }
+  input:focus, textarea:focus {
+    @include text-style(.95em, black, 350);
+    outline: none !important;
+  }
+  div:nth-child(1){
+    position: relative;
+    height: 0;
+    align-self: flex-end;
+    img {
+      height: 2em;
     }
   }
+  .theme {
+    margin-bottom: 0;
+  }
+
 }
 
 </style>
