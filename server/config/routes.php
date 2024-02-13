@@ -29,6 +29,8 @@ return function (App $app) {
     $app->group('/users', function ($app) {
         $app->get("[/]", \radio\net\app\action\user\GetUserAllInfo::class);
         $app->get("/{id_user}[/]", \radio\net\app\action\user\GetUserByMail::class)->setName('/user/{id_user}[/]');
+        $app->get("/{email_user}/playlists", \radio\net\app\action\playlist\GetPlaylistByEmailUserAction::class)->setName('/user/{email_user}/playlist');
+
     });
 
     //sons
@@ -39,10 +41,8 @@ return function (App $app) {
     });
 
     //playlist
-    $app->get("/playlist/{id_playlist}[/]", \radio\net\app\action\playlist\GetPlaylistByIdAction::class)->setName('/playlist/{id_playlist}[/]');
-    $app->get("/user/{email_user}/playlists", \radio\net\app\action\playlist\GetPlaylistByEmailUserAction::class)->setName('/user/{email_user}/playlist');
-    $app->post("/playlist", \radio\net\app\action\playlist\PostPlaylist::class)->setName("/playlist");
     $app->group('/playlists', function ($app) {
         $app->get("/{id_playlist}[/]", \radio\net\app\action\playlist\GetPlaylistByIdAction::class)->setName('/playlist/{id_playlist}[/]');
+        $app->post("[/]", \radio\net\app\action\playlist\PostPlaylist::class)->setName("/playlist");
     });
 };
