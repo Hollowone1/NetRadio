@@ -4,20 +4,24 @@ namespace radio\net\app\action\playlist;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use radio\net\app\action\Action;
-use radio\net\domaine\entities\Playlist;
+use radio\net\domaine\service\playlist\iPlaylistService;
+use radio\net\domaine\service\playlist\PlaylistService;
 
 class PostPlaylist extends Action
 {
 
-    function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args)
+    private iPlaylistService $playlistService;
+    public function __construct(PlaylistService $playlist_service)
+    {
+        $this->playlistService = $playlist_service;
+    }
+    function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $data = $request->getParsedBody();
-        $playlist = new Playlist();
-        $playlist->setName($data['name']);
-        $playlist->setDate($data['date']);
-        $playlist->setPodcastId($data['podcast_id']);
-        $playlist->setSonId($data['son_id']);
-        $playlist->save();
+        $name = $data['name'];
+        $description = $data['description'];
+        $emailUser = $data['emailUser'];
+        $playlist = $this->playlistService->createPlaylist($name, $description, $emailUser);
         $data = [
             'type' => 'resource',
             'playlist' => $playlist

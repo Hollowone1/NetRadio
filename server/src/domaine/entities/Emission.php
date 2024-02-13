@@ -10,6 +10,7 @@ class Emission extends Model
 
     public $connection = 'radio';
     protected $table = 'Emission';
+    public $timestamps = false;
     protected $fillable = [
         'id',
         'titre',

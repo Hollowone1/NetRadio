@@ -45,4 +45,13 @@ class PlaylistService implements iPlaylistService
             throw $e;
         }
     }
+
+    public function createPlaylist($name, $description, $emailUser) {
+        $playlist = new Playlist();
+        $playlist->name = $name;
+        $playlist->description = $description;
+        $playlist->emailUser = $emailUser;
+        $playlist->save();
+        return $playlist;
+    }
 }
