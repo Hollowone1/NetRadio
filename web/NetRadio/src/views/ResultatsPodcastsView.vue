@@ -1,18 +1,4 @@
 <script>
-<<<<<<< HEAD
-export default {
-  data() {
-    return {
-      podcasts: [
-        { emission: "Nom de l'émission 1", title: "Titre du podcast 1" },
-        { emission: "Nom de l'émission 2", title: "Titre du podcast 2" },
-        { emission: "Nom de l'émission 3", title: "Titre du podcast 3" },
-        { emission: "Nom de l'émission 4", title: "Titre du podcast 4" },
-      ],
-    };
-  },
-};
-=======
 import {RouterView } from 'vue-router'
 import EnDirect from '@/components/EnDirect.vue';
 
@@ -32,7 +18,6 @@ export default {
     }
   }
 }
->>>>>>> feat/front
 </script>
 
 <template>
@@ -47,12 +32,6 @@ export default {
                 <input type="text" placeholder="Rechercher">
             </div>
             <div class="podcasts-liste">
-<<<<<<< HEAD
-                <section class="podcast" v-for="(podcast, index) in podcasts" :key="index">
-                    <div class="podcast-info">
-                        <p>{{ podcast.emission }}</p>
-                        <p>{{ podcast.title }}</p>
-=======
                 <section
                 v-for="(podcast, index) in podcasts"
                 :key="index"
@@ -61,7 +40,6 @@ export default {
                 <div class="podcast-info">
                     <p>{{ podcast.emissionName }}</p>
                     <p>{{ podcast.podcastTitle }}</p>
->>>>>>> feat/front
                     </div>
                     <embed :src="podcast.playIcon" />
                 </section>
