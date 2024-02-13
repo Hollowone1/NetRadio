@@ -42,6 +42,12 @@ export default {
 @import "@/assets/buttons";
 @import "@/assets/listeEmissionsPodcasts";
 
+.podcast-info{
+  text-align: start;
+  padding: 1em;
+  padding-left: 0.5em;
+}
+
 
 </style>
 
