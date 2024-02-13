@@ -9,7 +9,7 @@ class EmissionDTO extends DTO
     public string $description;
     public string $theme;
     public string $photo;
-    public int $onDirect;
+    public ?bool $onDirect;
     public string $user;
 
 
@@ -29,6 +29,7 @@ class EmissionDTO extends DTO
             'titre' => $this->titre,
             'description'=> $this->description,
             'theme' => $this->theme,
+            'onDirect' => $this->onDirect,
             'photo' => $this->photo,
             'user' => $this->user
         ];

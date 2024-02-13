@@ -22,12 +22,15 @@ class Podcast extends Model
         'emission_id'
     ];
 
+    public $timestamps = false;
+
     public function emission () {
         return $this->belongsTo(Emission::class, 'emission_id')->first();
     }
 
     public function toDTO () {
-        $podcastDTO = new PodcastDTO($this->id, $this->titre, $this->description, $this->duree, $this->date, $this->audio, $this->photo, $this->emission_id);
+        $podcastDTO = new PodcastDTO($this->titre, $this->description, $this->duree, $this->date, $this->audio, $this->photo, $this->emission_id);
+        $podcastDTO->setId($this->id);
         return $podcastDTO;
     }
 }
