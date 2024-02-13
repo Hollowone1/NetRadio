@@ -4,29 +4,10 @@
       <div class="theme">
         <h3>Thématique 1</h3>
         <div class="emissions-liste">
-          <section class="emission">
-            <p>Le titre de l'émission</p>
-            <p>PRÉSENTATEUR</p>
-          </section>
-          <section class="emission">
-            <p>Le titre de l'émission</p>
-            <p>PRÉSENTATEUR</p>
-          </section>
-          <section class="emission">
-            <p>Le titre de l'émission</p>
-            <p>PRÉSENTATEUR</p>
-          </section>
-          <section class="emission">
-            <p>Le titre de l'émission</p>
-            <p>PRÉSENTATEUR</p>
-          </section>
-          <section class="emission">
-            <p>Le titre de l'émission</p>
-            <p>PRÉSENTATEUR</p>
-          </section>
-          <section class="emission">
-            <p>Le titre de l'émission</p>
-            <p>PRÉSENTATEUR</p>
+          <section class="emission" v-for="emission in emissions" :key="emission.id">
+            <p>{{ emission.titre }}</p>
+            <p>{{ emission.theme }}</p>
+            <p>{{ emission.user_mail }}</p>
           </section>
         </div>
       </div>
@@ -34,7 +15,23 @@
   </template>
 
   <script>
+  import axios from 'axios';
+  import instance from '@/plugin/api'
+
   export default {
+    data(){
+      return{
+        emission: []
+      }
+    },
+    created() {
+    axios.get(`${instance}/emissions`)
+      .then((response) => response.json())
+      .then((data) => {
+        this.emissions = data;
+      })
+      .catch((error) => console.log(error));
+  },
     props: {
       emission: {
         type: Object,

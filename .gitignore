@@ -32,7 +32,7 @@
 
 ##### Project config files
 *.ini
-.env
+*.env
 
 
 ##### draw.io temp files
