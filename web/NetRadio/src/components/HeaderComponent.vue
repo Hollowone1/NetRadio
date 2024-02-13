@@ -4,6 +4,7 @@ export default {
     return {
       connected : false,
       user: {
+        id: 1,
         mail: "",
         prenom: "",
         nom: "",

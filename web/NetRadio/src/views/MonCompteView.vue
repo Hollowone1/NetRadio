@@ -1,9 +1,14 @@
 <script>
+import PopupEmission from "@/components/PopupEmission.vue";
 
 export default {
-  components: {},
+  components: {
+    PopupEmission
+  },
   data() {
     return {
+      showPopupEmission: false,
+      emissionToDisplay: {},
       //user: [],
       user: {
         mail: "agathedellinger@gmail.com",
@@ -61,7 +66,14 @@ export default {
       this.display = number;
     },
     displayEmission(id) {
-
+      console.log(id)
+      console.log(this.emissions.find(emission => emission.id === id))
+      this.emissionToDisplay = this.emissions.find(emission => emission.id === id);
+      this.showPopupEmission = true;
+    },
+    updateEmission() {
+      this.showPopupEmission = false;
+      //aller refetch les infos de l'émission quand elle a été mise à jour !
     }
   }
 }
@@ -144,7 +156,7 @@ export default {
       </div>
       <div v-if="display === 2" class="emissions">
         <h1>Toutes les émissions</h1>
-        <h2>Émissions</h2>
+        <popup-emission :emission="emissionToDisplay" v-if="showPopupEmission" @close="updateEmission"></popup-emission>
         <div class="emissions-liste">
           <section v-for="emission in emissions" class="emission">
             <img @click="displayEmission(emission.id)" src="/icons/edit.svg" alt="edit">
@@ -158,11 +170,6 @@ export default {
     </main>
   </div>
 
-  <div class="display-emission">
-    <div class="top">
-      <h3>{{displayEmission.titre}}</h3>
-    </div>
-  </div>
 
 </template>
 
@@ -171,6 +178,10 @@ export default {
 @import "@/assets/layout";
 @import "@/assets/fonts";
 @import "@/assets/buttons";
+
+.emissions {
+  padding: 2em;
+}
 
 .emissions-liste {
   @include grid(repeat(auto-fit, 13em), auto, 1em, start, center);
@@ -181,6 +192,13 @@ export default {
     align-items: flex-end;
     img {
       height: 2em
+    }
+    .infos {
+      width: 100%;
+
+    }
+    p {
+      text-align: left;
     }
   }
 }
