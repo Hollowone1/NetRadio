@@ -8,11 +8,18 @@ export default {
     EnDirect
   },
   data() {
-    return {}
+    return {
+        emissions: [
+        { title: "Le titre de l'émission", presenter: "PRÉSENTATEUR" },
+        { title: "Le titre de l'émission", presenter: "PRÉSENTATEUR" },
+        { title: "Le titre de l'émission", presenter: "PRÉSENTATEUR" },
+        { title: "Le titre de l'émission", presenter: "PRÉSENTATEUR" },
+        { title: "Le titre de l'émission", presenter: "PRÉSENTATEUR" },
+      ],
+    }
   }
 }
 </script>
-
 
 <template>
     <main>
@@ -35,29 +42,13 @@ export default {
                 </div>
             </div>
             <div class="emissions-liste">
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
-                </section>
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
-                </section>
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
-                </section>
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
-                </section>
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
-                </section>
-                <section class="emission">
-                    <p>Le titre de l'émission</p>
-                    <p>PRÉSENTATEUR</p>
+                <section
+                    v-for="(emission, index) in emissions"
+                    :key="index"
+                    class="emission"
+                    >
+                    <p>{{ emission.title }}</p>
+                    <p>{{ emission.presenter }}</p>
                 </section>
             </div>
         </div>
