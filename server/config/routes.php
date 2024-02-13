@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use radio\net\app\action\creneau\GetAllCreneaux;
 use radio\net\app\action\podcast\GetAllPodcasts;
 use radio\net\app\action\podcast\GetPodcastByDate;
 use radio\net\app\action\podcast\GetPodcastByEmission;
@@ -44,5 +45,10 @@ return function (App $app) {
     $app->group('/playlists', function ($app) {
         $app->get("/{id_playlist}[/]", \radio\net\app\action\playlist\GetPlaylistByIdAction::class)->setName('/playlist/{id_playlist}[/]');
         $app->post("[/]", \radio\net\app\action\playlist\PostPlaylist::class)->setName("/playlist");
+    });
+
+    // creneau
+    $app->group('/creneaux', function ($app) {
+        $app->get("[/]", GetAllCreneaux::class);
     });
 };
