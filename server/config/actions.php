@@ -3,7 +3,6 @@
 use Psr\Container\ContainerInterface;
 use radio\net\app\action\playlist\GetPlaylistByIdAction;
 use radio\net\app\action\podcast\GetAllPodcasts;
-use radio\net\app\action\podcast\GetPodcastByDate;
 use radio\net\app\action\podcast\GetPodcastByEmission;
 use radio\net\app\action\podcast\GetPodcastByIdAction;
 use radio\net\app\action\son\GetAllSons;
@@ -19,6 +18,9 @@ return array(
     \radio\net\app\action\podcast\PostPodcast::class => function (ContainerInterface $container) {
         return new \radio\net\app\action\podcast\PostPodcast($container->get('PodcastService'));
     },
+    \radio\net\app\action\podcast\PutPodcast::class => function (ContainerInterface $container) {
+        return new \radio\net\app\action\podcast\PutPodcast($container->get('PodcastService'));
+    },
     GetAllPodcasts::class => function (ContainerInterface $container) {
         return new GetAllPodcasts($container->get('PodcastService'));
     },
@@ -31,18 +33,15 @@ return array(
     \radio\net\app\action\emission\GetEmissionsAction::class => function (ContainerInterface $container) {
         return new \radio\net\app\action\emission\GetEmissionsAction($container->get('EmissionService'));
     },
-
     \radio\net\app\action\emission\GetEmissionByTheme::class => function (ContainerInterface $container) {
         return new \radio\net\app\action\emission\GetEmissionByTheme($container->get('EmissionService'));
     },
-
     \radio\net\app\action\user\GetUserAllInfo::class => function (ContainerInterface $container) {
         return new \radio\net\app\action\user\GetUserAllInfo($container->get('UserService'));
     },
     \radio\net\app\action\user\GetUserByMail::class => function (ContainerInterface $container) {
         return new \radio\net\app\action\user\GetUserByMail($container->get('UserService'));
     },
-
     GetAllSons::class => function (ContainerInterface $container) {
         return new GetAllSons($container->get(SonService::class));
     },
@@ -53,10 +52,7 @@ return array(
     GetSonsByPlaylistId::class => function (ContainerInterface $container) {
         return new GetSonsByPlaylistId($container->get(SonService::class));
     },
-
     GetPlaylistByIdAction::class => function (ContainerInterface $container) {
         return new GetPlaylistByIdAction($container->get(PlaylistService::class));
     },
-
-
 );

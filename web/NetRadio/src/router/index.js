@@ -57,13 +57,13 @@ const router = createRouter({
       name: 'résultat des emissions',
       component: ToutesLesEmissions
     },
-    {
+    /*{
       path: '/profil',
       name: 'profil-utilisateurs',
       component: ProfilUtilisateur
-    },
+    },*/
     {
-      path: '/mon-compte',
+      path: '/mon-compte/:id',
       name: 'mon compte',
       component: MonCompte
     },

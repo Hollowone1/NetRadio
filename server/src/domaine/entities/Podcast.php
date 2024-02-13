@@ -21,9 +21,6 @@ class Podcast extends Model
         'photo',
         'emission_id'
     ];
-
-    public $timestamps = false;
-
     public function emission () {
         return $this->belongsTo(Emission::class, 'emission_id')->first();
     }

@@ -1,25 +1,48 @@
 <template>
-    <section class="direct">
-      <div class="direct-infos">
-        <div class="direct-infos-titre">
-          <embed src="../assets/direct.svg" />
-          <h1>{{}}</h1>
-        </div>
-        <p class="direct-infos-sous-titre">EN DIRECT</p>
-        <p class="direct-infos-desc">{{}}</p>
-        <button class="direct-infos-ecouter">Écouter</button>
+  <div class="emissions">
+    <h2>Toutes les émissions</h2>
+    <div class="theme">
+      <h3>Thématique 1</h3>
+      <div class="emissions-liste">
+        <section class="emission" v-for="emission in emissionsData" :key="emission.id">
+          <p>{{ emission.titre }}</p>
+          <p>{{ emission.theme }}</p>
+          <p>{{ emission.user_mail }}</p>
+        </section>
       </div>
-      <img class="direct-image" :src="emission.image" alt="image de l'émission en direct" />
-    </section>
-  </template>
+    </div>
+  </div>
+</template>
 
-  <script>
-  export default {
-    props: {
-      emission: {
-        type: Object,
-        required: true,
-      },
+<script>
+import axios from 'axios';
+import instance from '@/plugin/api'
+
+export default {
+  data(){
+    return{
+      emissionsData: []
+    }
+  },
+  created() {
+    axios.get("http://localhost:8081/emissions")
+      .then((response) => {
+        console.log(response)
+        if (response.data) {
+          console.log(response.data)
+          this.emissionsData = response.data;
+        } else {
+          throw new Error('Emissions data not found');
+        }
+      })
+      .catch((error) => console.log(error));
+  },
+  props: {
+    emission: {
+      type: Object,
+      required: true,
+      default: () => ({})
     },
-  };
-  </script>
+  },
+};
+</script>

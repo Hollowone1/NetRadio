@@ -17,18 +17,12 @@ $build->addDefinitions($actions);
 $container = $build->build();
 
 //creation de l'app à partir du container
-$app =  AppFactory::createFromContainer($container);
+$app = $container->get('app');
 
-//ajout des middleware
-$app->addBodyParsingMiddleware();
-$app->addRoutingMiddleware();
-$errorMiddleware = $app->addErrorMiddleware(true, false, false);
-$errorHandler = $errorMiddleware->getDefaultErrorHandler();
-$errorHandler->forceContentType('application/json');
+//connexion à la base de données
+$container->get('db');
 
-//Initiation de Eloquent
-//On initie les bases de données pour qu'il y ai une connection
-$eloquent = new Eloquent();
-$eloquent->init(__DIR__ . DIRECTORY_SEPARATOR . 'radio.db.ini', 'radio');
+//ajout des middlewares
+$container->get('middlewares');
 
 return $app;
