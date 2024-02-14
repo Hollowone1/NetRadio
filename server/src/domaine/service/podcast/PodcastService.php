@@ -148,4 +148,18 @@ class PodcastService implements iPodcastService
         return $duration;
     }
 
+    public function getUsersByPodcast($id) : array
+    {
+        try {
+            $users = Podcast::findOrFail($id)->users();
+            $userDTO = [];
+            foreach ($users as $user) {
+                $userDTO [] = $user->toDTO();
+            }
+            return $userDTO;
+        } catch (\Exception) {
+            throw new PodcastNotFoundException();
+        }
+
+    }
 }

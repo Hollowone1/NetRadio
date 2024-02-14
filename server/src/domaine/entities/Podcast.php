@@ -25,6 +25,11 @@ class Podcast extends Model
         return $this->belongsTo(Emission::class, 'emission_id')->first();
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'InvitesPodcast', 'idPodcast', 'emailInvite')->get();
+    }
+
     public function toDTO () {
         $podcastDTO = new PodcastDTO($this->titre, $this->description, $this->duree, $this->date, $this->audio, $this->photo, $this->emission_id);
         $podcastDTO->setId($this->id);
