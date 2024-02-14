@@ -7,16 +7,17 @@
 ajouter un fichier radio.env dans le dossier radio.components 
 Il doit contenir ceci :
 `
-MYSQL_ROOT_PASSWORD=r00tquizz
-MYSQL_USER=radio.db
-MYSQL_PASSWORD=radio.db
-MYSQL_DATABASE=radio.db
+MYSQL_ROOT_PASSWORD=r00t
+MYSQL_USER=radio_net
+MYSQL_PASSWORD=radio_net
+MYSQL_DATABASE=radio_net
 `
 
 ## Radio.db.ini 
 Ensuite copier coller le fichier radio.db.ini.template avec le nom :
-`radio.db.ini` et ajouter ceci :  `username=radio.db
-password=radio.db`
+`radio.db.ini` et ajouter ceci :  
+`username=radio_net
+password=radio_net`
 
 ## lancement de docker :
 ``` bash
@@ -25,7 +26,7 @@ docker compose up
 
 ## installation des dépendances : 
 ```bash 
-docker compose exec api.radio composer install
+docker compose exec radio.api composer install
 ```
 
 ## obtenir les données de bdd : 

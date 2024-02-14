@@ -8,7 +8,7 @@ use radio\net\domaine\dto\CreneauDTO;
 class Creneau extends Model
 {
     public $connection = 'radio';
-    protected $table = 'creneau';
+    protected $table = 'Creneau';
     public $timestamps = false;
     protected $fillable = [
         'id',

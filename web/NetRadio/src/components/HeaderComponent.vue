@@ -1,19 +1,54 @@
+<script>
+export default {
+  data() {
+    return {
+      connected : false,
+      user: {
+        id: 1,
+        mail: "",
+        prenom: "",
+        nom: "",
+        role: 1
+      }
+    }
+  },
+  methods: {
+    myFunction() {
+      // la fonction ici
+    },
+    toggleConnexion() {
+      this.connected = !this.connected
+    },
+    getUser() {
+      //get les infos de user, notamment le role
+    }
+  },
+};
+</script>
+
 <template>
   <header>
     <div class="header">
-      <img class="header-logo" src="/icons/logo.png" alt="Logo NET RADIO">
+      <router-link to="/"><img class="header-logo" src="/icons/logo.png" alt="Logo NET RADIO"></router-link>
       <div class="header-boutons">
-        <input class="search" type="search" src="/icons/search.svg" placeholder="Search for...">
-        <!--si on est  connecté-->
-        <embed class="header-user-co" src="/icons/user.svg"/>
-        <!--si on n'est pas connecté-->
-        <button class="header-boutons-connecter">Se connecter</button>
+        <input class="search" type="search" src="/icons/search.svg" placeholder="Rechercher ...">
+        <router-link to="/mon-compte" v-if="connected"><img class="header-user-co" src="/icons/user.svg" alt="user icon"/></router-link>
+        <router-link to="/mon-compte" v-if="connected && user.role === 2"><img class="header-user-co" src="/icons/user.svg" alt="user icon"/></router-link>
+
+        <button v-if="connected" class="header-boutons-deconnecter" @click="toggleConnexion">Se déconnecter</button>
+        <button v-else class="header-boutons-connecter" @click="toggleConnexion">Se connecter</button>
       </div>
     </div>
     <nav class="nav">
-      <div class="nav-item"><router-link to="/liste-des-podcasts">Podcasts</router-link></div>
-      <div class="nav-item"><router-link to="/liste-des-emissions">Emissions</router-link></div>
-      <div class="nav-item"><router-link to="/grille-des-programmes">Grille des programmes</router-link></div>
+      <div class="nav-item">
+        <router-link to="/liste-des-podcasts">Podcasts</router-link>
+      </div>
+      <div class="nav-item">
+        <router-link to="/liste-des-emissions">Emissions</router-link>
+      </div>
+      <div class="nav-item">
+        <router-link to="/grille-des-programmes">Grille des programmes</router-link>
+      </div>
     </nav>
   </header>
   <div class="topnav">
@@ -26,17 +61,7 @@
       <i class="gg-menu"></i>
     </a>
   </div>
-  </template>
-
-  <script>
-  export default {
-    methods: {
-      myFunction() {
-        // la fonction ici
-      },
-    },
-  };
-  </script>
+</template>
 
 <style scoped lang="scss">
 
@@ -45,6 +70,7 @@
 @import "@/assets/fonts";
 @import "@/assets/buttons";
 @import "@/assets/listeEmissionsPodcasts";
+
 .header {
   display: flex;
   align-items: center;
@@ -56,32 +82,44 @@
   margin-left: 20px;
   border-radius: 5px;
   height: 80px;
-  width : auto;
+  width: auto;
+}
+
+@media screen and (max-width:750px) {
+  .header-logo {
+  align-content: center;
+  margin-left: 40%;
+  border-radius: 5px;
+  height: 50px;
+  width: auto;
+}
 }
 
 .header-boutons {
   display: flex;
-  .header-user-co{
+
+  .header-user-co {
     height: 50px;
     width: auto;
-    margin : .5em 0em .5em 0em;
+    margin: .5em 0em .5em 0em;
   }
 
-  .header-boutons-connecter{
+  .header-boutons-connecter, .header-boutons-deconnecter {
 
     @include buttonStyle($purple, $purple, white, auto, 1em, .5em 0em .5em 0em, 0px);
     font-weight: 500;
     margin-right: 10px;
   }
-  .search{
 
-    border-color:transparent;
-    border-bottom-color:#dcdcdc;
+  .search {
+
+    border-color: transparent;
+    border-bottom-color: #dcdcdc;
     border-right-color: #dcdcdc;
     border-radius: 5px;
-    width : auto;
-    font-size : 1em;
-    margin : .5em 0em .5em 0em;
+    width: auto;
+    font-size: 1em;
+    margin: .5em 0em .5em 0em;
 
   }
 }
@@ -89,6 +127,7 @@
 .header-boutons-connecter {
   margin-right: 10px;
 }
+
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
@@ -134,21 +173,21 @@
   background-color: rgba(0, 0, 0, 0.081);
 }
 
-.nav-item a{
+.nav-item a {
   margin: 0 10px;
   text-decoration: none;
   color: black;
   font-weight: bold;
 }
 
-.topnav i{
+.topnav i {
   margin: 0 10px;
   text-decoration: none;
   color: black;
   font-weight: bold;
 }
 
-.topnav i{
+.topnav i {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -156,11 +195,12 @@
 }
 
 
-a:hover{
+a:hover {
 
   color: $purple;
 }
-i:hover{
+
+i:hover {
 
   color: $purple;
 }
@@ -171,13 +211,13 @@ i:hover{
   }
 }
 
-#myLinks{
+#myLinks {
   margin-bottom: 1em;
   display: none;
 }
 
 @media (min-width: 658px) {
-  .topnav a{
+  .topnav a {
     display: none;
   }
 }

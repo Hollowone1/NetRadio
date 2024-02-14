@@ -1,4 +1,3 @@
-App
 <script >
 import {RouterView } from 'vue-router'
 import HeaderComponent from "@/components/HeaderComponent.vue";
@@ -16,7 +15,7 @@ export default {
 <template>
   <header-component></header-component>
   <RouterView />
-  <footer-component></footer-component>
+  <FooterComponent></FooterComponent>
 </template>
 
 <style>

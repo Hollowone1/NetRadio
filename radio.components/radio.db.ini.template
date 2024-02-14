@@ -1,7 +1,7 @@
 connection=radio
 driver=mysql
-username=
-password=
+username=radio.db
+password=radio.db
 host=radio.db
 database=radio_net
 charset=utf8

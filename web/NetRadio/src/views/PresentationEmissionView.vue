@@ -1,13 +1,9 @@
 <script>
 import EnDirect from "@/components/EnDirect.vue";
-import HeaderComponent from "@/components/HeaderComponent.vue";
-import FooterComponent from "@/components/FooterComponent.vue";
 
 export default {
   components: {
     EnDirect,
-    HeaderComponent,
-    FooterComponent
   },
 }
 

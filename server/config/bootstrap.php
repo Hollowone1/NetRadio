@@ -1,5 +1,7 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 
+use radio\net\domaine\utils\Eloquent;
 use Slim\Factory\AppFactory;
 
 //ajout des dépendances
