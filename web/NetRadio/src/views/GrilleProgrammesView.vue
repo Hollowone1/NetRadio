@@ -8,14 +8,16 @@ export default {
   data() {
     return {
       emissions: [],
-      currentDate:'jeudi 9 novembre 2023'
+      currentDate:'jeudi 9 novembre 2023',
+      programs: [],
     }
   },
   created() {
-    this.$api.get("emissions")
+    this.loadPrograms()
+    this.$api.get('podcasts')
       .then(response => {
         console.log(response)
-        this.emissions = response.data.emission;
+        this.emissions = response.data.podcasts;
       })
       .catch(error => {
         console.error('Erreur lors de la récupération des programmes :', error);
@@ -26,11 +28,22 @@ export default {
       const date = new Date(this.currentDate);
       date.setDate(date.getDate() - 1);
       this.currentDate = date.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      this.loadPrograms();
     },
     nextDate() {
       const date = new Date(this.currentDate);
       date.setDate(date.getDate() + 1);
       this.currentDate = date.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      this.loadPrograms();
+    },
+    loadPrograms() {
+      this.$api.get('podcasts', { params: { date: this.currentDate } })
+        .then(response => {
+          this.programs = response.data.podcasts.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
 }
 }
