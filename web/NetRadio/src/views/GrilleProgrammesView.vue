@@ -1,5 +1,6 @@
  <script>
 import EnDirect from '@/components/EnDirect.vue'
+import moment from 'moment';
 
 export default {
   components: {
@@ -13,7 +14,6 @@ export default {
     }
   },
   created() {
-    this.currentDate = new Date(this.currentDate.toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
     this.loadPrograms()
     this.$api.get('podcasts')
       .then(response => {
@@ -28,32 +28,31 @@ export default {
     prevDate() {
       const date = new Date(this.currentDate);
       date.setDate(date.getDate() - 1);
-      this.currentDate = date.toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      this.currentDate = date;
       this.loadPrograms();
-    },
+  },
+
     nextDate() {
       const date = new Date(this.currentDate);
       date.setDate(date.getDate() + 1);
-      this.currentDate = date.toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      this.currentDate = date;
       this.loadPrograms();
-    },
-    loadPrograms() {
-       this.$api.get('podcasts', { params: { date: this.currentDate } })
-      .then(response => {
-        response.data.podcasts.forEach(program => {
-          program.start_time = new Date(program.start_time);
-        });
-        this.programs = response.data.podcasts.sort((a, b) => a.start_time - b.start_time);
-        this.programs.forEach(program => {
-          program.start_time = program.start_time.toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        });
-      })
-      .catch(error => {
-        console.error(error);
+},
+loadPrograms() {
+  this.$api.get('podcasts', { params: { date: this.currentDate } })
+    .then(response => {
+      response.data.podcasts.forEach(program => {
+        program.start_time = new Date(program.start_time);
       });
-      }
+      this.programs = response.data.podcasts.sort((a, b) => a.start_time - b.start_time);
+    })
+    .catch(error => {
+      console.error(error);
+    });
 }
 }
+}
+
 </script>
 <template>
   <header-component></header-component>
