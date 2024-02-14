@@ -8,11 +8,12 @@ export default {
   data() {
     return {
       emissions: [],
-      currentDate: new Date(toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })),
+      currentDate: new Date(),
       programs: [],
     }
   },
   created() {
+    this.currentDate = new Date(this.currentDate.toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }));
     this.loadPrograms()
     this.$api.get('podcasts')
       .then(response => {
@@ -38,19 +39,19 @@ export default {
     },
     loadPrograms() {
        this.$api.get('podcasts', { params: { date: this.currentDate } })
-        .then(response => {
-          response.data.podcasts.forEach(program => {
+      .then(response => {
+        response.data.podcasts.forEach(program => {
           program.start_time = new Date(program.start_time);
         });
-          this.programs = response.data.podcasts.sort((a, b) => a.start_time - b.start_time);
-          this.programs.forEach(program => {
-            program.start_time = program.start_time.toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        this.programs = response.data.podcasts.sort((a, b) => a.start_time - b.start_time);
+        this.programs.forEach(program => {
+          program.start_time = program.start_time.toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         });
       })
-    .catch(error => {
-      console.error(error);
-    });
-}
+      .catch(error => {
+        console.error(error);
+      });
+      }
 }
 }
 </script>
