@@ -1,13 +1,24 @@
 <script>
 import EnDirect from '@/components/EnDirect.vue'
+
 export default {
   components: {
     EnDirect,
   },
   data() {
     return {
-
+      emissions: [],
     }
+  },
+  created() {
+    this.$api.get("emissions")
+      .then(response => {
+        console.log(response)
+        this.emissions = response.data.emission;
+      })
+      .catch(error => {
+        console.error('Erreur lors de la récupération des programmes :', error);
+      });
   }
 }
 </script>
@@ -37,39 +48,14 @@ export default {
       </div>
 
       <section>
-        <h4>Heure 1</h4>
-        <div class="prog">
+        <div class="prog" v-for="(emission, index) in emissions" :key="index">
           <div class="prog-infos">
             <div class="prog-infos-texte">
-              <h5>Le nom de l'émission</h5>
-              <p>Nom présentateur</p>
+              <h5> {{ emission.titre }}</h5>
+              <p>{{ emission.user }}</p>
               <p>Avec nom de l'invité, nom de l'invité, ...</p>
             </div>
-            <img src="/icons/placeholder.png" alt="image de l'émission">
-          </div>
-        </div>
-
-        <h4>Heure 2</h4>
-        <div class="prog">
-          <div class="prog-infos">
-            <div class="prog-infos-texte">
-              <h5>Le nom de l'émission</h5>
-              <p>Nom présentateur</p>
-              <p>Avec nom de l'invité, nom de l'invité, ...</p>
-            </div>
-            <img src="/icons/placeholder.png" alt="image de l'émission">
-          </div>
-        </div>
-
-        <h4>Heure 3</h4>
-        <div class="prog">
-          <div class="prog-infos">
-            <div class="prog-infos-texte">
-              <h5>Le nom de l'émission</h5>
-              <p>Nom présentateur</p>
-              <p>Avec nom de l'invité, nom de l'invité, ...</p>
-            </div>
-            <img src="/icons/placeholder.png" alt="image de l'émission">
+            <img :src="emission.photo" alt="image de l'émission">
           </div>
         </div>
       </section>
