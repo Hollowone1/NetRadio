@@ -55,6 +55,9 @@ class GetAllPodcasts extends Action
                         'emission' => [
                             "href" => $router->urlFor('emission.show', ['id_emission' => $podcastDTO->idEmission]),
                         ],
+                        'invite' => [
+                            "href" => $router->urlFor('podcast.invites', ['id' => $podcastDTO->id])
+                        ]
                     ]
                 ];
             }

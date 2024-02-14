@@ -2,12 +2,13 @@
 import EnDirect from '@/components/EnDirect.vue'
 import Emission from '@/components/Emission.vue'
 import Podcast from '@/components/Podcast.vue'
-
+import Calendar from '@/components/Calendar.vue'
 export default {
   components: {
     EnDirect,
     Emission,
-    Podcast
+    Podcast,
+    Calendar
   },
   data() {
     return {
@@ -38,7 +39,7 @@ export default {
 
 <template>
   <en-direct></en-direct>
-
+  <Calendar></Calendar>
   <div class="emissions">
     <div class="top">
       <h2>Émissions</h2>
