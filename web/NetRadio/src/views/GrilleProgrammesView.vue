@@ -1,6 +1,5 @@
  <script>
 import EnDirect from '@/components/EnDirect.vue'
-import moment from 'moment';
 
 export default {
   components: {
@@ -38,18 +37,20 @@ export default {
       this.currentDate = date;
       this.loadPrograms();
 },
-loadPrograms() {
-  this.$api.get('podcasts', { params: { date: this.currentDate } })
-    .then(response => {
-      response.data.podcasts.forEach(program => {
-        program.start_time = new Date(program.start_time);
-      });
-      this.programs = response.data.podcasts.sort((a, b) => a.start_time - b.start_time);
-    })
-    .catch(error => {
-      console.error(error);
-    });
-}
+    loadPrograms() {
+        this.$api.get('podcasts', { params: { date: this.currentDate } })
+          .then(response => {
+            this.emissions = response.data.podcasts.date;
+            this.programs = this.emissions.map(program => {
+              program.start_time = new Date(program.start_time);
+              return program;
+            });
+          this.programs.sort((a, b) => a.start_time - b.start_time);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
 }
 }
 
