@@ -79,9 +79,9 @@ export default {
 }
 
 .header-logo {
-  margin-left: 20px;
+  margin-left: 1em;
   border-radius: 5px;
-  height: 80px;
+  height: 4em;
   width: auto;
 }
 
