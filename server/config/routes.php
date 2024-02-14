@@ -12,7 +12,9 @@ use radio\net\app\action\playlist\PostPlaylist;
 use radio\net\app\action\podcast\GetAllPodcasts;
 use radio\net\app\action\podcast\GetPodcastByEmission;
 use radio\net\app\action\podcast\GetPodcastByIdAction;
+use radio\net\app\action\podcast\GetUSersByPodcast;
 use radio\net\app\action\podcast\PostPodcast;
+use radio\net\app\action\podcast\PutPodcast;
 use radio\net\app\action\son\GetAllSons;
 use radio\net\app\action\son\GetSonByIdAction;
 use radio\net\app\action\son\GetSonsByPlaylistId;
@@ -26,8 +28,8 @@ return function (App $app) {
     $app->group('/podcasts', function ($app) {
         $app->get("/{id_podcast}[/]", GetPodcastByIdAction::class)->setName('podcast.show');
         $app->get("[/]", GetAllPodcasts::class)->setName('podcast.index');
-        $app->put('/{id}[/]', \radio\net\app\action\podcast\PutPodcast::class)->setName('podcast.update');
-        $app->get('/{id}/users', \radio\net\app\action\podcast\GetUSersByPodcast::class)->setName('podcast.invites');
+        $app->put('/{id}[/]', PutPodcast::class)->setName('podcast.update');
+        $app->get('/{id}/users', GetUSersByPodcast::class)->setName('podcast.invites');
         $app->post("[/]", PostPodcast::class)->setName('');
     });
 
