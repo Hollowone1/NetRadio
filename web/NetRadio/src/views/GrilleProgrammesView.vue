@@ -1,4 +1,4 @@
-<script>
+ <script>
 import EnDirect from '@/components/EnDirect.vue'
 
 export default {
@@ -8,7 +8,7 @@ export default {
   data() {
     return {
       emissions: [],
-      currentDate:'jeudi 9 novembre 2023',
+      currentDate: new Date(toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })),
       programs: [],
     }
   },
@@ -27,24 +27,30 @@ export default {
     prevDate() {
       const date = new Date(this.currentDate);
       date.setDate(date.getDate() - 1);
-      this.currentDate = date.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      this.currentDate = date.toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
       this.loadPrograms();
     },
     nextDate() {
       const date = new Date(this.currentDate);
       date.setDate(date.getDate() + 1);
-      this.currentDate = date.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      this.currentDate = date.toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
       this.loadPrograms();
     },
     loadPrograms() {
-      this.$api.get('podcasts', { params: { date: this.currentDate } })
+       this.$api.get('podcasts', { params: { date: this.currentDate } })
         .then(response => {
-          this.programs = response.data.podcasts.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
-        })
-        .catch(error => {
-          console.error(error);
+          response.data.podcasts.forEach(program => {
+          program.start_time = new Date(program.start_time);
         });
-    }
+          this.programs = response.data.podcasts.sort((a, b) => a.start_time - b.start_time);
+          this.programs.forEach(program => {
+            program.start_time = program.start_time.toLocaleString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        });
+      })
+    .catch(error => {
+      console.error(error);
+    });
+}
 }
 }
 </script>
