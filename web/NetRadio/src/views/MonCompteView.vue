@@ -1,9 +1,13 @@
 <script>
 import PopupEmission from "@/components/PopupEmission.vue";
+import Emission from '@/components/Emission.vue'
+import SideBar from "@/components/SideBarComponent.vue";
 
 export default {
   components: {
-    PopupEmission
+    PopupEmission,
+    Emission,
+    SideBar
   },
   data() {
     return {
@@ -81,16 +85,13 @@ export default {
 </script>
 
 <template>
-  <div v-if="user.role === 1">
-    <aside>
-      <div>
-        <div @click="changeDisplay(1)">Mon compte</div>
-        <div @click="changeDisplay(2)">Enregistrements</div>
-      </div>
-      <div>Déconnexion</div>
-    </aside>
+  <div class="view" v-if="user.role === 1">
+    <side-bar @change="changeDisplay">
+      <template v-slot:1>Mon compte</template>
+      <template v-slot:2>Enregistrements</template>
+    </side-bar>
     <main>
-      <div v-if="display === 1" class="mon-compte">
+      <div v-if="display === 1" class="display mon-compte">
         <div class="top">
           <h1>Mon compte</h1>
           <button>Modifier mes informations</button>
@@ -98,14 +99,12 @@ export default {
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
           <div>
-            <p>{{ user.nom }}</p>
-            <p>{{ user.prenom }}</p>
-            <p>{{ user.mail }}</p>
-            <p>Mot de passe</p>
+            <p><strong>Nom :</strong> {{ user.nom }}</p>
+            <p><strong>Prénom :</strong> {{ user.prenom }}</p>
           </div>
         </div>
       </div>
-      <div v-if="display === 2" class="enregistrements">
+      <div v-if="display === 2" class="display enregistrements">
         <h1>Vos enregistrements</h1>
         <div class="podcasts">
           <h2>Podcasts</h2>
@@ -129,17 +128,14 @@ export default {
   </div>
 
 
-  <div v-if="user.role === 2">
-    <aside>
-      <div>
-        <div @click="changeDisplay(1)">Mon compte</div>
-        <div @click="changeDisplay(2)">Émissions</div>
-        <div @click="changeDisplay(3)">Calendrier</div>
-      </div>
-      <div>Déconnexion</div>
-    </aside>
+  <div class="view" v-if="user.role === 2">
+    <side-bar @change="changeDisplay">
+      <template v-slot:1>Mon compte</template>
+      <template v-slot:2>Émissions</template>
+      <template v-slot:3>Calendrier</template>
+    </side-bar>
     <main>
-      <div v-if="display === 1" class="mon-compte">
+      <div v-if="display === 1" class="display mon-compte">
         <div class="top">
           <h1>Mon compte</h1>
           <button>Modifier mes informations</button>
@@ -147,14 +143,12 @@ export default {
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
           <div>
-            <p>{{ user.nom }}</p>
-            <p>{{ user.prenom }}</p>
-            <p>{{ user.mail }}</p>
-            <p>Mot de passe</p>
+            <p><strong>Nom :</strong> {{ user.nom }}</p>
+            <p><strong>Prénom :</strong> {{ user.prenom }}</p>
           </div>
         </div>
       </div>
-      <div v-if="display === 2" class="emissions">
+      <div v-if="display === 2" class="display emissions">
         <h1>Toutes les émissions</h1>
         <popup-emission :emission="emissionToDisplay" v-if="showPopupEmission" @close="updateEmission"></popup-emission>
         <div class="emissions-liste">
@@ -179,30 +173,114 @@ export default {
 @import "@/assets/fonts";
 @import "@/assets/buttons";
 
-.emissions {
-  padding: 2em;
+body{
+  overflow-y: hidden;
 }
 
-.emissions-liste {
-  @include grid(repeat(auto-fit, 13em), auto, 1em, start, center);
-  .emission {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-end;
-    img {
-      height: 2em
-    }
-    .infos {
-      width: 100%;
-
-    }
-    p {
-      text-align: left;
-    }
+.display {
+  padding: 2em 3em;
+  h1 {
+    @include text-style(1.5em, inherit, 700);
+    margin: 0;
+  }
+  h2 {
+    @include text-style(1.25em, inherit, 600);
+    margin-top: 1em;
+  }
+}
+.view {
+  @include flex(column, nowrap, 0, start, stretch);
+  main {
+    background-color: $lightLightGrey;
+    flex-basis: 80vw;
+    flex-shrink: 1;
+    flex-grow: 0;
   }
 }
 
+.mon-compte {
+  min-height: 40vh;
+
+  @include flex(column, nowrap, 3em, start, center);
+  .top {
+    @include flex(column, nowrap, .5em, start, center);
+    text-align: center;
+    h1 {
+      margin: 0
+    }
+    button {
+      @include buttonStyle($purple, $purple, $white, fit-content, .8em)
+    }
+  }
+  .info {
+    @include flex(row, nowrap, 1em, center, center);
+    img {
+      height: 5em;
+      border-radius: 50%;
+      margin-right: 1em;
+    }
+    p {
+      @include text-style(1em, inherit, 400);
+      margin-bottom: .25em;
+      margin-top: .25em;
+      text-align: center;
+    }
+  }
+}
+.emissions-liste {
+  @include grid(repeat(auto-fit, 13em), auto, 1em, start, center);
+}
+
+@media screen and (min-width: 800px) {
+  .display {
+    h1 {
+      @include text-style(2em, inherit, 700);
+      margin-bottom: 1em;
+    }
+    h2 {
+      @include text-style(1.5em, inherit, 600);
+      margin-top: 1em;
+    }
+  }
+  .view {
+    @include flex(row, nowrap, 0, start, stretch);
+    min-height: 60vh;
+
+    main {
+      flex-basis: 80vw;
+      flex-shrink: 1;
+      flex-grow: 0;
+    }
+  }
+  .mon-compte {
+    @include flex(column, nowrap, 2em, start);
+
+    .top {
+      @include flex(row, wrap, 2em, space-between, center);
+
+      button {
+        @include buttonStyle($purple, $purple, $white);
+        flex: 0 0 fit-content;
+      }
+    }
+
+    .info {
+      @include flex(row, wrap, 2em, start, center);
+
+      div {
+        @include flex(column, nowrap, 1em, start, flex-start);
+      }
+
+      p {
+        @include text-style(1.3em, inherit, 400);
+      }
+
+      img {
+        height: 6em
+      }
+    }
+  }
+}
 
 
 </style>

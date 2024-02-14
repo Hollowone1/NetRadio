@@ -77,12 +77,10 @@ export default {
   padding-right: 3em;
   .top {
     h2{
-      margin: 0;
-      margin-bottom: .5em;
-      margin-top: 1em;
-
+      margin: 0
     }
-    @include flex(row, nowrap, 1em, start);
+    margin: 1em 0 1em;
+    @include flex(row, nowrap, 1em, start, center);
     img {
       height: 1em;
     }
