@@ -53,8 +53,8 @@ export default {
 
   <div class="podcasts">
     <div class="top">
-      <h2>Podcasts</h2>
-      <img src="/icons/fleche.svg" alt="arrow">
+      <div><h2>Podcasts</h2></div>
+      <div><img src="/icons/fleche.svg" alt="arrow"></div>
     </div>
     <div class="podcasts-liste">
       <podcast v-for="podcast in podcasts" :podcast="podcast" :key="podcast.id"></podcast>
@@ -82,10 +82,15 @@ export default {
       margin-top: 1em;
 
     }
+
     @include flex(row, nowrap, 1em, start);
     img {
       height: 1em;
     }
+
+  display: grid;
+  grid-template-columns: auto auto;
+  padding: 10px;
   }
 }
 
