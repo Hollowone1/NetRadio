@@ -10,7 +10,7 @@ p {
 .podcast {
   background-color: $lightField;
   border-radius: 10px;
-  padding: 1em;
+  padding: .2em 1em;
   @include flex(row, nowrap, 1.5em, space-between, center);
 
   &-info p:nth-child(1) {

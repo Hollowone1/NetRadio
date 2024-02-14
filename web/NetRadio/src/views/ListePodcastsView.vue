@@ -9,12 +9,48 @@ export default {
     SearchBar,
     Podcast
   },
+  data() {
+    return {
+      podcasts: [],
+      podcastsToday: [],
+      recentPodcasts: []
+    }
+  },
+  created() {
+    this.$api.get("podcasts")
+        .then((response) => {
+          this.podcasts = response.data.podcasts
+          this.podcastsToday = this.getPodcastsDate(new Date().toISOString().split('T')[0]);
+          this.recentPodcasts = this.podcasts.slice(-6)
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+  },
+  methods: {
+    getPodcastsDate(date) {
+      return this.podcasts.filter(podcast => podcast.date === date);
+    },
+  },
 };
 </script>
 
 <template>
   <en-direct></en-direct>
-  <podcast></podcast>
+  <div class="podcasts">
+    <div class="jour">
+      <h2>Aujourd'hui</h2>
+      <div class="podcasts-liste">
+        <podcast v-for="podcast in podcastsToday" :podcast="podcast" :key="podcast.id"></podcast>
+      </div>
+    </div>
+    <div class="jour">
+      <h2>Récemment</h2>
+      <div class="podcasts-liste">
+        <podcast v-for="podcast in recentPodcasts" :podcast="podcast" :key="podcast.id"></podcast>
+      </div>
+    </div>
+  </div>
 
 
   <a href="">Découvrir d'autres podcasts</a>
