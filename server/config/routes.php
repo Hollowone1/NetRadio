@@ -16,6 +16,7 @@ return function (App $app) {
         $app->get("[/]", GetAllPodcasts::class)->setName('podcast.index');
         $app->post("[/]", \radio\net\app\action\podcast\PostPodcast::class)->setName('podcast.create');
         $app->put('/{id}[/]', \radio\net\app\action\podcast\PutPodcast::class)->setName('podcast.update');
+        $app->get('/{id}/users', \radio\net\app\action\podcast\GetUSersByPodcast::class)->setName('podcast.invites');
     });
 
     //emission

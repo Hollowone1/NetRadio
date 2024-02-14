@@ -12,6 +12,7 @@ use radio\net\domaine\service\playlist\PlaylistService;
 use radio\net\domaine\service\son\SonService;
 
 return array(
+    //podcast
     GetPodcastByIdAction::class => function (ContainerInterface $container) {
         return new GetPodcastByIdAction($container->get('PodcastService'));
     },
@@ -27,6 +28,10 @@ return array(
     GetPodcastByEmission::class => function (ContainerInterface $container) {
         return new GetPodcastByEmission($container->get('PodcastService'));
     },
+    \radio\net\app\action\podcast\GetUSersByPodcast::class => function (ContainerInterface $container) {
+        return new \radio\net\app\action\podcast\GetUSersByPodcast($container->get('PodcastService'));
+    },
+
     \radio\net\app\action\emission\GetEmissionById::class => function (ContainerInterface $container) {
         return new \radio\net\app\action\emission\GetEmissionById($container->get('EmissionService'));
     },
