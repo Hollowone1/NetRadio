@@ -8,6 +8,7 @@ export default {
   data() {
     return {
       emissions: [],
+      currentDate:'jeudi 9 novembre 2023'
     }
   },
   created() {
@@ -19,7 +20,19 @@ export default {
       .catch(error => {
         console.error('Erreur lors de la récupération des programmes :', error);
       });
-  }
+  },
+  methods: {
+    prevDate() {
+      const date = new Date(this.currentDate);
+      date.setDate(date.getDate() - 1);
+      this.currentDate = date.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    },
+    nextDate() {
+      const date = new Date(this.currentDate);
+      date.setDate(date.getDate() + 1);
+      this.currentDate = date.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    }
+}
 }
 </script>
 <template>
@@ -42,9 +55,9 @@ export default {
       <h2>Grille des programmes</h2>
       <h3>Net Radio</h3>
       <div class="dates">
-        <img src="/icons/gauche.svg">
-        <p>Jeudi 9 novembre 2023</p>
-        <img src="/icons/droite.svg">
+        <img src="/icons/gauche.svg" @click="prevDate">
+        <p>{{ currentDate }}</p>
+        <img src="/icons/droite.svg" @click="nextDate">
       </div>
 
       <section>
