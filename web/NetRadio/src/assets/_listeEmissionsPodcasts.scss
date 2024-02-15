@@ -11,6 +11,7 @@ p {
   background-color: $lightField;
   border-radius: 10px;
   padding: .2em 1em;
+
   @include flex(row, nowrap, 1.5em, space-between, center);
 
   &-info p:nth-child(1) {
@@ -33,6 +34,10 @@ p {
   padding: 3em 1em 1em;
   background-position:center top;
   color: white;
+  img {
+    height: 2em;
+    align-self: flex-end;
+  }
   p:nth-child(1) {
     @include text-style(1.2em, inherit, 500);
   }
@@ -54,6 +59,6 @@ p {
     box-sizing: border-box;
     height: 13em;
     padding: 1em;
-    @include flex(column, nowrap, 0, flex-end, flex-start);
+    @include flex(column, nowrap, 1em, space-between, flex-start);
   }
 }
