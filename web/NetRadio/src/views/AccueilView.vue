@@ -9,7 +9,7 @@ export default {
     Emission,
     Podcast,
     Calendar,
-    
+
   },
   data() {
     return {
@@ -19,15 +19,24 @@ export default {
   },
   methods: {},
   created() {
-    this.$api.get("emissions")
+    this.$api.get("/emissions")
         .then((response) => {
-          this.emissions = response.data.emission.slice(0, 6)
+          this.emissions = response.data.emission
+          this.emissions.forEach(emission => {
+            this.$api.get(emission.user)
+                .then((response2) => {
+                  emission.user = `${response2.data.user.nom} ${response2.data.user.prenom}`
+                })
+                .catch((error) => {
+                  console.log(error)
+                });
+          });
         })
         .catch((error) => {
           console.log(error)
         });
 
-    this.$api.get("podcasts")
+    this.$api.get("/podcasts")
         .then((response) => {
           this.podcasts = response.data.podcasts.slice(0, 6)
         })

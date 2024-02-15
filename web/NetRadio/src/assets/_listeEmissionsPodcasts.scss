@@ -34,6 +34,8 @@ p {
   padding: 3em 1em 1em;
   background-position:center top;
   color: white;
+  @include flex(column, nowrap, 1em, space-between, flex-start);
+
   img {
     height: 2em;
     align-self: flex-end;
@@ -59,6 +61,5 @@ p {
     box-sizing: border-box;
     height: 13em;
     padding: 1em;
-    @include flex(column, nowrap, 1em, space-between, flex-start);
   }
 }
