@@ -7,16 +7,14 @@ import PresentationEmission from '@/views/PresentationEmissionView.vue'
 import ResultatEmission from '@/views/ResultatsEmissionsView.vue'
 import ResultatPodcast from '@/views/ResultatsPodcastsView.vue'
 import ToutesLesEmissions from '@/views/ToutesEmissionsView.vue'
-import ProfilUtilisateur from '@/views/ProfilUtilisateurView.vue'
+//import ProfilUtilisateur from '@/views/ProfilUtilisateurView.vue'
 import MonCompte from '@/views/MonCompteView.vue'
-import ListeUtilisateurs from '@/views/ListeUtilisateursView.vue'
+import Connexion from '@/views/ConnexionView.vue'
+import Inscription from '@/views/InscriptionView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-
-
-
     {
       path: '/',
       name: 'accueil',
@@ -38,7 +36,7 @@ const router = createRouter({
       component: ListePodcasts
     },
     {
-      path: '/presentation-emission/:id',
+      path: '/emission/:id',
       name: 'presentation emission',
       component: PresentationEmission
     },
@@ -57,24 +55,23 @@ const router = createRouter({
       name: 'résultat des emissions',
       component: ToutesLesEmissions
     },
-    /*{
-      path: '/profil',
-      name: 'profil-utilisateurs',
-      component: ProfilUtilisateur
-    },*/
     {
-      path: '/mon-compte/:id',
+      path: '/mon-compte',
       name: 'mon compte',
       component: MonCompte
     },
     {
-      path: '/liste-utilisateur',
-      name: 'liste des utilisateurs',
-      component: ListeUtilisateurs
+      path: '/connexion',
+      name: 'connexion',
+      component: Connexion
+    },
+    {
+      path: '/inscription',
+      name: 'inscription',
+      component: Inscription
     },
 
   ]
 })
 
 export default router
-
