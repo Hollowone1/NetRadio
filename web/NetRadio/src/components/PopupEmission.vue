@@ -177,6 +177,9 @@ $widthPopupEm: 30em;
   label {
     @include text-style(1.2em, $lightBlack, 500);
   }
+  textarea{
+    min-height: 6em;
+  }
   input, textarea {
     width:calc($widthPopup - 1em);
     max-width: calc($widthPopupEm * 1.5);
@@ -185,7 +188,7 @@ $widthPopupEm: 30em;
     border-color: transparent;
     border-bottom-color: #dcdcdc;
     background-color: $lightLightGrey;
-    height: auto;
+    height: fit-content;
     font-size: 1em;
     padding: .3em .5em;
     @include text-style(.95em, $darkGrey, 300);

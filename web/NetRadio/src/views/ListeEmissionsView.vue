@@ -14,18 +14,24 @@ export default {
     }
   },
   created() {
-    this.$api.get("emissions")
+    this.$api.get("/emissions")
         .then((response) => {
           this.emissions = response.data.emission
-          console.log(this.emissions)
           let themes = []
           this.emissions.forEach(emission => {
             if (!themes.includes(emission.theme)) {
               themes.push(emission.theme)
             }
+            this.$api.get(emission.user)
+                .then((response2) => {
+                  emission.user = `${response2.data.user.nom} ${response2.data.user.prenom}`
+                })
+                .catch((error) => {
+                  console.log(error)
+                });
           });
           this.themes = themes;
-          console.log(this.themes)
+          console.log(this.emissions)
         })
         .catch((error) => {
           console.log(error)

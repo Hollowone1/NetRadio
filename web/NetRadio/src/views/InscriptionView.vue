@@ -11,14 +11,15 @@ export default {
   methods: {
     inscrire() {
 
-      this.$api.post('/signup', {
+      this.$api.post('users/signup', {
         username: this.username,
         email: this.mail,
         password: this.password,
       })
       .then(response => {
         console.log('Inscription réussie :', response);
-        // Rediriger vers la page de connexion ou afficher un message de succès
+        this.errorMessage = "Inscription réussie.";
+        this.$router.push('/');
       })
       .catch(error => {
         console.error('Erreur lors de l\'inscription :', error);

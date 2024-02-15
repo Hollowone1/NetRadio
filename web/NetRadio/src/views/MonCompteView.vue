@@ -23,13 +23,13 @@ export default {
     ...mapState(useUserStore, ['user'])
   },
   created() {
-    this.$api.get("emissions")
+    this.$api.get("/emissions")
         .then((response) => {
           this.emissions = response.data.emission
           this.emissions.forEach(emission => {
             this.$api.get(emission.user)
                 .then((response2) => {
-                  emission.user = response2.data.user.nom
+                  emission.user = `${response2.data.user.nom} ${response2.data.user.prenom}`
                 })
                 .catch((error) => {
                   console.log(error)
