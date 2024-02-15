@@ -22,7 +22,7 @@ class UserService implements iUserService
 
     public function GetInfoUserByMail ($mail) {
         try {
-            $user = User::find($mail)->first();
+            $user = User::where('email', $mail)->first();
             return $user->toDTO();
         } catch (\Exception $e) {
             throw new UserNotFoundException("User not found");

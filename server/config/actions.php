@@ -90,8 +90,4 @@ return array(
     RefreshAction::class => function (ContainerInterface $container) {
         return new RefreshAction($container->get('AuthService'));
     },
-
-    GetUsernameAction::class => function (ContainerInterface $container) {
-        return new GetUsernameAction($container->get('AuthService'));
-    }
 );
