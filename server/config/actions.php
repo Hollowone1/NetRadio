@@ -1,13 +1,26 @@
 <?php
 
 use Psr\Container\ContainerInterface;
+use radio\net\app\action\auth\GetUsernameAction;
+use radio\net\app\action\auth\RefreshAction;
+use radio\net\app\action\auth\SigninAction;
+use radio\net\app\action\auth\SignupAction;
+use radio\net\app\action\auth\ValidateAction;
+use radio\net\app\action\emission\GetEmissionById;
+use radio\net\app\action\emission\GetEmissionByTheme;
+use radio\net\app\action\emission\GetEmissionsAction;
 use radio\net\app\action\playlist\GetPlaylistByIdAction;
 use radio\net\app\action\podcast\GetAllPodcasts;
 use radio\net\app\action\podcast\GetPodcastByEmission;
 use radio\net\app\action\podcast\GetPodcastByIdAction;
+use radio\net\app\action\podcast\GetUSersByPodcast;
+use radio\net\app\action\podcast\PostPodcast;
+use radio\net\app\action\podcast\PutPodcast;
 use radio\net\app\action\son\GetAllSons;
 use radio\net\app\action\son\GetSonByIdAction;
 use radio\net\app\action\son\GetSonsByPlaylistId;
+use radio\net\app\action\user\GetUserAllInfo;
+use radio\net\app\action\user\GetUserByMail;
 use radio\net\domaine\service\playlist\PlaylistService;
 use radio\net\domaine\service\son\SonService;
 
@@ -16,11 +29,11 @@ return array(
     GetPodcastByIdAction::class => function (ContainerInterface $container) {
         return new GetPodcastByIdAction($container->get('PodcastService'));
     },
-    \radio\net\app\action\podcast\PostPodcast::class => function (ContainerInterface $container) {
-        return new \radio\net\app\action\podcast\PostPodcast($container->get('PodcastService'));
+    PostPodcast::class => function (ContainerInterface $container) {
+        return new PostPodcast($container->get('PodcastService'));
     },
-    \radio\net\app\action\podcast\PutPodcast::class => function (ContainerInterface $container) {
-        return new \radio\net\app\action\podcast\PutPodcast($container->get('PodcastService'));
+    PutPodcast::class => function (ContainerInterface $container) {
+        return new PutPodcast($container->get('PodcastService'));
     },
     GetAllPodcasts::class => function (ContainerInterface $container) {
         return new GetAllPodcasts($container->get('PodcastService'));
@@ -28,24 +41,24 @@ return array(
     GetPodcastByEmission::class => function (ContainerInterface $container) {
         return new GetPodcastByEmission($container->get('PodcastService'));
     },
-    \radio\net\app\action\podcast\GetUSersByPodcast::class => function (ContainerInterface $container) {
-        return new \radio\net\app\action\podcast\GetUSersByPodcast($container->get('PodcastService'));
+    GetUSersByPodcast::class => function (ContainerInterface $container) {
+        return new GetUSersByPodcast($container->get('PodcastService'));
     },
 
-    \radio\net\app\action\emission\GetEmissionById::class => function (ContainerInterface $container) {
-        return new \radio\net\app\action\emission\GetEmissionById($container->get('EmissionService'));
+    GetEmissionById::class => function (ContainerInterface $container) {
+        return new GetEmissionById($container->get('EmissionService'));
     },
-    \radio\net\app\action\emission\GetEmissionsAction::class => function (ContainerInterface $container) {
-        return new \radio\net\app\action\emission\GetEmissionsAction($container->get('EmissionService'));
+    GetEmissionsAction::class => function (ContainerInterface $container) {
+        return new GetEmissionsAction($container->get('EmissionService'));
     },
-    \radio\net\app\action\emission\GetEmissionByTheme::class => function (ContainerInterface $container) {
-        return new \radio\net\app\action\emission\GetEmissionByTheme($container->get('EmissionService'));
+    GetEmissionByTheme::class => function (ContainerInterface $container) {
+        return new GetEmissionByTheme($container->get('EmissionService'));
     },
-    \radio\net\app\action\user\GetUserAllInfo::class => function (ContainerInterface $container) {
-        return new \radio\net\app\action\user\GetUserAllInfo($container->get('UserService'));
+    GetUserAllInfo::class => function (ContainerInterface $container) {
+        return new GetUserAllInfo($container->get('UserService'));
     },
-    \radio\net\app\action\user\GetUserByMail::class => function (ContainerInterface $container) {
-        return new \radio\net\app\action\user\GetUserByMail($container->get('UserService'));
+    GetUserByMail::class => function (ContainerInterface $container) {
+        return new GetUserByMail($container->get('UserService'));
     },
     GetAllSons::class => function (ContainerInterface $container) {
         return new GetAllSons($container->get(SonService::class));
@@ -60,4 +73,25 @@ return array(
     GetPlaylistByIdAction::class => function (ContainerInterface $container) {
         return new GetPlaylistByIdAction($container->get(PlaylistService::class));
     },
+
+    //users
+    SigninAction::class => function (ContainerInterface $container) {
+        return new SigninAction($container->get('AuthService'));
+    },
+
+    SignupAction::class => function (ContainerInterface $container) {
+        return new SignupAction($container->get('AuthService'));
+    },
+
+    ValidateAction::class => function (ContainerInterface $container) {
+        return new ValidateAction($container->get('AuthService'));
+    },
+
+    RefreshAction::class => function (ContainerInterface $container) {
+        return new RefreshAction($container->get('AuthService'));
+    },
+
+    GetUsernameAction::class => function (ContainerInterface $container) {
+        return new GetUsernameAction($container->get('AuthService'));
+    }
 );

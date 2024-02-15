@@ -8,7 +8,8 @@ export default {
     EnDirect,
     Emission,
     Podcast,
-    Calendar
+    Calendar,
+    
   },
   data() {
     return {
