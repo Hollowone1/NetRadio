@@ -201,5 +201,16 @@ a{
 
 }
 
+@media screen and (max-width: 750px) {
+  input{
+    width: 15em;
+  }
+  label{
+    width: 15em;
+  }
+  .login-button{
+    width: 15em;
+  }
+}
 
 </style>

@@ -17,10 +17,22 @@ class Cors
         }
 
         $response = $next->handle($rq);
-        return $response->withHeader('Access-Control-Allow-Origin', $rq->getHeaderLine('Origin'))
-            ->withHeader('Access-Control-Allow-Headers', $rq->getHeaderLine('Access-Control-Request-Headers'))
-            ->withHeader('Access-Control-Allow-Methods', $rq->getHeaderLine('Access-Control-Request-Method'))
-            ->withHeader('Access-Control-Max-Age', 3600)
-            ->withHeader('Access-Control-Allow-Credentials', 'true');
+        $origin = $rq->getHeaderLine('Origin');
+
+        if ($rq->hasHeader('Authorization')) {
+            $response = $response->withHeader('Access-Control-Allow-Origin', $origin)
+                ->withHeader('Access-Control-Allow-Credentials', 'true')
+                ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        } else {
+            $response = $response->withHeader('Access-Control-Allow-Origin', 'http://localhost:2080/')
+                ->withHeader('Access-Control-Allow-Credentials', 'false')
+                ->withHeader('Access-Control-Allow-Headers', 'Content-Type');
+        }
+
+        $response = $response->withHeader('Access-Control-Max-Age', 3600)
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+
+        return $response;
+
     }
 }

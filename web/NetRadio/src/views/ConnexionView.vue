@@ -32,7 +32,7 @@ export default {
         <input v-model="password" type="password" id="password" placeholder=" " required />    
       </div>
       <button @click="connection()" class="login-button">Se connecter</button>
-      <div class="register"><RouterLink to="/inscription">Pas encore de compte ? Inscrivez-vous</RouterLink></div>
+      <div class="register"><RouterLink to="/inscription"> Pas encore de compte ? Inscrivez-vous</RouterLink></div>
     </form>
   </div>
 </template>
@@ -145,6 +145,7 @@ hr {
 }
 .register{
   text-align: center;
+  color: #8d4ba5;
 }
 input{
   border: transparent;
@@ -157,6 +158,18 @@ form {
   margin: 5em;
   text-align: center;
 
+}
+
+@media screen and (max-width: 750px) {
+  input{
+    width: 15em;
+  }
+  label{
+    width: 15em;
+  }
+  .login-button{
+    width: 15em;
+  }
 }
 
 </style>

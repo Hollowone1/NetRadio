@@ -15,7 +15,7 @@ class Creneau extends Model
         'jourSemaine',
         'heureDeDepart',
         'heureDeFin',
-        'emissionId'
+        'emission_id'
     ];
 
     public function toDTO () {
@@ -24,7 +24,7 @@ class Creneau extends Model
             $this->jourSemaine,
             $this->heureDeDepart,
             $this->heureDeFin,
-            $this->emissionId
+            $this->emission_id
         );
     }
 }
