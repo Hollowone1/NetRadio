@@ -1,4 +1,4 @@
--- Adminer 4.8.1 MySQL 11.1.2-MariaDB-1:11.1.2+maria~ubu2204 dump
+-- Adminer 4.8.1 MySQL 11.0.2-MariaDB-1:11.0.2+maria~ubu2204 dump
 
 SET NAMES utf8;
 SET time_zone = '+00:00';
@@ -23,6 +23,7 @@ CREATE TABLE `Emission` (
                             `id` int(3) NOT NULL AUTO_INCREMENT,
                             `titre` varchar(128) NOT NULL,
                             `description` varchar(512) NOT NULL,
+                            `onDirect` tinyint(4) DEFAULT NULL,
                             `theme` varchar(128) NOT NULL,
                             `photo` varchar(128) DEFAULT NULL,
                             `user_mail` varchar(128) DEFAULT NULL,
@@ -37,7 +38,9 @@ CREATE TABLE `InvitesPodcast` (
                                   `emailInvite` varchar(128) NOT NULL,
                                   `idPodcast` int(4) NOT NULL,
                                   KEY `idPodcast` (`idPodcast`),
-                                  KEY `emailInvite` (`emailInvite`)
+                                  KEY `emailInvite` (`emailInvite`),
+                                  CONSTRAINT `InvitesPodcast_ibfk_1` FOREIGN KEY (`emailInvite`) REFERENCES `User` (`email`),
+                                  CONSTRAINT `InvitesPodcast_ibfk_2` FOREIGN KEY (`idPodcast`) REFERENCES `Podcast` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 
@@ -94,9 +97,8 @@ DROP TABLE IF EXISTS `User`;
 CREATE TABLE `User` (
                         `email` varchar(128) NOT NULL,
                         `password` varchar(128) NOT NULL,
-                        `prenom` varchar(128) NOT NULL,
-                        `nom` varchar(128) NOT NULL,
-                        `role` int(4) NOT NULL,
+                        `username` varchar(128) DEFAULT NULL,
+                        `role` int(4) DEFAULT NULL,
                         `refresh_token` varchar(64) DEFAULT NULL,
                         `refresh_token_expiration_date` timestamp NULL DEFAULT NULL,
                         `reset_password_token` varchar(64) DEFAULT NULL,
@@ -107,4 +109,4 @@ CREATE TABLE `User` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 
--- 2023-12-20 11:02:35
+-- 2024-02-15 12:54:55
