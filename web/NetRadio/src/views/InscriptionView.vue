@@ -24,9 +24,9 @@ export default {
     }
 
       this.$api.post('users/signup', {
-        username: this.username,
-        email: this.mail,
-        password: this.password,
+        username: this.username.trim(),
+        email: this.mail.trim(),
+        password: this.password.trim(),
       })
       .then(response => {
       console.log('Inscription réussie :', response);
