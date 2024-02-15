@@ -77,6 +77,7 @@ h2 {
 }
 
 label {
+  font-family: "Inter", sans-serif;
   font-size: inherit;
   color: inherit;
   font-weight: inherit;
