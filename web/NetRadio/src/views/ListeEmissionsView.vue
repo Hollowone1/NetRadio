@@ -22,7 +22,7 @@ export default {
             if (!themes.includes(emission.theme)) {
               themes.push(emission.theme)
             }
-            this.$api.get(emission.user)
+            this.$api.get(emission.links.users.href)
                 .then((response2) => {
                   emission.user = `${response2.data.user.nom} ${response2.data.user.prenom}`
                 })
