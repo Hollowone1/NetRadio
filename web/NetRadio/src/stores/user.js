@@ -13,11 +13,11 @@ export const useUserStore = defineStore('user', {
             this.loggedIn = true;
             this.tokens = tokens;
             //this.user = user;
-            //this.$api.get()
         },
         logoutUser() {
             this.loggedIn = false;
             this.user = [];
+            this.tokens = [];
         },
     },
     persist: {

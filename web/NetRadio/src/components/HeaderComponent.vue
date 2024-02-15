@@ -4,18 +4,25 @@ import { useUserStore } from "@/stores/user.js";
 
 export default {
   computed: {
-    ...mapState(useUserStore, ['user', 'loggedIn'])
+    ...mapState(useUserStore, ['user', 'loggedIn','tokens'])
   },
   data() {
-    return {}
+    return {
+
+    }
   },
   created() {
-    //console.log("han", this.user)
+    console.log("han", this.tokens)
   },
   methods: {
+    ...mapActions(useUserStore, ['logoutUser']),
     toggleConnexion() {
       this.connected = !this.connected
     },
+    logOut() {
+      this.logoutUser()
+      this.$router.push('/connexion')
+    }
   },
 };
 </script>
