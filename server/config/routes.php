@@ -54,10 +54,10 @@ return function (App $app) {
         $app->post('/refresh', RefreshAction::class)->setName('refresh');
         $app->get('/validate', ValidateAction::class)->setName('validate_user');
 
+        //user infos
         $app->get("[/]", GetUserAllInfo::class);
-        $app->get("/{id_user:[0-9]+}[/]", GetUserByMail::class)->setName('/user/{id_user}[/]');
         $app->get("/{email_user}/playlists", GetPlaylistByEmailUserAction::class)->setName('/user/{email_user}/playlist');
-        $app->get('/username[/]', GetUsernameAction::class)->setName('username');
+        $app->get('/mail/{email}', GetUserByMail::class)->setName('user.index');
     });
 
     //sons

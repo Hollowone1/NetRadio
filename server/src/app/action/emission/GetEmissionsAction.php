@@ -31,7 +31,7 @@ class GetEmissionsAction extends Action
                     'theme' => $emission->theme,
                     'photo' => $emission->photo,
                     'onDirect' =>$emission->onDirect,
-                    'user' => $route->urlFor('/user/{id_user}[/]', ['id_user' => $emission->user])
+                    'user' => $route->urlFor('user.index', ['email' => $emission->user])
                 ];
             }
 
