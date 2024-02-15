@@ -1,4 +1,4 @@
- <script>
+<script>
 import EnDirect from '@/components/EnDirect.vue'
 
 export default {
@@ -12,16 +12,13 @@ export default {
       programs: [],
     }
   },
+  computed: {
+    formattedCurrentDate() {
+      return this.currentDate.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+  },
   created() {
     this.loadPrograms()
-    this.$api.get('podcasts')
-      .then(response => {
-        console.log(response)
-        this.emissions = response.data.podcasts;
-      })
-      .catch(error => {
-        console.error('Erreur lors de la récupération des programmes :', error);
-      });
   },
   methods: {
     prevDate() {
@@ -29,31 +26,57 @@ export default {
       date.setDate(date.getDate() - 1);
       this.currentDate = date;
       this.loadPrograms();
-  },
-
+      this.displayEmission();
+    },
     nextDate() {
       const date = new Date(this.currentDate);
       date.setDate(date.getDate() + 1);
       this.currentDate = date;
       this.loadPrograms();
-},
+      this.displayEmission();
+    },
     loadPrograms() {
-        this.$api.get('podcasts', { params: { date: this.currentDate } })
-          .then(response => {
-            this.emissions = response.data.podcasts.date;
-            this.programs = this.emissions.map(program => {
-              program.start_time = new Date(program.start_time);
-              return program;
-            });
-          this.programs.sort((a, b) => a.start_time - b.start_time);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
-}
-}
+  this.$api.get('podcasts', { params: { date: this.currentDate } })
+    .then(response => {
+      this.emissions = response.data.podcasts;
+      this.programs = this.emissions.map(program => {
+        program.start_time = new Date(program.start_time);
+        return program;
+      });
+      this.programs.sort((a, b) => a.start_time - b.start_time);
+      this.displayEmission();
+    })
+    .catch(error => {
+      console.error('Erreur lors de la récupération des programmes :', error);
+    });
+},
+    findAndDisplayCurrentEmission() {
+      const currentEmission = this.emissions.find(emission => emission.date === this.formattedCurrentDate);
+      if (currentEmission) {
+        this.displayEmission(currentEmission);
+      }
+    },
+    displayEmission() {
+  const currentDate = new Date(this.currentDate);
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentDay = currentDate.getDate();
 
+  this.currentEmission = this.emissions.find(emission => {
+    const emissionDate = new Date(emission.date);
+    return (
+      emissionDate.getFullYear() === currentYear &&
+      emissionDate.getMonth() + 1 === currentMonth &&
+      emissionDate.getDate() === currentDay
+    );
+  });
+
+  if (!this.currentEmission) {
+    console.log('Aucune émission trouvée pour cette date');
+  }
+}
+  }
+}
 </script>
 <template>
   <header-component></header-component>
@@ -67,12 +90,12 @@ export default {
       <h3>Net Radio</h3>
       <div class="dates">
         <img src="/icons/gauche.svg" @click="prevDate">
-        <p>{{ currentDate }}</p>
+        <p>{{ formattedCurrentDate }}</p>
         <img src="/icons/droite.svg" @click="nextDate">
       </div>
 
       <section>
-        <div class="prog" v-for="(emission, index) in emissions" :key="index">
+        <div class="prog" v-for="(emission, index) in emissions" :key="emission.id">
           <div class="prog-infos">
             <div class="prog-infos-texte">
               <h5> {{ emission.titre }}</h5>
@@ -80,6 +103,10 @@ export default {
               <p>Avec nom de l'invité, nom de l'invité, ...</p>
             </div>
             <img :src="emission.photo" alt="image de l'émission">
+          </div>
+          <div v-if="currentEmission">
+             <h2>{{ currentEmission.title }}</h2>
+             <p>{{ currentEmission.description }}</p>
           </div>
         </div>
       </section>
