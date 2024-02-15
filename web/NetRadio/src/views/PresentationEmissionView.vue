@@ -5,6 +5,8 @@ export default {
   data() {
     return {
       emission: [],
+      podcasts: [],
+      playing: false
     }
   },
   components: {
@@ -14,7 +16,7 @@ export default {
     this.$api.get(`/emissions/${this.$route.params.id}`)
         .then((response) => {
           this.emission = response.data.emission
-          console.log(this.emission)
+          //console.log(this.emission)
           this.$api.get(this.emission.user)
               .then((response2) => {
                 this.emission.user = `${response2.data.user.nom} ${response2.data.user.prenom}`
@@ -29,12 +31,30 @@ export default {
 
     this.$api.get(`/emissions/${this.$route.params.id}/podcasts`)
         .then((response) => {
-          console.log("podcasrs", response.data.podcasts)
+          //console.log("podcasrs", response.data.podcasts)
           this.podcasts = response.data.podcasts
+          this.podcasts.forEach(podcast => {
+            podcast.playing = false
+            podcast.plus = false
+          })
         })
         .catch((error) => {
           console.log(error)
         });
+  },
+  methods: {
+    startPlaying(podcast) {
+      podcast.playing = true
+      //récup le mp4
+      //lancer le mp4
+    },
+    stopPlaying(podcast) {
+      podcast.playing = false
+      //stop l'audio de son
+    },
+    togglePlus(podcast) {
+      podcast.plus = !podcast.plus
+    }
   }
 }
 
@@ -44,44 +64,43 @@ export default {
   <main>
     <en-direct></en-direct>
 
-    <section class="presentation">
+    <div class="presentation">
       <div class="presentation-infos">
-        <embed :src="emission.photo"/>
+        <img alt="emission photo" :src="emission.photo"/>
         <div class="presentation-infos-texte">
           <h3>{{ emission.titre }}</h3>
           <p> {{ emission.description }}</p>
         </div>
       </div>
-    </section>
+    </div>
 
-    <section class="podcasts-emission">
+    <div class="podcasts-emission">
       <h2>Podcasts</h2>
       <div class="episodes">
-        <section class="episode">
+        <section v-for="podcast in podcasts" class="episode">
           <div class="episode-infos">
             <div>
-              <embed class="play" src="/icons/miniplay.svg">
-              <p class="titre">Nom de l'épisode</p>
+              <img @click="stopPlaying(podcast)" v-if="podcast.playing" class="pause" src="/icons/pause.svg"
+                   alt="pause icon">
+              <img @click="startPlaying(podcast)" v-else class="play" src="/icons/miniplay.svg" alt="play icon">
+              <p class="titre">{{ podcast.titre }}</p>
             </div>
             <div>
-              <p>00:00</p>
-              <embed class="plus" src="/icons/plus.svg">
+              <p>{{ podcast.duree }}</p>
+              <img @click="togglePlus(podcast)" v-if="podcast.plus" class="croix" src="/icons/croix.svg"
+                   alt="cross icon">
+              <img @click="togglePlus(podcast)" v-else class="plus" src="/icons/plus.svg" alt="plus icon">
             </div>
-            <!--<embed class="croix" src="/icons/croix.svg">-->
           </div>
-          <div class="episode-infos-plus">
-            <p><strong>Présentateur : </strong> Nom Prénom</p>
+          <div class="episode-infos-plus" :class="{ active : podcast.plus}">
+            <p><strong>Présentateur : </strong> {{ emission.user }}</p>
             <p><strong>Invités : </strong> Nom Prénom, Nom Prénom</p>
-            <p class="date">00/00/0000</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris nisi ut aliquip ex ea commodo consequat. </p>
+            <p class="date">{{ podcast.date }}</p>
+            <p>{{ podcast.description }}</p>
           </div>
         </section>
       </div>
-    </section>
+    </div>
     <router-link to="/liste-des-emissions">Découvrir d'autres émissions</router-link>
   </main>
 </template>
@@ -99,23 +118,8 @@ export default {
 }
 
 .presentation {
-  &-titre {
-    h2, embed {
-      display: inline-block;
-    }
-
-    h2 {
-      @include text-style(1.8em, inherit, bold);
-    }
-
-    embed {
-      height: 1em;
-      margin-left: .5em;
-    }
-  }
-
   &-infos {
-    embed {
+    img {
       width: 100%;
       border-radius: 10px;
       margin-bottom: .5em;
@@ -139,20 +143,29 @@ export default {
 
   .episode {
     margin-bottom: 1em;
-    padding: .7em 1em .7em 1em;
+    padding: 1.5em 2em 1.5em 2em;
     border: 3px solid $purple;
-    border-radius: 10px;
+    border-radius: 20px;
 
     &-infos {
       font-size: 1.1em;
-      @include flex(row, nowrap, .2em, space-between, center);
+      @include flex(column, nowrap, 1em, space-between, stretch);
 
       div {
         @include flex(row, nowrap, 1em, space-between, center);
       }
 
-      embed {
+      img {
+        height: 1.7em
+      }
+
+      .play {
         height: 1.7em;
+      }
+
+      .pause {
+        height: 1.5em;
+        padding-right: .3em;
       }
 
       .titre {
@@ -166,6 +179,9 @@ export default {
         p {
           margin-top: .5em;
         }
+        p:nth-child(1) {
+          padding-top: 1em
+        }
 
         .date {
           @include text-style(inherit, inherit, 200);
@@ -175,6 +191,9 @@ export default {
   }
 }
 
+.active {
+  display: initial !important;
+}
 
 @media screen and (min-width: 700px) {
   .podcasts-emission, .presentation {
@@ -186,7 +205,7 @@ export default {
         @include text-style(2.3em, inherit, bold);
       }
 
-      embed {
+      img {
         height: 1.5em;
       }
     }
@@ -194,7 +213,7 @@ export default {
     &-infos {
       @include flex(row, nowrap, 1em, space-between, center);
 
-      embed {
+      img {
         width: 25vw;
       }
 
@@ -215,28 +234,28 @@ export default {
     }
 
     .episodes {
-      @include grid(repeat(auto-fit, minmax(22em, 1fr)), auto, 1em, center, stretch);
+      @include grid(1fr, auto, 1em, center, stretch);
 
       .episode {
         margin: 0;
 
-        embed:hover {
+        img:hover {
           cursor: pointer;
         }
 
         &-infos {
-          font-size: 1.1em;
-          @include flex(row, nowrap, .2em, space-between, center);
+          font-size: 1.2em;
+          @include flex(row, nowrap, 2.5em, space-between, center);
 
           div {
             @include flex(row, nowrap, 1em, space-between, center);
           }
 
           &-plus {
-            font-size: 1em;
+            font-size: 1.1em;
             display: none;
-            //passer en display:initial au clic
             margin-top: .8em;
+            background-color: blue;
 
             p {
               margin-top: .5em;
@@ -246,6 +265,7 @@ export default {
               @include text-style(inherit, inherit, 200);
             }
           }
+
         }
       }
     }

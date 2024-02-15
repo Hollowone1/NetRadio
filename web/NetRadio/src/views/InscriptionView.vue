@@ -61,6 +61,8 @@ export default {
         <input v-model="password" type="password" id="password" placeholder=" " required />  
       </div>
       <button @click="inscrire()" class="login-button">S'inscrire</button>
+      <div class="connexion"><RouterLink to="/Connexion">Déjà un compte ? Connectez-vous</RouterLink></div>
+
     </div>
   </div>
 </template>
@@ -76,27 +78,10 @@ export default {
   margin-bottom: 20px;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.form-group{
+  display:block;
+  padding: 1em;
 }
-
-  label {
-    font-family: "Inter", sans-serif;
-    font-size: inherit;
-    color: inherit;
-    font-weight: inherit;
-    width: 30em;
-    margin-top: 1%;
-    margin-bottom: 1%;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: left;
-    gap: 10;
-    align-items: stretch;
-  }
 
 
 body {
@@ -130,12 +115,29 @@ h2 {
   align-items: stretch;
 }
 
+label {
+  font-family: "Inter", sans-serif;
+  font-size: inherit;
+  color: inherit;
+  font-weight: inherit;
+  width: 30em;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0;
+  align-items: stretch;
+  text-align: left;
+}
+
 button {
   cursor: pointer;
   font-family: "Inter", Helvetica, Arial, sans-serif;
   font-weight: 400;
   display: flex;
-  width: auto;
+  width: 30em;
   justify-content: center;
   align-items: center;
   flex: 1 0 0;
@@ -143,19 +145,27 @@ button {
   background-color: #A568BB;
   color: #D9D9D9;
   font-size: 1em;
-  padding: 0.5em 1em 0.5em 1em;
+  padding: 1em;
   margin: 0.5em 0em 0.5em 0em;
   border-radius: 0px;
   transition: border-radius 0.3s;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 2em;
 }
 button:hover {
   background-color: #8d4ba5;
   border: 2px solid #b291fa;
+  color: white;
 }
 
-
+label {
+  font-size: inherit;
+  color: inherit;
+  font-weight: inherit;
+  height: 50px;
+  
+}
 
 input {
   font-size: inherit;
@@ -164,24 +174,32 @@ input {
   height: 40px;
   background-color: #E9E9E9;
   margin-bottom: 10px;
-  width: 25%;
-  
+  width: 30em;
+  padding: 0.2em;
+
 }
 
 hr {
-  width: 30em;
+  width: 60em;
 }
 .register{
   text-align: center;
 }
-
+input{
+  border: transparent;
+  border-bottom: 1px solid #a2a2a2;
+}
 a{
   text-decoration: none;
   color: #b291fa;
 }
-form {
+.login-container {
   margin-top: 40px;
   margin-bottom: 40px;
+  margin: 5em;
+  text-align: center;
+
 }
+
 
 </style>
