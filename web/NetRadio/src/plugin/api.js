@@ -6,7 +6,11 @@ export default {
             baseURL : 'http://localhost:2080',
             headers: {
                 'Content-Type': 'application/json',
-            }
+            },
+            crossDomain: true,
+            withCredentials: true,
+            xsrfCookieName: 'XSRF-TOKEN',
+            xsrfHeaderName: 'X-XSRF-TOKEN',
         })
     }
 }
