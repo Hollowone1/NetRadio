@@ -10,6 +10,18 @@ export default {
   },
   methods: {
     inscrire() {
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+
+      if (!emailRegex.test(this.mail)) {
+        this.errorMessage = "Format d'email invalide.";
+        return;
+    }
+
+      if (!passwordRegex.test(this.password)) {
+        this.errorMessage = "Mot de passe invalide. Il doit contenir 8 caractères et au moins une majuscule.";
+        return;
+    }
 
       this.$api.post('users/signup', {
         username: this.username,
@@ -17,15 +29,15 @@ export default {
         password: this.password,
       })
       .then(response => {
-        console.log('Inscription réussie :', response);
-        this.errorMessage = "Inscription réussie.";
-        this.$router.push('/');
-      })
+      console.log('Inscription réussie :', response);
+      this.errorMessage = "Inscription réussie.";
+      this.$router.push('/');
+    })
       .catch(error => {
-        console.error('Erreur lors de l\'inscription :', error);
-        this.errorMessage = "Une erreur s'est produite lors de l'inscription.";
-      });
-    }
+      console.error('Erreur lors de l\'inscription :', error);
+      this.errorMessage = "Une erreur s'est produite lors de l'inscription.";
+  });
+}
   }
 }
 
@@ -55,10 +67,36 @@ export default {
 
 <style scoped lang="scss">
 
-.form-group{
-  display:block;
+.error {
   text-align: center;
+  background-color: #ffecec;
+  color: #e74c3c;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
 }
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+  label {
+    font-family: "Inter", sans-serif;
+    font-size: inherit;
+    color: inherit;
+    font-weight: inherit;
+    width: 30em;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: left;
+    gap: 10;
+    align-items: stretch;
+  }
 
 
 body {
@@ -92,22 +130,6 @@ h2 {
   align-items: stretch;
 }
 
-label {
-  font-family: "Inter", sans-serif;
-  font-size: inherit;
-  color: inherit;
-  font-weight: inherit;
-  width: 30em;
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0;
-  align-items: stretch;
-}
-
 button {
   cursor: pointer;
   font-family: "Inter", Helvetica, Arial, sans-serif;
@@ -133,12 +155,7 @@ button:hover {
   border: 2px solid #b291fa;
 }
 
-label {
-  font-size: inherit;
-  color: inherit;
-  font-weight: inherit;
-  height: 30px;
-}
+
 
 input {
   font-size: inherit;
@@ -147,6 +164,8 @@ input {
   height: 40px;
   background-color: #E9E9E9;
   margin-bottom: 10px;
+  width: 25%;
+  
 }
 
 hr {
