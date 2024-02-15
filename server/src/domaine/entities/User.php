@@ -16,6 +16,8 @@ class User extends Model
         'email',
         'password',
         'username',
+        'prenom',
+        'nom',
         'role',
         'refresh_token',
         'refresh_token_expiration_date',
@@ -27,6 +29,8 @@ class User extends Model
         $user = new UserDTO($this->email);
         $user->password = $this->password;
         $user->username = $this->username;
+        $user->prenom = $this->prenom;
+        $user->nom = $this->nom;
         $user->role = $this->role;
         $user->refresh_token = $this->refresh_token;
         $user->refresh_token_expiration_date = $this->refresh_token_expiration_date;

@@ -18,7 +18,7 @@ class GetUserByMail extends Action
     {
         $email = $args['email'];
         try {
-            $user = $this->userService->GetInfoUserByMail($email);
+            $user = $this->userService->GetInfoUserByMail($email)->toArray();
             $data = [
                 'type' => 'resource',
                 'user' => $user

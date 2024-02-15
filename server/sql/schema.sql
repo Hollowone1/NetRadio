@@ -98,6 +98,8 @@ CREATE TABLE `User` (
                         `email` varchar(128) NOT NULL,
                         `password` varchar(128) NOT NULL,
                         `username` varchar(128) DEFAULT NULL,
+                        `prenom` varchar(128) DEFAULT NULL,
+                        `nom` varchar(128) DEFAULT NULL,
                         `role` int(4) DEFAULT NULL,
                         `refresh_token` varchar(64) DEFAULT NULL,
                         `refresh_token_expiration_date` timestamp NULL DEFAULT NULL,
@@ -109,4 +111,4 @@ CREATE TABLE `User` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 
--- 2024-02-15 12:54:55
+-- 2024-02-15 13:34:10
