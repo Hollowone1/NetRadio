@@ -1,6 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 
+use radio\net\domaine\middleware\Cors;
 use radio\net\domaine\utils\Eloquent;
 use Slim\Factory\AppFactory;
 
@@ -18,6 +19,9 @@ $container = $build->build();
 
 //creation de l'app à partir du container
 $app = $container->get('app');
+
+//cors
+$app->add(new Cors());
 
 //connexion à la base de données
 $container->get('db');
