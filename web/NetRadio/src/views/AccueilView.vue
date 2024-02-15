@@ -3,12 +3,14 @@ import EnDirect from '@/components/EnDirect.vue'
 import Emission from '@/components/Emission.vue'
 import Podcast from '@/components/Podcast.vue'
 import Calendar from '@/components/Calendar.vue'
+import headsidebar from '@/components/HeadSideBar.vue'
 export default {
   components: {
     EnDirect,
     Emission,
     Podcast,
-    Calendar
+    Calendar,
+    headsidebar
   },
   data() {
     return {
