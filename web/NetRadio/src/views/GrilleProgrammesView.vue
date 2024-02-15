@@ -36,7 +36,7 @@ export default {
       this.displayEmission();
     },
     loadPrograms() {
-  this.$api.get('podcasts', { params: { date: this.currentDate } })
+  this.$api.get('/podcasts', { params: { date: this.currentDate } })
     .then(response => {
       this.emissions = response.data.podcasts;
       this.programs = this.emissions.map(program => {
