@@ -66,7 +66,7 @@ export default {
 
     <div class="presentation">
       <div class="presentation-infos">
-        <img :src="emission.photo"/>
+        <img alt="emission photo" :src="emission.photo"/>
         <div class="presentation-infos-texte">
           <h3>{{ emission.titre }}</h3>
           <p> {{ emission.description }}</p>
