@@ -159,7 +159,9 @@ form {
   text-align: center;
 
 }
-
+a{
+  color: #8d4ba5;
+}
 @media screen and (max-width: 750px) {
   input{
     width: 15em;
@@ -170,6 +172,11 @@ form {
   .login-button{
     width: 15em;
   }
+  form {
+
+  margin: 9em;
+
+}
 }
 
 </style>
