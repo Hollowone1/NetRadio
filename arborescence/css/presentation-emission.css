@@ -446,31 +446,31 @@ p {
     align-items: flex-start;
   }
 }
-.podcasts-emission, .si-direct {
+.podcasts-emission, .presentation {
   padding: 1em;
 }
 
-.si-direct-titre h2, .si-direct-titre embed {
+.presentation-titre h2, .presentation-titre embed {
   display: inline-block;
 }
-.si-direct-titre h2 {
+.presentation-titre h2 {
   font-size: 1.8em;
   color: inherit;
   font-weight: bold;
 }
-.si-direct-titre embed {
+.presentation-titre embed {
   height: 1em;
   margin-left: 0.5em;
 }
-.si-direct-infos embed {
+.presentation-infos embed {
   width: 100%;
   border-radius: 10px;
   margin-bottom: 0.5em;
 }
-.si-direct-infos-texte {
+.presentation-infos-texte {
   text-align: justify;
 }
-.si-direct-infos-texte h3 {
+.presentation-infos-texte h3 {
   margin-bottom: 0.2em;
   font-size: 1.3em;
   color: inherit;
@@ -527,18 +527,18 @@ p {
 }
 
 @media screen and (min-width: 700px) {
-  .podcasts-emission, .si-direct {
+  .podcasts-emission, .presentation {
     padding: 1.5em;
   }
-  .si-direct-titre h2 {
+  .presentation-titre h2 {
     font-size: 2.3em;
     color: inherit;
     font-weight: bold;
   }
-  .si-direct-titre embed {
+  .presentation-titre embed {
     height: 1.5em;
   }
-  .si-direct-infos {
+  .presentation-infos {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -546,13 +546,13 @@ p {
     gap: 1em;
     align-items: center;
   }
-  .si-direct-infos embed {
+  .presentation-infos embed {
     width: 25vw;
   }
-  .si-direct-infos-texte {
+  .presentation-infos-texte {
     font-size: 1.1em;
   }
-  .si-direct-infos-texte h3 {
+  .presentation-infos-texte h3 {
     margin: 0 0 0.2em;
     font-size: 1.5em;
     color: inherit;
