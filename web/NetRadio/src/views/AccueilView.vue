@@ -2,12 +2,15 @@
 import EnDirect from '@/components/EnDirect.vue'
 import Emission from '@/components/Emission.vue'
 import Podcast from '@/components/Podcast.vue'
-
+import Calendar from '@/components/Calendar.vue'
+import headsidebar from '@/components/HeadSideBar.vue'
 export default {
   components: {
     EnDirect,
     Emission,
-    Podcast
+    Podcast,
+    Calendar,
+    headsidebar
   },
   data() {
     return {
@@ -38,7 +41,7 @@ export default {
 
 <template>
   <en-direct></en-direct>
-
+  <Calendar></Calendar>
   <div class="emissions">
     <div class="top">
       <h2>Émissions</h2>
@@ -76,12 +79,10 @@ export default {
   padding-right: 3em;
   .top {
     h2{
-      margin: 0;
-      margin-bottom: .5em;
-      margin-top: 1em;
-
+      margin: 0
     }
-    @include flex(row, nowrap, 1em, start);
+    margin: 1em 0 1em;
+    @include flex(row, nowrap, 1em, start, center);
     img {
       height: 1em;
     }

@@ -2,11 +2,17 @@
 <script>
 
 export default {
+  emits: ['edit'],
   props: {
     emission: {
       type: Object,
       required: true
     },
+    edit : {
+      type : Boolean,
+      required : false,
+      default : false
+    }
   },
   data() {
     return {
@@ -16,7 +22,7 @@ export default {
   directives : {
     image : {
       mounted(el, binding) {
-        el.style.background =  `linear-gradient( transparent,black), url('${binding.value}')`;
+        el.style.background =  `linear-gradient(transparent,black), url('${binding.value}')`;
         //el.style.background = `url('${binding.value}')`;
       }
     }
@@ -27,8 +33,11 @@ export default {
 
 <template>
   <section v-image="emission.photo" class="emission">
-    <p>{{ emission.titre }}</p>
-    <p>{{ emission.user }}</p>
+    <img v-if="edit" @click="$emit('edit')" src="/icons/edit.svg" alt="edit">
+    <div>
+      <p>{{ emission.titre }}</p>
+      <p>{{ emission.user }}</p>
+    </div>
   </section>
 </template>
 

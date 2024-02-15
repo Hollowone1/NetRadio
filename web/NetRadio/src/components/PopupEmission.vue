@@ -1,3 +1,4 @@
+Fonctionne
 <script>
 export default {
   props: {
@@ -11,16 +12,35 @@ export default {
       edit: false,
       editedEmission: {
         titre: this.emission.titre,
-        presentateur: this.emission.presentateur,
+        user: this.emission.user,
         theme: this.emission.theme,
         description: this.emission.description
       }
     }
   },
+  directives: {
+    outside : {
+      beforeMount(el, binding) {
+        el.clickOutsideEvent = function(event) {
+          if (!(el === event.target || el.contains(event.target))) {
+            console.log('click outside', binding.value)
+
+            //vnode.context.$emit('close')
+            //el.dispatchEvent(event);
+          }
+        };
+        document.addEventListener('click', el.clickOutsideEvent);
+      },
+      unmounted(el) {
+        // Remove the event listener when the bound element is unmounted
+        document.removeEventListener('click', el.clickOutsideEvent);
+      }
+    },
+  },
   methods: {
     stopEditing() {
       this.edit = false
-      this.$emit('close')
+      this.$emit('edited')
       //console.log(this.editedEmission)
       this.editEmission()
     },
@@ -36,19 +56,19 @@ export default {
   <div class="modal-mask">
     <div class="modal-wrapper">
 
-      <div v-if="edit === false" class="popup-emission">
+      <div v-outside="edit" v-if="edit === false" class="popup-emission">
         <div class="top">
           <h3>{{ emission.titre }}</h3>
           <img @click="edit = true" src="/icons/editPurple.svg" alt="edit icon"/>
         </div>
         <div class="infos">
-          <p><strong>Présentateur / animateur :</strong> {{ emission.presentateur }}</p>
+          <p><strong>Présentateur / animateur :</strong> {{ emission.user }}</p>
           <p>{{ emission.theme }}</p>
           <p>{{ emission.description }}</p>
         </div>
       </div>
 
-      <div v-if="edit === true" class="popup-emission-edit">
+      <div v-outside v-if="edit === true" class="popup-emission-edit">
         <div><img @click="stopEditing" src="/icons/check.svg" alt="edit icon"/></div>
         <div class="titre">
           <label for="titre">Titre de l'émission :</label>
@@ -56,7 +76,7 @@ export default {
         </div>
         <div class="presentateur">
           <label for="presentateur">Présentateur :</label>
-          <input type="text" id="presentateur" v-model="editedEmission.presentateur">
+          <input type="text" id="presentateur" v-model="editedEmission.user">
         </div>
         <div class="theme">
           <label for="theme">Thème :</label>
@@ -189,3 +209,4 @@ $widthPopupEm: 30em;
 }
 
 </style>
+

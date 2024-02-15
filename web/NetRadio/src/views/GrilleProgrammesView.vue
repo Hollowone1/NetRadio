@@ -1,28 +1,86 @@
 <script>
 import EnDirect from '@/components/EnDirect.vue'
+
 export default {
   components: {
     EnDirect,
   },
   data() {
     return {
-
+      emissions: [],
+      currentDate: new Date(),
+      programs: [],
     }
+  },
+  computed: {
+    formattedCurrentDate() {
+      return this.currentDate.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+  },
+  created() {
+    this.loadPrograms()
+  },
+  methods: {
+    prevDate() {
+      const date = new Date(this.currentDate);
+      date.setDate(date.getDate() - 1);
+      this.currentDate = date;
+      this.loadPrograms();
+      this.displayEmission();
+    },
+    nextDate() {
+      const date = new Date(this.currentDate);
+      date.setDate(date.getDate() + 1);
+      this.currentDate = date;
+      this.loadPrograms();
+      this.displayEmission();
+    },
+    loadPrograms() {
+  this.$api.get('podcasts', { params: { date: this.currentDate } })
+    .then(response => {
+      this.emissions = response.data.podcasts;
+      this.programs = this.emissions.map(program => {
+        program.start_time = new Date(program.start_time);
+        return program;
+      });
+      this.programs.sort((a, b) => a.start_time - b.start_time);
+      this.displayEmission();
+    })
+    .catch(error => {
+      console.error('Erreur lors de la récupération des programmes :', error);
+    });
+},
+    findAndDisplayCurrentEmission() {
+      const currentEmission = this.emissions.find(emission => emission.date === this.formattedCurrentDate);
+      if (currentEmission) {
+        this.displayEmission(currentEmission);
+      }
+    },
+    displayEmission() {
+  const currentDate = new Date(this.currentDate);
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentDay = currentDate.getDate();
+
+  this.currentEmission = this.emissions.find(emission => {
+    const emissionDate = new Date(emission.date);
+    return (
+      emissionDate.getFullYear() === currentYear &&
+      emissionDate.getMonth() + 1 === currentMonth &&
+      emissionDate.getDate() === currentDay
+    );
+  });
+
+  if (!this.currentEmission) {
+    console.log('Aucune émission trouvée pour cette date');
+  }
+}
   }
 }
 </script>
 <template>
   <header-component></header-component>
-  <div class="topnav">
-    <div id="myLinks">
-      <div class="nav-item"><a href="./podcasts.html">Podcasts</a></div>
-      <div class="nav-item"><a href="./emissions.html">Émissions</a></div>
-      <div class="nav-item"><a href="./programmation.html">Grille des programmes</a></div>
-    </div>
-    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-      <i class="gg-menu"></i>
-    </a>
-  </div>
+
   <main>
 
     <en-direct></en-direct>
@@ -31,45 +89,20 @@ export default {
       <h2>Grille des programmes</h2>
       <h3>Net Radio</h3>
       <div class="dates">
-        <img src="/icons/gauche.svg">
-        <p>Jeudi 9 novembre 2023</p>
-        <img src="/icons/droite.svg">
+        <img src="/icons/gauche.svg" @click="prevDate">
+        <p>{{ formattedCurrentDate }}</p>
+        <img src="/icons/droite.svg" @click="nextDate">
       </div>
 
       <section>
-        <h4>Heure 1</h4>
-        <div class="prog">
+        <div class="prog" v-if="currentEmission">
           <div class="prog-infos">
             <div class="prog-infos-texte">
-              <h5>Le nom de l'émission</h5>
-              <p>Nom présentateur</p>
-              <p>Avec nom de l'invité, nom de l'invité, ...</p>
+              <h5> {{ currentEmission.titre }}</h5>
+              <p>{{ currentEmission.links.emission }}</p>
+              <p>{{ currentEmission.links.invite }}</p>
             </div>
-            <img src="/icons/placeholder.png" alt="image de l'émission">
-          </div>
-        </div>
-
-        <h4>Heure 2</h4>
-        <div class="prog">
-          <div class="prog-infos">
-            <div class="prog-infos-texte">
-              <h5>Le nom de l'émission</h5>
-              <p>Nom présentateur</p>
-              <p>Avec nom de l'invité, nom de l'invité, ...</p>
-            </div>
-            <img src="/icons/placeholder.png" alt="image de l'émission">
-          </div>
-        </div>
-
-        <h4>Heure 3</h4>
-        <div class="prog">
-          <div class="prog-infos">
-            <div class="prog-infos-texte">
-              <h5>Le nom de l'émission</h5>
-              <p>Nom présentateur</p>
-              <p>Avec nom de l'invité, nom de l'invité, ...</p>
-            </div>
-            <img src="/icons/placeholder.png" alt="image de l'émission">
+            <img :src="currentEmission.photo" alt="image de l'émission">
           </div>
         </div>
       </section>
