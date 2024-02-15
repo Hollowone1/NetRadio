@@ -12,7 +12,7 @@ class UserService implements iUserService
             $users = User::all();
             $usersDTO = [];
             foreach ($users as $user) {
-                $usersDTO [] = $user->toDTO();
+                $usersDTO [] = $user->toDTO()->toArray();
             }
             return $usersDTO;
         } catch (UserNotFoundException $e) {
