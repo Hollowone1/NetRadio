@@ -85,6 +85,7 @@ export default {
   padding-top: 1em;
   padding-left: 3em;
   padding-right: 3em;
+  margin-bottom: 1em;
   .top {
     h2{
       margin: 0
@@ -96,6 +97,8 @@ export default {
     }
   }
 }
+
+
 
 
 </style>
