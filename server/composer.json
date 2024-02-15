@@ -10,6 +10,7 @@
     "php-di/php-di": "^6.4.0",
     "php-di/slim-bridge": "^3.2",
     "respect/validation": "^2.2.0",
+    "firebase/php-jwt": "^6.3",
     "fakerphp/faker": "^1.23"
   },
   "require-dev": {

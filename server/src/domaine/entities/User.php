@@ -15,8 +15,7 @@ class User extends Model
     protected $fillable = [
         'email',
         'password',
-        'prenom',
-        'nom',
+        'username',
         'role',
         'refresh_token',
         'refresh_token_expiration_date',
@@ -25,6 +24,14 @@ class User extends Model
     ];
 
     public function toDTO() {
-        return new UserDTO($this->email, $this->password, $this->prenom, $this->nom, $this->role, $this->refresh_token, $this->refresh_token_expiration_date, $this->reset_password_token, $this->reset_password_token_expiration_date);
+        $user = new UserDTO($this->email);
+        $user->password = $this->password;
+        $user->username = $this->username;
+        $user->role = $this->role;
+        $user->refresh_token = $this->refresh_token;
+        $user->refresh_token_expiration_date = $this->refresh_token_expiration_date;
+        $user->reset_password_token = $this->reset_password_token;
+        $user->reset_password_token_expiration_date = $this->reset_password_token_expiration_date;
+        return $user;
     }
 }
