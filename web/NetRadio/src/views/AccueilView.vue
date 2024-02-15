@@ -21,7 +21,7 @@ export default {
   created() {
     this.$api.get("/emissions")
         .then((response) => {
-          this.emissions = response.data.emission
+          this.emissions = response.data.emission.slice(0, 6)
           this.emissions.forEach(emission => {
             this.$api.get(emission.user)
                 .then((response2) => {

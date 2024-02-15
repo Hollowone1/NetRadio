@@ -9,7 +9,6 @@ import ResultatPodcast from '@/views/ResultatsPodcastsView.vue'
 import ToutesLesEmissions from '@/views/ToutesEmissionsView.vue'
 //import ProfilUtilisateur from '@/views/ProfilUtilisateurView.vue'
 import MonCompte from '@/views/MonCompteView.vue'
-//import ListeUtilisateurs from '@/views/ListeUtilisateursView.vue'
 import Connexion from '@/views/ConnexionView.vue'
 import Inscription from '@/views/InscriptionView.vue'
 
@@ -37,7 +36,7 @@ const router = createRouter({
       component: ListePodcasts
     },
     {
-      path: '/presentation-emission/:id',
+      path: '/emission/:id',
       name: 'presentation emission',
       component: PresentationEmission
     },
@@ -61,11 +60,6 @@ const router = createRouter({
       name: 'mon compte',
       component: MonCompte
     },
-    /*{
-      path: '/liste-utilisateur',
-      name: 'liste des utilisateurs',
-      component: ListeUtilisateurs
-    },*/
     {
       path: '/connexion',
       name: 'connexion',

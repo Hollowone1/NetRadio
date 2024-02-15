@@ -19,6 +19,11 @@ export default {
 
     }
   },
+  methods : {
+    redirect(id) {
+      this.$router.push(`/emission/${id}`)
+    }
+  },
   directives : {
     image : {
       mounted(el, binding) {
@@ -31,7 +36,7 @@ export default {
 </script>
 
 <template>
-  <section v-image="emission.photo" class="emission">
+  <section @click="redirect(emission.id)" v-image="emission.photo" class="emission">
     <img v-if="edit" @click="$emit('edit')" src="/icons/edit.svg" alt="edit">
     <div v-if="!edit"></div>
     <div>

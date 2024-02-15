@@ -8,11 +8,11 @@
 @import "nav";
 @import "listeEmissionsPodcasts";
 
-.podcasts-emission, .si-direct {
+.podcasts-emission, .presentation {
   padding: 1em
 }
 
-.si-direct {
+.presentation {
   &-titre {
     h2, embed {
       display: inline-block;
@@ -78,10 +78,10 @@
 
 
 @media screen and (min-width: 700px) {
-  .podcasts-emission, .si-direct {
+  .podcasts-emission, .presentation {
     padding: 1.5em;
   }
-  .si-direct {
+  .presentation {
     &-titre {
       h2 {
         @include text-style(2.3em, inherit, bold);
