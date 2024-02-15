@@ -1,6 +1,11 @@
 <?php
 declare(strict_types=1);
 
+use radio\net\app\action\auth\GetUsernameAction;
+use radio\net\app\action\auth\RefreshAction;
+use radio\net\app\action\auth\SigninAction;
+use radio\net\app\action\auth\SignupAction;
+use radio\net\app\action\auth\ValidateAction;
 use radio\net\app\action\creneau\GetAllCreneaux;
 use radio\net\app\action\creneau\GetCreneauById;
 use radio\net\app\action\emission\GetEmissionById;
@@ -43,10 +48,16 @@ return function (App $app) {
 
     //users
     $app->group('/users', function ($app) {
-        $app->get("[/]", GetUserAllInfo::class);
-        $app->get("/{id_user}[/]", GetUserByMail::class)->setName('/user/{id_user}[/]');
-        $app->get("/{email_user}/playlists", GetPlaylistByEmailUserAction::class)->setName('/user/{email_user}/playlist');
+        //auth
+        $app->post('/signin', SigninAction::class)->setName('signin');
+        $app->post('/signup', SignupAction::class)->setName('signup');
+        $app->post('/refresh', RefreshAction::class)->setName('refresh');
+        $app->get('/validate', ValidateAction::class)->setName('validate_user');
 
+        //user infos
+        $app->get("[/]", GetUserAllInfo::class);
+        $app->get("/{email_user}/playlists", GetPlaylistByEmailUserAction::class)->setName('/user/{email_user}/playlist');
+        $app->get('/mail/{email}', GetUserByMail::class)->setName('user.index');
     });
 
     //sons

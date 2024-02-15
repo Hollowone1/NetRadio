@@ -2,12 +2,14 @@
 import EnDirect from '@/components/EnDirect.vue'
 import Emission from '@/components/Emission.vue'
 import Podcast from '@/components/Podcast.vue'
-
+import Calendar from '@/components/Calendar.vue'
 export default {
   components: {
     EnDirect,
     Emission,
-    Podcast
+    Podcast,
+    Calendar,
+
   },
   data() {
     return {
@@ -17,15 +19,24 @@ export default {
   },
   methods: {},
   created() {
-    this.$api.get("emissions")
+    this.$api.get("/emissions")
         .then((response) => {
           this.emissions = response.data.emission.slice(0, 6)
+          this.emissions.forEach(emission => {
+            this.$api.get(emission.user)
+                .then((response2) => {
+                  emission.user = `${response2.data.user.nom} ${response2.data.user.prenom}`
+                })
+                .catch((error) => {
+                  console.log(error)
+                });
+          });
         })
         .catch((error) => {
           console.log(error)
         });
 
-    this.$api.get("podcasts")
+    this.$api.get("/podcasts")
         .then((response) => {
           this.podcasts = response.data.podcasts.slice(0, 6)
         })
@@ -38,7 +49,7 @@ export default {
 
 <template>
   <en-direct></en-direct>
-
+  <Calendar></Calendar>
   <div class="emissions">
     <div class="top">
       <h2>Émissions</h2>
@@ -74,19 +85,20 @@ export default {
   padding-top: 1em;
   padding-left: 3em;
   padding-right: 3em;
+  margin-bottom: 1em;
   .top {
     h2{
-      margin: 0;
-      margin-bottom: .5em;
-      margin-top: 1em;
-
+      margin: 0
     }
-    @include flex(row, nowrap, 1em, start);
+    margin: 1em 0 1em;
+    @include flex(row, nowrap, 1em, start, center);
     img {
       height: 1em;
     }
   }
 }
+
+
 
 
 </style>

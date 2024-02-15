@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const axiosPlugin =  {
+export default {
     install: function (app) {
-        const axiosInstance = axios.create({
+        app.config.globalProperties.$api = axios.create({
             baseURL : 'http://localhost:2080/',
             headers: {
                 'Content-Type': 'application/json',

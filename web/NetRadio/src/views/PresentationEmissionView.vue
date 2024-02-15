@@ -2,9 +2,40 @@
 import EnDirect from "@/components/EnDirect.vue";
 
 export default {
+  data() {
+    return {
+      emission: [],
+    }
+  },
   components: {
     EnDirect,
   },
+  created() {
+    this.$api.get(`/emissions/${this.$route.params.id}`)
+        .then((response) => {
+          this.emission = response.data.emission
+          console.log(this.emission)
+          this.$api.get(this.emission.user)
+              .then((response2) => {
+                this.emission.user = `${response2.data.user.nom} ${response2.data.user.prenom}`
+              })
+              .catch((error) => {
+                console.log(error)
+              });
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+
+    this.$api.get(`/emissions/${this.$route.params.id}/podcasts`)
+        .then((response) => {
+          console.log("podcasrs", response.data.podcasts)
+          this.podcasts = response.data.podcasts
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+  }
 }
 
 </script>
@@ -13,21 +44,12 @@ export default {
   <main>
     <en-direct></en-direct>
 
-    <section class="si-direct">
-      <div class="si-direct-titre">
-        <h2>En direct</h2>
-        <embed src="/icons/direct.svg"/>
-      </div>
-      <div class="si-direct-infos">
-        <embed src="/icons/Desktop.png"/>
-        <div class="si-direct-infos-texte">
-          <h3>Nom de l'émission</h3>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Et magnam optio iusto, eaque quos impedit hic
-            perferendis eius similique a maxime dolor unde fugiat facere, placeat vel ab expedita exercitationem.
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Et magnam optio iusto, eaque quos impedit hic
-            perferendis eius similique a maxime dolor unde fugiat facere, placeat vel ab expedita exercitationem.
-          </p>
+    <section class="presentation">
+      <div class="presentation-infos">
+        <embed :src="emission.photo"/>
+        <div class="presentation-infos-texte">
+          <h3>{{ emission.titre }}</h3>
+          <p> {{ emission.description }}</p>
         </div>
       </div>
     </section>
@@ -58,57 +80,9 @@ export default {
               laboris nisi ut aliquip ex ea commodo consequat. </p>
           </div>
         </section>
-
-        <section class="episode">
-          <div class="episode-infos">
-            <div>
-              <embed class="play" src="/icons/miniplay.svg">
-              <p class="titre">Nom de l'épisode</p>
-            </div>
-            <div>
-              <p>00:00</p>
-              <embed class="plus" src="/icons/plus.svg">
-            </div>
-            <!--<embed class="croix" src="/icons/croix.svg">-->
-          </div>
-          <div class="episode-infos-plus">
-            <p><strong>Présentateur : </strong> Nom Prénom</p>
-            <p><strong>Invités : </strong> Nom Prénom, Nom Prénom</p>
-            <p class="date">00/00/0000</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris nisi ut aliquip ex ea commodo consequat. </p>
-          </div>
-        </section>
-
-        <section class="episode">
-          <div class="episode-infos">
-            <div>
-              <embed class="play" src="/icons/miniplay.svg">
-              <p class="titre">Nom de l'épisode</p>
-            </div>
-            <div>
-              <p>00:00</p>
-              <embed class="plus" src="/icons/plus.svg">
-            </div>
-            <!--<embed class="croix" src="/icons/croix.svg">-->
-          </div>
-          <div class="episode-infos-plus">
-            <p><strong>Présentateur : </strong> Nom Prénom</p>
-            <p><strong>Invités : </strong> Nom Prénom, Nom Prénom</p>
-            <p class="date">00/00/0000</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris nisi ut aliquip ex ea commodo consequat. </p>
-          </div>
-        </section>
       </div>
     </section>
-    <a href="emission.html">Découvrir d'autres émissions</a>
+    <router-link to="/liste-des-emissions">Découvrir d'autres émissions</router-link>
   </main>
 </template>
 
@@ -120,11 +94,11 @@ export default {
 @import "@/assets/listeEmissionsPodcasts";
 
 
-.podcasts-emission, .si-direct {
+.podcasts-emission, .presentation {
   padding: 1em
 }
 
-.si-direct {
+.presentation {
   &-titre {
     h2, embed {
       display: inline-block;
@@ -203,10 +177,10 @@ export default {
 
 
 @media screen and (min-width: 700px) {
-  .podcasts-emission, .si-direct {
+  .podcasts-emission, .presentation {
     padding: 1.5em;
   }
-  .si-direct {
+  .presentation {
     &-titre {
       h2 {
         @include text-style(2.3em, inherit, bold);

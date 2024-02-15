@@ -1,27 +1,21 @@
 <script>
+import { mapState, mapActions } from "pinia";
+import { useUserStore } from "@/stores/user.js";
+
 export default {
+  computed: {
+    ...mapState(useUserStore, ['user', 'loggedIn'])
+  },
   data() {
-    return {
-      connected : false,
-      user: {
-        id: 1,
-        mail: "",
-        prenom: "",
-        nom: "",
-        role: 1
-      }
-    }
+    return {}
+  },
+  created() {
+    //console.log("han", this.user)
   },
   methods: {
-    myFunction() {
-      // la fonction ici
-    },
     toggleConnexion() {
       this.connected = !this.connected
     },
-    getUser() {
-      //get les infos de user, notamment le role
-    }
   },
 };
 </script>
@@ -32,11 +26,10 @@ export default {
       <router-link to="/"><img class="header-logo" src="/icons/logo.png" alt="Logo NET RADIO"></router-link>
       <div class="header-boutons">
         <input class="search" type="search" src="/icons/search.svg" placeholder="Rechercher ...">
-        <router-link to="/mon-compte" v-if="connected"><img class="header-user-co" src="/icons/user.svg" alt="user icon"/></router-link>
-        <router-link to="/mon-compte" v-if="connected && user.role === 2"><img class="header-user-co" src="/icons/user.svg" alt="user icon"/></router-link>
+        <router-link to="/mon-compte" v-if="loggedIn"><img class="header-user-co" src="/icons/user.svg" alt="user icon"/></router-link>
 
-        <button v-if="connected" class="header-boutons-deconnecter" @click="toggleConnexion">Se déconnecter</button>
-        <button v-else class="header-boutons-connecter" @click="toggleConnexion">Se connecter</button>
+        <button v-if="loggedIn" class="header-boutons-deconnecter" @click="logoutUser">Se déconnecter</button>
+        <router-link v-else to="/connexion"><button class="header-boutons-connecter" >Se connecter</button></router-link>
       </div>
     </div>
     <nav class="nav">
@@ -79,9 +72,9 @@ export default {
 }
 
 .header-logo {
-  margin-left: 20px;
+  margin-left: 1em;
   border-radius: 5px;
-  height: 80px;
+  height: 4em;
   width: auto;
 }
 

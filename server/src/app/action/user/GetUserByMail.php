@@ -16,9 +16,9 @@ class GetUserByMail extends Action
     }
     function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
-        $id = $args['id_user'];
+        $email = $args['email'];
         try {
-            $user = $this->userService->GetInfoUserByMail($id);
+            $user = $this->userService->GetInfoUserByMail($email)->toArray();
             $data = [
                 'type' => 'resource',
                 'user' => $user

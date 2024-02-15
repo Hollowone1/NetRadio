@@ -8,58 +8,79 @@ export default {
   data() {
     return {
       emissions: [],
-      currentDate:'jeudi 9 novembre 2023',
+      currentDate: new Date(),
       programs: [],
+    }
+  },
+  computed: {
+    formattedCurrentDate() {
+      return this.currentDate.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
     }
   },
   created() {
     this.loadPrograms()
-    this.$api.get('podcasts')
-      .then(response => {
-        console.log(response)
-        this.emissions = response.data.podcasts;
-      })
-      .catch(error => {
-        console.error('Erreur lors de la récupération des programmes :', error);
-      });
   },
   methods: {
     prevDate() {
       const date = new Date(this.currentDate);
       date.setDate(date.getDate() - 1);
-      this.currentDate = date.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      this.currentDate = date;
       this.loadPrograms();
+      this.displayEmission();
     },
     nextDate() {
       const date = new Date(this.currentDate);
       date.setDate(date.getDate() + 1);
-      this.currentDate = date.toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      this.currentDate = date;
       this.loadPrograms();
+      this.displayEmission();
     },
     loadPrograms() {
-      this.$api.get('podcasts', { params: { date: this.currentDate } })
-        .then(response => {
-          this.programs = response.data.podcasts.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
+  this.$api.get('/podcasts', { params: { date: this.currentDate } })
+    .then(response => {
+      this.emissions = response.data.podcasts;
+      this.programs = this.emissions.map(program => {
+        program.start_time = new Date(program.start_time);
+        return program;
+      });
+      this.programs.sort((a, b) => a.start_time - b.start_time);
+      this.displayEmission();
+    })
+    .catch(error => {
+      console.error('Erreur lors de la récupération des programmes :', error);
+    });
+},
+    findAndDisplayCurrentEmission() {
+      const currentEmission = this.emissions.find(emission => emission.date === this.formattedCurrentDate);
+      if (currentEmission) {
+        this.displayEmission(currentEmission);
+      }
+    },
+    displayEmission() {
+  const currentDate = new Date(this.currentDate);
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentDay = currentDate.getDate();
+
+  this.currentEmission = this.emissions.find(emission => {
+    const emissionDate = new Date(emission.date);
+    return (
+      emissionDate.getFullYear() === currentYear &&
+      emissionDate.getMonth() + 1 === currentMonth &&
+      emissionDate.getDate() === currentDay
+    );
+  });
+
+  if (!this.currentEmission) {
+    console.log('Aucune émission trouvée pour cette date');
+  }
 }
+  }
 }
 </script>
 <template>
   <header-component></header-component>
-  <div class="topnav">
-    <div id="myLinks">
-      <div class="nav-item"><a href="./podcasts.html">Podcasts</a></div>
-      <div class="nav-item"><a href="./emissions.html">Émissions</a></div>
-      <div class="nav-item"><a href="./programmation.html">Grille des programmes</a></div>
-    </div>
-    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-      <i class="gg-menu"></i>
-    </a>
-  </div>
+
   <main>
 
     <en-direct></en-direct>
@@ -69,19 +90,19 @@ export default {
       <h3>Net Radio</h3>
       <div class="dates">
         <img src="/icons/gauche.svg" @click="prevDate">
-        <p>{{ currentDate }}</p>
+        <p>{{ formattedCurrentDate }}</p>
         <img src="/icons/droite.svg" @click="nextDate">
       </div>
 
       <section>
-        <div class="prog" v-for="(emission, index) in emissions" :key="index">
+        <div class="prog" v-if="currentEmission">
           <div class="prog-infos">
             <div class="prog-infos-texte">
-              <h5> {{ emission.titre }}</h5>
-              <p>{{ emission.user }}</p>
-              <p>Avec nom de l'invité, nom de l'invité, ...</p>
+              <h5> {{ currentEmission.titre }}</h5>
+              <p>{{ currentEmission.links.emission }}</p>
+              <p>{{ currentEmission.links.invite }}</p>
             </div>
-            <img :src="emission.photo" alt="image de l'émission">
+            <img :src="currentEmission.photo" alt="image de l'émission">
           </div>
         </div>
       </section>

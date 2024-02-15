@@ -19,10 +19,10 @@ class GetUserAllInfo extends \radio\net\app\action\Action
     function __invoke(ServerRequestInterface $request, ResponseInterface $response, array $args)
     {
         try {
-            $user = $this->service->GetAllInfoUser();
+            $users = $this->service->GetAllInfoUser();
             $data = [
                 'type' => 'resource',
-                'users' => $user
+                'users' => $users
             ];
             $response->getBody()->write(json_encode($data));
             return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
