@@ -95,18 +95,14 @@ export default {
       </div>
 
       <section>
-        <div class="prog" v-for="(emission, index) in emissions" :key="emission.id">
+        <div class="prog" v-if="currentEmission">
           <div class="prog-infos">
             <div class="prog-infos-texte">
-              <h5> {{ emission.titre }}</h5>
-              <p>{{ emission.user }}</p>
-              <p>Avec nom de l'invité, nom de l'invité, ...</p>
+              <h5> {{ currentEmission.titre }}</h5>
+              <p>{{ currentEmission.links.emission }}</p>
+              <p>{{ currentEmission.links.invite }}</p>
             </div>
-            <img :src="emission.photo" alt="image de l'émission">
-          </div>
-          <div v-if="currentEmission">
-             <h2>{{ currentEmission.title }}</h2>
-             <p>{{ currentEmission.description }}</p>
+            <img :src="currentEmission.photo" alt="image de l'émission">
           </div>
         </div>
       </section>
