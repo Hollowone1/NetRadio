@@ -32,7 +32,7 @@ class GetEmissionById extends Action
                 'description'=> $emission->description,
                 'theme' => $emission->theme,
                 'photo' => $emission->photo,
-                'user' => $route->urlFor('/user/{id_user}[/]', ['id_user' => $emission->user])
+                'user' => $route->urlFor('user.index', ['email' => $emission->user])
             ];
             $data = [
                 'type' => 'resource',
