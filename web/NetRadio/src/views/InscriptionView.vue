@@ -137,7 +137,7 @@ button {
   font-family: "Inter", Helvetica, Arial, sans-serif;
   font-weight: 400;
   display: flex;
-  width: 30%;
+  width: 30em;
   justify-content: center;
   align-items: center;
   flex: 1 0 0;
@@ -174,7 +174,7 @@ input {
   height: 40px;
   background-color: #E9E9E9;
   margin-bottom: 10px;
-  width: 30%;
+  width: 30em;
   padding: 0.2em;
 
 }
