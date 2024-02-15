@@ -6,6 +6,19 @@ use radio\net\domaine\entities\Emission;
 
 class EmissionService implements iEmissionService
 {
+    public function getCreneauxByEmission ($id) {
+        try {
+            $creneauDTO = [];
+            $creneaux = Emission::findOrFail($id)->creneaux();
+            foreach ($creneaux as $creneau) {
+                $creneauDTO [] = $creneau->toDTO();
+            }
+            return $creneauDTO;
+        }catch (\Exception) {
+            throw new EmissionNotFoundException('Emission not found');
+        }
+    }
+
     public function getEmissions () {
         try {
             $emissionsDTO = [];

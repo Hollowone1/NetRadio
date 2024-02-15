@@ -22,7 +22,15 @@ class GetEmissionsAction extends Action
         try {
             $router = RouteContext::fromRequest($request);
             $route = $router->getRouteParser();
-            $emissions = $this->emissionService->getEmissions();
+
+            $queryParams = $request->getQueryParams();
+
+            if (isset($queryParams['theme'])) {
+                $emissions = $this->emissionService->getEmissionByTheme($queryParams['theme']);
+            } else {
+                $emissions = $this->emissionService->getEmissions();
+            }
+
             foreach ($emissions as $emission) {
                 $emissionsResponse [] = [
                     'id' => $emission->id,
@@ -31,7 +39,20 @@ class GetEmissionsAction extends Action
                     'theme' => $emission->theme,
                     'photo' => $emission->photo,
                     'onDirect' =>$emission->onDirect,
-                    'user' => $route->urlFor('user.index', ['email' => $emission->user])
+                    'links' => [
+                        'self' => [
+                            "href" => $route->urlFor('emission.show', ['id_emission' => $emission->id])
+                        ],
+                        'users' => [
+                            "href" => $route->urlFor('user.show', ['email' => $emission->user])
+                        ],
+                        'creneaux' => [
+                            "href" => $route->urlFor('creneaux.emission', ['id_emission' => $emission->id])
+                        ],
+                        'podcasts' => [
+                            "href" => $route->urlFor('podcasts.emission', ['id_emission' => $emission->id])
+                        ]
+                    ],
                 ];
             }
 

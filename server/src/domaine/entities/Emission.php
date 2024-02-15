@@ -29,6 +29,11 @@ class Emission extends Model
         return $this->belongsTo(User::class, 'user_mail')->first();
     }
 
+    public function creneaux()
+    {
+        return $this->hasMany(Creneau::class, 'emission_id')->get();
+    }
+
     public function toDTO () {
         return new EmissionDTO(
             $this->id,
