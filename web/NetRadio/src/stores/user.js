@@ -1,25 +1,22 @@
 import { defineStore } from 'pinia';
 
-export const useUserStore = defineStore('userStore', {
+export const useUserStore = defineStore('user', {
     state() {
         return {
             loggedIn: false,
-            //user : []
-            user: {
-                mail: "presentateur9@example.com",
-                prenom : "Non",
-                nom : "AhGars",
-                role: 2
-            },
+            user : [],
+            tokens : []
         }
     },
     actions: {
-        loginUser() {
-            this.user.loggedIn = true;
+        loginUser(tokens) {
+            this.loggedIn = true;
+            this.tokens = tokens;
             //this.user = user;
+            //this.$api.get()
         },
         logoutUser() {
-            this.user.loggedIn = false;
+            this.loggedIn = false;
             this.user = [];
         },
     },
@@ -28,7 +25,7 @@ export const useUserStore = defineStore('userStore', {
         strategies: [
             {
                 storage: localStorage,
-                paths: ['user']
+                //paths: ['user']
             },
         ],
     }
