@@ -21,7 +21,7 @@ export default {
   created() {
     this.$api.get("/emissions")
         .then((response) => {
-          this.emissions = response.data.emission
+          this.emissions = response.data.emission.slice(0, 6)
           this.emissions.forEach(emission => {
             this.$api.get(emission.user)
                 .then((response2) => {
@@ -85,6 +85,7 @@ export default {
   padding-top: 1em;
   padding-left: 3em;
   padding-right: 3em;
+  margin-bottom: 1em;
   .top {
     h2{
       margin: 0
@@ -96,6 +97,8 @@ export default {
     }
   }
 }
+
+
 
 
 </style>

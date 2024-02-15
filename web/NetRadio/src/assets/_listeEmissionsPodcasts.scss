@@ -8,6 +8,7 @@ p {
 }
 
 .podcast {
+  cursor: pointer;
   background-color: $lightField;
   border-radius: 10px;
   padding: .2em 1em;
@@ -29,6 +30,7 @@ p {
 }
 
 .emission {
+  cursor: pointer;
   background-color: $lightGrey;
   border-radius: 10px;
   padding: 3em 1em 1em;
