@@ -11,7 +11,7 @@ export default {
   methods: {
     inscrire() {
 
-      this.$api.post('/signup', {
+      this.$api.post('users/signup', {
         username: this.username,
         email: this.mail,
         password: this.password,
