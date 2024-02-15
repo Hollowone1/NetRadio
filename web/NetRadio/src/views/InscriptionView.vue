@@ -23,7 +23,7 @@ export default {
         return;
     }
 
-      this.$api.post('users/signup', {
+      this.$api.post('/users/signup', {
         username: this.username.trim(),
         email: this.mail.trim(),
         password: this.password.trim(),
