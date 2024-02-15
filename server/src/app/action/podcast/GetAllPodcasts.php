@@ -33,7 +33,7 @@ class GetAllPodcasts extends Action
             $podcastsDTO = [];
 
             if (isset($queryParams['sort'])) {
-                $podcastsDTO = $this->servicePodcast->getPodcastByDate();
+                if ($queryParams['sort'] === 'date') $podcastsDTO = $this->servicePodcast->getPodcastByDate();
             } else {
                 $podcastsDTO = $this->servicePodcast->GetAllPodcast();
             }
