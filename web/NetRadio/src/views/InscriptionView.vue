@@ -4,15 +4,26 @@ export default {
     return {
       mail : "",
       password : "",
-      password2 : "",
       username: "",
       errorMessage : null
     }
   },
   methods: {
     inscrire() {
-      console.log('Inscription !')
-      //api post inscription avec data
+
+      this.$api.post('/signup', {
+        username: this.username,
+        email: this.mail,
+        password: this.password,
+      })
+      .then(response => {
+        console.log('Inscription réussie :', response);
+        // Rediriger vers la page de connexion ou afficher un message de succès
+      })
+      .catch(error => {
+        console.error('Erreur lors de l\'inscription :', error);
+        this.errorMessage = "Une erreur s'est produite lors de l'inscription.";
+      });
     }
   }
 }
@@ -35,10 +46,6 @@ export default {
       <div class="form-group">
         <label for="password">Mot de passe</label>
         <input v-model="password" type="password" id="password" placeholder=" " required />  
-      </div>
-      <div class="form-group">
-        <label for="password">Confirmer le mot de passe</label>
-        <input v-model="password2" type="password" id="password" placeholder=" " required />
       </div>
       <button @click="inscrire()" class="login-button">S'inscrire</button>
     </div>
