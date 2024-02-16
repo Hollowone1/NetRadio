@@ -23,7 +23,8 @@ export default {
         this.loginUser(resp.data)
         this.$router.push('/')
       }).catch(err => {
-        console.log(err)
+        err.response.data.error ? this.errorMessage = err.response.data.error : this.errorMessage = null
+        //console.log(err)
       })
     }
   }
