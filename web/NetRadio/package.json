@@ -11,6 +11,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "axios": "^1.6.7",
+    "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",
     "pinia": "^2.1.7",
     "pinia-plugin-persist": "^1.0.0",
@@ -19,6 +20,7 @@
     "v-calendar": "^3.1.2",
     "vue": "^3.4.15",
     "vue-datepicker-ui": "^3.1.1",
+    "vue-jwt-decode": "^0.1.0",
     "vue-router": "^4.2.5",
     "vue3-burger-menu": "^1.1.1"
   },

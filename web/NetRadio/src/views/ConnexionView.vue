@@ -1,4 +1,7 @@
 <script>
+import { mapActions } from 'pinia'
+import { useUserStore } from '@/stores/user.js'
+
 export default {
   data() {
     return {
@@ -8,9 +11,20 @@ export default {
     }
   },
   methods: {
+    ...mapActions(useUserStore, ['loginUser']),
     connection() {
       console.log('Connexion !')
-      //api post connexion avec data
+      this.$api.post('/users/signin', {}, {
+        auth : {
+          username: this.mail,
+          password: this.password
+        }
+      }).then(resp => {
+        this.loginUser(resp.data)
+        this.$router.push('/')
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }
@@ -18,22 +32,23 @@ export default {
 </script>
 
 <template>
-  <div >
-    <form class="login-form">
+  <div>
+    {{mail}}
+    {{password}}
+    <div class="login-form form">
       <h2>Connexion</h2>
       <div v-if="errorMessage" class="error">{{errorMessage}}</div>
-
       <div class="form-group">
         <label for="email">Email</label>
-        <input v-model="mail" type="email" id="email" placeholder=" " required />  
+        <input v-model="mail" type="email" id="email" placeholder="Votre adresse e-mail ..." required />
       </div>
       <div class="form-group">
         <label for="password">Mot de passe</label>
-        <input v-model="password" type="password" id="password" placeholder=" " required />    
+        <input v-model="password" type="password" id="password" placeholder="Votre mot de passe ..." required />
       </div>
       <button @click="connection()" class="login-button">Se connecter</button>
       <div class="register"><RouterLink to="/inscription"> Pas encore de compte ? Inscrivez-vous</RouterLink></div>
-    </form>
+    </div>
   </div>
 </template>
 
@@ -42,25 +57,6 @@ export default {
 .form-group{
   display:block;
   padding: 1em;
-}
-
-
-body {
-  margin: 0;
-  padding: 0;
-}
-
-
-@font-face {
-  font-family: "Inter";
-  src: url("../fonts/Inter/Inter-VariableFont_slnt,wght.ttf");
-}
-* {
-  font-family: "Inter", Helvetica, Arial, sans-serif;
-}
-
-p {
-  text-align: justify;
 }
 
 h2 {
@@ -152,7 +148,7 @@ input{
   border-bottom: 1px solid #a2a2a2;
 }
 
-form {
+.form {
   margin-top: 40px;
   margin-bottom: 40px;
   margin: 5em;
