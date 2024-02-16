@@ -29,6 +29,10 @@ use Slim\App;
 
 return function (App $app) {
 
+    $app->options('/{routes:.+}', function ($request, $response) {
+        return $response;
+    });
+
     //podcast
     $app->group('/podcasts', function ($app) {
         $app->get("[/]", GetAllPodcasts::class)->setName('podcast.index'); // v

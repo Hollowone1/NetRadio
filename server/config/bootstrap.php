@@ -1,9 +1,6 @@
 <?php
-header("Access-Control-Allow-Origin: *");
 
 use radio\net\domaine\middleware\Cors;
-use radio\net\domaine\utils\Eloquent;
-use Slim\Factory\AppFactory;
 
 //ajout des dépendances
 $settings = require_once __DIR__ . DIRECTORY_SEPARATOR . 'settings.php';
