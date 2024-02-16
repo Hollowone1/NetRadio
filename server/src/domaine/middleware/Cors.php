@@ -11,7 +11,6 @@ class Cors
 {
     public function __invoke(ServerRequestInterface $rq, RequestHandlerInterface $next): ResponseInterface
     {
-
         if (!$rq->hasHeader('Origin')) {
             throw new HttpUnauthorizedException($rq, "missing Origin Header (cors)");
         }

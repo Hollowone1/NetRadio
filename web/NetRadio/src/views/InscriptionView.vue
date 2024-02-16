@@ -1,66 +1,102 @@
 <script>
+import {mapState, mapActions} from "pinia";
+import {useUserStore} from "@/stores/user.js";
 export default {
   data() {
     return {
-      mail : "",
-      password : "",
+      mail: "",
+      password: "",
       username: "",
-      errorMessage : null
+      errorMessage: null
     }
   },
   methods: {
-    inscrire() {
+    /*inscrire() {
       const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+      const passwordRegex = /^(?=.*[A-Z])[a-zA-Z\d]{8,}$/
 
       if (!emailRegex.test(this.mail)) {
         this.errorMessage = "Format d'email invalide.";
         return;
-    }
+      }
 
       if (!passwordRegex.test(this.password)) {
         this.errorMessage = "Mot de passe invalide. Il doit contenir 8 caractères et au moins une majuscule.";
         return;
-    }
+      }
 
-      this.$api.post('users/signup', {
-        username: this.username,
-        email: this.mail,
-        password: this.password,
+      this.$api.post('/users/signup', {
+        username: this.username.trim(),
+        email: this.mail.trim(),
+        password: this.password.trim(),
       })
-      .then(response => {
-      console.log('Inscription réussie :', response);
-      this.errorMessage = "Inscription réussie.";
-      this.$router.push('/');
-    })
-      .catch(error => {
-      console.error('Erreur lors de l\'inscription :', error);
-      this.errorMessage = "Une erreur s'est produite lors de l'inscription.";
-  });
-}
+          .then(response => {
+            console.log('Inscription réussie :', response);
+            this.errorMessage = "Inscription réussie.";
+            this.$router.push('/');
+          })
+          .catch(error => {
+            console.error('Erreur lors de l\'inscription :', error);
+            this.errorMessage = "Une erreur s'est produite lors de l'inscription.";
+          });
+    }*/
+    ...mapActions(useUserStore, ['loginUser']),
+    inscrire() {
+      this.$api.post('/users/signup', {
+        email: this.mail,
+        username: this.username,
+        password: this.password
+      }).then(resp => {
+        this.connexionAfter()
+        this.$router.push('/')
+      }).catch(err => {
+        err.response.data.error ? this.errorMessage = err.response.data.error : this.errorMessage = null
+        err.response.data.exception[0].message ? this.errorMessage = err.response.data.exception[0].message : this.errorMessage = null
+        console.log(err.response.data)
+      })
+    },
+    connexionAfter() {
+      this.$api.post('/users/signin', {}, {
+        auth : {
+          username: this.mail,
+          password: this.password
+        }
+      }).then(resp => {
+        this.loginUser(resp.data)
+      }).catch(err => {
+        console.log("erreur dans connexion APRÈS inscription", err)
+      })
+    },
   }
 }
 
 </script>
 
 <template>
+  {{ password}}
+  {{ mail}}
+  {{ username}}
   <div class="login-container">
     <div class="login-form">
       <h2>Inscription</h2>
-      <div v-if="errorMessage" class="error">{{errorMessage}}</div>
+      <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
       <div class="form-group">
         <label for="username">Nom d'utilisateur</label>
-        <input v-model="username" type="text" id="username" placeholder=" " required />     
+        <input v-model="username" type="text" id="username" placeholder=" " required/>
       </div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input v-model="mail" type="email" id="email" placeholder=" " required />
+        <input v-model="mail" type="email" id="email" placeholder=" " required/>
       </div>
       <div class="form-group">
         <label for="password">Mot de passe</label>
-        <input v-model="password" type="password" id="password" placeholder=" " required />  
+        <input v-model="password" type="password" id="password" placeholder=" " required/>
       </div>
       <button @click="inscrire()" class="login-button">S'inscrire</button>
+      <div class="connexion">
+        <RouterLink to="/Connexion">Déjà un compte ? Connectez-vous</RouterLink>
+      </div>
+
     </div>
   </div>
 </template>
@@ -77,26 +113,9 @@ export default {
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: block;
+  padding: 1em;
 }
-
-  label {
-    font-family: "Inter", sans-serif;
-    font-size: inherit;
-    color: inherit;
-    font-weight: inherit;
-    width: 30em;
-    margin-top: 1%;
-    margin-bottom: 1%;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    justify-content: left;
-    gap: 10;
-    align-items: stretch;
-  }
 
 
 body {
@@ -109,6 +128,7 @@ body {
   font-family: "Inter";
   src: url("../fonts/Inter/Inter-VariableFont_slnt,wght.ttf");
 }
+
 * {
   font-family: "Inter", Helvetica, Arial, sans-serif;
 }
@@ -130,12 +150,29 @@ h2 {
   align-items: stretch;
 }
 
+label {
+  font-family: "Inter", sans-serif;
+  font-size: inherit;
+  color: inherit;
+  font-weight: inherit;
+  width: 30em;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0;
+  align-items: stretch;
+  text-align: left;
+}
+
 button {
   cursor: pointer;
   font-family: "Inter", Helvetica, Arial, sans-serif;
   font-weight: 400;
   display: flex;
-  width: auto;
+  width: 30em;
   justify-content: center;
   align-items: center;
   flex: 1 0 0;
@@ -143,19 +180,28 @@ button {
   background-color: #A568BB;
   color: #D9D9D9;
   font-size: 1em;
-  padding: 0.5em 1em 0.5em 1em;
+  padding: 1em;
   margin: 0.5em 0em 0.5em 0em;
   border-radius: 0px;
   transition: border-radius 0.3s;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 2em;
 }
+
 button:hover {
   background-color: #8d4ba5;
   border: 2px solid #b291fa;
+  color: white;
 }
 
+label {
+  font-size: inherit;
+  color: inherit;
+  font-weight: inherit;
+  height: 50px;
 
+}
 
 input {
   font-size: inherit;
@@ -164,24 +210,47 @@ input {
   height: 40px;
   background-color: #E9E9E9;
   margin-bottom: 10px;
-  width: 25%;
-  
+  width: 30em;
+  padding: 0.2em;
+
 }
 
 hr {
-  width: 30em;
+  width: 60em;
 }
-.register{
+
+.register {
   text-align: center;
 }
 
-a{
+input {
+  border: transparent;
+  border-bottom: 1px solid #a2a2a2;
+}
+
+a {
   text-decoration: none;
   color: #b291fa;
 }
-form {
+
+.login-container {
   margin-top: 40px;
   margin-bottom: 40px;
+  margin: 5em;
+  text-align: center;
+
+}
+
+@media screen and (max-width: 750px) {
+  input {
+    width: 15em;
+  }
+  label {
+    width: 15em;
+  }
+  .login-button {
+    width: 15em;
+  }
 }
 
 </style>

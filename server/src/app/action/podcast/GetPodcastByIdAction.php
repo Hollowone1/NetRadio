@@ -37,10 +37,15 @@ class GetPodcastByIdAction extends Action
                 'audio' => $podcastDTO->audio,
                 'photo' => $podcastDTO->photo,
                 'links' => [
-                    'href' => $router->urlFor('podcast.show', ['id_podcast' => $podcastDTO->id]),
+                    'self' => [
+                        'href' => $router->urlFor('podcast.show', ['id_podcast' => $podcastDTO->id]),
+                    ],
                     'emission' => [
                         'href' => $router->urlFor('emission.show', ['id_emission' => $podcastDTO->idEmission])
                     ],
+                    'invite' => [
+                        "href" => $router->urlFor('podcast.invites', ['id' => $podcastDTO->id])
+                    ]
                 ],
             ];
             // mise en forme des données pour le json

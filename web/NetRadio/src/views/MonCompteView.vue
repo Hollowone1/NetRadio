@@ -2,8 +2,10 @@
 import PopupEmission from "@/components/PopupEmission.vue";
 import Emission from '@/components/Emission.vue'
 import SideBar from "@/components/SideBarComponent.vue";
-import { mapState } from "pinia";
-import { useUserStore } from "@/stores/user.js";
+import {mapState, mapActions} from "pinia";
+import {useUserStore} from "@/stores/user.js";
+//import VueJwtDecode from "vue-jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 export default {
   components: {
@@ -20,14 +22,14 @@ export default {
     }
   },
   computed: {
-    ...mapState(useUserStore, ['user'])
+    ...mapState(useUserStore, ['user', 'tokens', 'loggedIn'])
   },
   created() {
     this.$api.get("/emissions")
         .then((response) => {
           this.emissions = response.data.emission
           this.emissions.forEach(emission => {
-            this.$api.get(emission.user)
+            this.$api.get(emission.links.users.href)
                 .then((response2) => {
                   emission.user = `${response2.data.user.nom} ${response2.data.user.prenom}`
                 })
@@ -40,8 +42,19 @@ export default {
           console.log(error)
         });
 
+    const mail = jwtDecode(this.tokens.access_token).upr.email
+    this.$api.get(`/users/mail/${mail}`)
+        .then((response) => {
+          //console.log(response.data)
+          this.setUser(response.data.user)
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+
   },
   methods: {
+    ...mapActions(useUserStore, ['setUser']),
     changeDisplay(number) {
       this.display = number;
     },
@@ -59,7 +72,7 @@ export default {
 </script>
 
 <template>
-  <div class="view" v-if="user.role === 1">
+  <div class="view" v-if="user.role === `1`">
     <side-bar @change="changeDisplay">
       <template v-slot:1>Mon compte</template>
       <template v-slot:2>Enregistrements</template>
@@ -73,8 +86,8 @@ export default {
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
           <div>
-            <p><strong>Nom d'utilisateur :</strong> {{ user.nom }}</p>
-            <p><strong>Email :</strong> {{ user.prenom }}</p>
+            <p><strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
+            <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
         </div>
       </div>
@@ -102,7 +115,7 @@ export default {
   </div>
 
 
-  <div class="view" v-if="user.role === 2">
+  <div class="view" v-if="user.role === `2`">
     <side-bar @change="changeDisplay">
       <template v-slot:1>Mon compte</template>
       <template v-slot:2>Émissions</template>
@@ -117,7 +130,7 @@ export default {
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
           <div>
-            <p><strong>Nom d'utilisateur :</strong>{{user.prenom}} {{ user.nom }} </p>
+            <p><strong>Nom d'utilisateur :</strong>{{ user.prenom }} {{ user.nom }} </p>
             <p><strong>Email :</strong> {{ user.mail }}</p>
           </div>
         </div>

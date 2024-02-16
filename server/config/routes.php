@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-use radio\net\app\action\auth\GetUsernameAction;
 use radio\net\app\action\auth\RefreshAction;
 use radio\net\app\action\auth\SigninAction;
 use radio\net\app\action\auth\SignupAction;
 use radio\net\app\action\auth\ValidateAction;
 use radio\net\app\action\creneau\GetAllCreneaux;
 use radio\net\app\action\creneau\GetCreneauById;
+use radio\net\app\action\emission\GetCreneauByEmission;
 use radio\net\app\action\emission\GetEmissionById;
 use radio\net\app\action\emission\GetEmissionByTheme;
 use radio\net\app\action\emission\GetEmissionsAction;
@@ -29,53 +29,57 @@ use Slim\App;
 
 return function (App $app) {
 
+    $app->options('/{routes:.+}', function ($request, $response) {
+        return $response;
+    });
+
     //podcast
     $app->group('/podcasts', function ($app) {
-        $app->get("/{id_podcast}[/]", GetPodcastByIdAction::class)->setName('podcast.show');
-        $app->get("[/]", GetAllPodcasts::class)->setName('podcast.index');
-        $app->put('/{id}[/]', PutPodcast::class)->setName('podcast.update');
-        $app->get('/{id}/users', GetUSersByPodcast::class)->setName('podcast.invites');
-        $app->post("[/]", PostPodcast::class)->setName('');
+        $app->get("[/]", GetAllPodcasts::class)->setName('podcast.index'); // v
+        $app->get("/{id_podcast}[/]", GetPodcastByIdAction::class)->setName('podcast.show'); // v
+        $app->post("[/]", PostPodcast::class)->setName('podcast.create'); //
+        $app->put('/{id}[/]', PutPodcast::class)->setName('podcast.update'); //
+        $app->get('/{id}/users', GetUSersByPodcast::class)->setName('podcast.invites'); //
     });
 
     //emission
     $app->group('/emissions', function ($app) {
-        $app->get("/{id_emission}/podcasts", GetPodcastByEmission::class)->setName('');
-        $app->get("/{id_emission}[/]", GetEmissionById::class)->setName('emission.show');
-        $app->get("[/]", GetEmissionsAction::class)->setName('/emissions')->setName('emission.index');
-        $app->get("/theme/{theme}", GetEmissionByTheme::class)->setName('/emissions/theme');
+        $app->get("[/]", GetEmissionsAction::class)->setName('emission.index'); // v
+        $app->get("/{id_emission}[/]", GetEmissionById::class)->setName('emission.show'); // v
+        $app->get("/{id_emission}/podcasts", GetPodcastByEmission::class)->setName('podcasts.emission'); //v
+        $app->get("/{id_emission}/creneau", GetCreneauByEmission::class)->setName('creneaux.emission');
     });
 
-    //users
+    //user
     $app->group('/users', function ($app) {
+        //user infos
+        $app->get("[/]", GetUserAllInfo::class)->setName('users.index');
+        $app->get('/mail/{email}', GetUserByMail::class)->setName('user.show');
+        $app->get("/{email_user}/playlists", GetPlaylistByEmailUserAction::class)->setName('playlists.user');
+
         //auth
         $app->post('/signin', SigninAction::class)->setName('signin');
         $app->post('/signup', SignupAction::class)->setName('signup');
         $app->post('/refresh', RefreshAction::class)->setName('refresh');
         $app->get('/validate', ValidateAction::class)->setName('validate_user');
-
-        //user infos
-        $app->get("[/]", GetUserAllInfo::class);
-        $app->get("/{email_user}/playlists", GetPlaylistByEmailUserAction::class)->setName('/user/{email_user}/playlist');
-        $app->get('/mail/{email}', GetUserByMail::class)->setName('user.index');
     });
 
-    //sons
+    //son
     $app->group('/sons', function ($app) {
-        $app->get("[/]", GetAllSons::class);
-        $app->get("/{id_son}[/]", GetSonByIdAction::class)->setName('/son/{id_son}[/]');
-        $app->get("/playlist/{id_playlist}[/]", GetSonsByPlaylistId::class)->setName('/son/playlist/{id_playlist}[/]');
+        $app->get("[/]", GetAllSons::class)->setName('son.index');
+        $app->get("/{id_son}[/]", GetSonByIdAction::class)->setName('son.show');
+        $app->get("/playlist/{id_playlist}[/]", GetSonsByPlaylistId::class)->setName('sons.playlist');
     });
 
     //playlist
     $app->group('/playlists', function ($app) {
-        $app->get("/{id_playlist}[/]", GetPlaylistByIdAction::class)->setName('/playlist/{id_playlist}[/]');
-        $app->post("[/]", PostPlaylist::class)->setName("/playlist");
+        $app->post("[/]", PostPlaylist::class)->setName("playlist.index");
+        $app->get("/{id_playlist}[/]", GetPlaylistByIdAction::class)->setName('.playlist.show');
     });
 
     // creneau
     $app->group('/creneaux', function ($app) {
-        $app->get("[/]", GetAllCreneaux::class);
-        $app->get("/{id}[/]", GetCreneauById::class);
+        $app->get("[/]", GetAllCreneaux::class)->setName('creneaux.index'); // v
+        $app->get("/{id}[/]", GetCreneauById::class)->setName('creneaux.show'); // v
     });
 };

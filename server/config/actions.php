@@ -1,13 +1,11 @@
 <?php
 
 use Psr\Container\ContainerInterface;
-use radio\net\app\action\auth\GetUsernameAction;
 use radio\net\app\action\auth\RefreshAction;
 use radio\net\app\action\auth\SigninAction;
 use radio\net\app\action\auth\SignupAction;
 use radio\net\app\action\auth\ValidateAction;
 use radio\net\app\action\emission\GetEmissionById;
-use radio\net\app\action\emission\GetEmissionByTheme;
 use radio\net\app\action\emission\GetEmissionsAction;
 use radio\net\app\action\playlist\GetPlaylistByIdAction;
 use radio\net\app\action\podcast\GetAllPodcasts;
@@ -45,15 +43,18 @@ return array(
         return new GetUSersByPodcast($container->get('PodcastService'));
     },
 
+    //emission
     GetEmissionById::class => function (ContainerInterface $container) {
         return new GetEmissionById($container->get('EmissionService'));
     },
     GetEmissionsAction::class => function (ContainerInterface $container) {
         return new GetEmissionsAction($container->get('EmissionService'));
     },
-    GetEmissionByTheme::class => function (ContainerInterface $container) {
-        return new GetEmissionByTheme($container->get('EmissionService'));
+    \radio\net\app\action\emission\GetCreneauByEmission::class => function (ContainerInterface $container) {
+        return new \radio\net\app\action\emission\GetCreneauByEmission($container->get('EmissionService'));
     },
+
+    //user
     GetUserAllInfo::class => function (ContainerInterface $container) {
         return new GetUserAllInfo($container->get('UserService'));
     },

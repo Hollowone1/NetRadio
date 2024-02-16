@@ -32,7 +32,20 @@ class GetEmissionById extends Action
                 'description'=> $emission->description,
                 'theme' => $emission->theme,
                 'photo' => $emission->photo,
-                'user' => $route->urlFor('user.index', ['email' => $emission->user])
+                'links' => [
+                    'self' => [
+                        "href" => $route->urlFor('emission.show', ['id_emission' => $emission->id])
+                    ],
+                    'users' => [
+                        "href" => $route->urlFor('user.show', ['email' => $emission->user])
+                    ],
+                    'creneaux' => [
+                        "href" => $route->urlFor('creneaux.emission', ['id_emission' => $emission->id])
+                    ],
+                    'podcasts' => [
+                        "href" => $route->urlFor('podcasts.emission', ['id_emission' => $emission->id])
+                    ]
+                ],
             ];
             $data = [
                 'type' => 'resource',
