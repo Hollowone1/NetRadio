@@ -1,67 +1,101 @@
 <script>
+import {mapState, mapActions} from "pinia";
+import {useUserStore} from "@/stores/user.js";
 export default {
   data() {
     return {
-      mail : "",
-      password : "",
+      mail: "",
+      password: "",
       username: "",
-      errorMessage : null
+      errorMessage: null
     }
   },
   methods: {
-    inscrire() {
+    /*inscrire() {
       const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
       const passwordRegex = /^(?=.*[A-Z])[a-zA-Z\d]{8,}$/
 
       if (!emailRegex.test(this.mail)) {
         this.errorMessage = "Format d'email invalide.";
         return;
-    }
+      }
 
       if (!passwordRegex.test(this.password)) {
         this.errorMessage = "Mot de passe invalide. Il doit contenir 8 caractères et au moins une majuscule.";
         return;
-    } 
+      }
 
       this.$api.post('/users/signup', {
         username: this.username.trim(),
         email: this.mail.trim(),
         password: this.password.trim(),
       })
-      .then(response => {
-      console.log('Inscription réussie :', response);
-      this.errorMessage = "Inscription réussie.";
-      this.$router.push('/');
-    })
-      .catch(error => {
-      console.error('Erreur lors de l\'inscription :', error);
-      this.errorMessage = "Une erreur s'est produite lors de l'inscription.";
-  });
-}
+          .then(response => {
+            console.log('Inscription réussie :', response);
+            this.errorMessage = "Inscription réussie.";
+            this.$router.push('/');
+          })
+          .catch(error => {
+            console.error('Erreur lors de l\'inscription :', error);
+            this.errorMessage = "Une erreur s'est produite lors de l'inscription.";
+          });
+    }*/
+    ...mapActions(useUserStore, ['loginUser']),
+    inscrire() {
+      this.$api.post('/users/signup', {
+        email: this.mail,
+        username: this.username,
+        password: this.password
+      }).then(resp => {
+        this.connexionAfter()
+        this.$router.push('/')
+      }).catch(err => {
+        err.response.data.error ? this.errorMessage = err.response.data.error : this.errorMessage = null
+        err.response.data.exception[0].message ? this.errorMessage = err.response.data.exception[0].message : this.errorMessage = null
+        console.log(err.response.data)
+      })
+    },
+    connexionAfter() {
+      this.$api.post('/users/signin', {}, {
+        auth : {
+          username: this.mail,
+          password: this.password
+        }
+      }).then(resp => {
+        this.loginUser(resp.data)
+      }).catch(err => {
+        console.log("erreur dans connexion APRÈS inscription", err)
+      })
+    },
   }
 }
 
 </script>
 
 <template>
+  {{ password}}
+  {{ mail}}
+  {{ username}}
   <div class="login-container">
     <div class="login-form">
       <h2>Inscription</h2>
-      <div v-if="errorMessage" class="error">{{errorMessage}}</div>
+      <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
       <div class="form-group">
         <label for="username">Nom d'utilisateur</label>
-        <input v-model="username" type="text" id="username" placeholder=" " required />     
+        <input v-model="username" type="text" id="username" placeholder=" " required/>
       </div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input v-model="mail" type="email" id="email" placeholder=" " required />
+        <input v-model="mail" type="email" id="email" placeholder=" " required/>
       </div>
       <div class="form-group">
         <label for="password">Mot de passe</label>
-        <input v-model="password" type="password" id="password" placeholder=" " required />  
+        <input v-model="password" type="password" id="password" placeholder=" " required/>
       </div>
       <button @click="inscrire()" class="login-button">S'inscrire</button>
-      <div class="connexion"><RouterLink to="/Connexion">Déjà un compte ? Connectez-vous</RouterLink></div>
+      <div class="connexion">
+        <RouterLink to="/Connexion">Déjà un compte ? Connectez-vous</RouterLink>
+      </div>
 
     </div>
   </div>
@@ -78,8 +112,8 @@ export default {
   margin-bottom: 20px;
 }
 
-.form-group{
-  display:block;
+.form-group {
+  display: block;
   padding: 1em;
 }
 
@@ -94,6 +128,7 @@ body {
   font-family: "Inter";
   src: url("../fonts/Inter/Inter-VariableFont_slnt,wght.ttf");
 }
+
 * {
   font-family: "Inter", Helvetica, Arial, sans-serif;
 }
@@ -153,6 +188,7 @@ button {
   margin-right: auto;
   margin-bottom: 2em;
 }
+
 button:hover {
   background-color: #8d4ba5;
   border: 2px solid #b291fa;
@@ -164,7 +200,7 @@ label {
   color: inherit;
   font-weight: inherit;
   height: 50px;
-  
+
 }
 
 input {
@@ -182,17 +218,21 @@ input {
 hr {
   width: 60em;
 }
-.register{
+
+.register {
   text-align: center;
 }
-input{
+
+input {
   border: transparent;
   border-bottom: 1px solid #a2a2a2;
 }
-a{
+
+a {
   text-decoration: none;
   color: #b291fa;
 }
+
 .login-container {
   margin-top: 40px;
   margin-bottom: 40px;
@@ -202,13 +242,13 @@ a{
 }
 
 @media screen and (max-width: 750px) {
-  input{
+  input {
     width: 15em;
   }
-  label{
+  label {
     width: 15em;
   }
-  .login-button{
+  .login-button {
     width: 15em;
   }
 }

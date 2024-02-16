@@ -86,8 +86,8 @@ export default {
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
           <div>
-            <p><strong>Nom d'utilisateur :</strong> {{ user.nom }}</p>
-            <p><strong>Email :</strong> {{ user.prenom }}</p>
+            <p><strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
+            <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
         </div>
       </div>
