@@ -11,6 +11,7 @@ import ToutesLesEmissions from '@/views/ToutesEmissionsView.vue'
 import MonCompte from '@/views/MonCompteView.vue'
 import Connexion from '@/views/ConnexionView.vue'
 import Inscription from '@/views/InscriptionView.vue'
+import EnregistrementEnDirectViewVue from '@/views/EnregistrementEnDirectView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -70,6 +71,11 @@ const router = createRouter({
       name: 'inscription',
       component: Inscription
     },
+    {
+      path: '/enregistrement',
+      name: 'enregistrement en direct',
+      component: EnregistrementEnDirectViewVue
+    }
 
   ]
 })
