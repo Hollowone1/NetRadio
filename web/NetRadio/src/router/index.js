@@ -70,6 +70,11 @@ const router = createRouter({
       name: 'inscription',
       component: Inscription
     },
+    {
+        path: '/ecouterEmission/:id',
+        name: 'ecouterEmission',
+        component: () => import('@/views/EcouterEmission.vue')
+    }
 
   ]
 })

@@ -8,11 +8,22 @@ Direct
       </div>
       <p class="direct-infos-sous-titre">EN DIRECT</p>
       <p class="direct-infos-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-      <button class="direct-infos-ecouter">Écouter</button>
+      <button class="direct-infos-ecouter" @click="listenDirect">Écouter</button>
     </div>
     <img class="direct-image" src="/icons/Desktop.png" alt="image de l'émission en direct">
   </section>
 </template>
+
+<script>
+export default {
+  name: "EnDirect",
+  methods: {
+    listenDirect() {
+      this.$router.push({path: '/ecouterEmission/' + this.$route.params.id});
+    }
+  }
+}
+</script>
 
 <style scoped lang="scss">
 @import "@/assets/var";

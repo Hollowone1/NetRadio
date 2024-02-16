@@ -8,9 +8,6 @@ export default {
                 'Content-Type': 'application/json',
             }
         });
-
-        app.config.globalProperties.$api = axiosInstance;
     }
 }
 
-export default axiosPlugin;
