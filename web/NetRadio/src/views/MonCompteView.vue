@@ -41,17 +41,16 @@ export default {
         .catch((error) => {
           console.log(error)
         });
-    //const mail = VueJwtDecode.decode(this.tokens.access_token).upr.email
+
     const mail = jwtDecode(this.tokens.access_token).upr.email
-    console.log(mail)
-    /*this.$api.get(`/users/mail/${mail}`)
+    this.$api.get(`/users/mail/${mail}`)
         .then((response) => {
-          console.log(response.data)
-          //this.setUser(response.data)
+          //console.log(response.data)
+          this.setUser(response.data.user)
         })
         .catch((error) => {
           console.log(error)
-        });*/
+        });
 
   },
   methods: {
@@ -73,7 +72,7 @@ export default {
 </script>
 
 <template>
-  <div class="view" v-if="user.role === 1">
+  <div class="view" v-if="user.role === `1`">
     <side-bar @change="changeDisplay">
       <template v-slot:1>Mon compte</template>
       <template v-slot:2>Enregistrements</template>
@@ -116,7 +115,7 @@ export default {
   </div>
 
 
-  <div class="view" v-if="user.role === 2">
+  <div class="view" v-if="user.role === `2`">
     <side-bar @change="changeDisplay">
       <template v-slot:1>Mon compte</template>
       <template v-slot:2>Émissions</template>
