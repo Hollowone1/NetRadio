@@ -1,5 +1,3 @@
-
-
 <script>
 import AudioRecorder from "@/components/AudioRecorder.vue";
 import {io} from "socket.io-client";
@@ -7,6 +5,7 @@ import HeaderComponent from "@/App.vue";
 import AudioPlayer from "@/components/AudioPlayer.vue";
 
 export default {
+
   components: {HeaderComponent, AudioRecorder, AudioPlayer},
   data() {
     return {
@@ -15,122 +14,131 @@ export default {
       audio: null,
       id: null,
       invite: false,
-      emission: null
+      emission: null,
+      userInput: "",
+      microphoneState: null,
+      audioContext: new AudioContext(),
+      mediaStreamSource: null,
+      micImage: null
     };
   },
-  mounted() {
-
-    // console.log("You joined the live");
-    // this.socket.on("voice", (arrayBuffer) => {
-    //   let blob = new Blob([arrayBuffer], { type: "audio/mp3; codecs=opus" });
-    //   let audio = document.createElement("audio");
-    //   audio.src = window.URL.createObjectURL(blob);
-    //   audio.play();
-    // });
-    // this.socket.on("voiceInvite", (arrayBuffer) => {
-    //   console.log("test");
-    //   if (this.invite) {
-    //     let blob = new Blob([arrayBuffer], { type: "audio/mp3; codecs=opus" });
-    //     let audio = document.createElement("audio");
-    //     audio.src = window.URL.createObjectURL(blob);
-    //     audio.play();
-    //   }
-    // });
-    // this.socket.on("diconnect", () => {
-    //   this.invite = false;
-    // });
-    // this.socket.on("authorisation", (invite) => {
-    //   if (this.id === invite.id) {
-    //     if (invite.response) {
-    //       console.log("je suis invité");
-    //       this.invite = invite.response;
-    //
-    //       let constraints = {
-    //         audio: true,
-    //       };
-    //       let mediaRecorder;
-    //
-    //       navigator.mediaDevices
-    //           .getUserMedia(constraints)
-    //           .then((mediaStream) => {
-    //             mediaRecorder = new MediaRecorder(mediaStream);
-    //             mediaRecorder.onstart = () => {
-    //               this.chunks = [];
-    //             };
-    //
-    //             mediaRecorder.ondataavailable = (e) => {
-    //               this.chunks.push(e.data);
-    //               let blob = new Blob(this.chunks, {
-    //                 type: "audio/mp3; codecs=opus",
-    //               });
-    //               if (this.invite) {
-    //                 this.socket.emit("radioInvite", blob);
-    //               }
-    //             };
-    //
-    //             mediaRecorder.start();
-    //
-    //
-    //             setInterval(() => {
-    //               if (this.invite) {
-    //                 mediaRecorder.stop();
-    //                 mediaRecorder.start();
-    //               }
-    //             }, 1000);
-    //           });
-    //     } else {
-    //       console.log("Demande refusée !");
-    //     }
-    //   }
-    // });
-    //
-    // this.$api
-    //     .get("emissions/" + this.$route.params.id) //  + this.$route.params.id
-    //     .then((response) => {
-    //       this.emission = response.data.emission;
-    //       console.log(response.data);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-
-    // this.audioContext = new AudioContext();
-    // this.gainNode = this.audioContext.createGain();
-    // this.gainNode.connect(this.audioContext.destination);
-    //
-    // this.socket.on("audio", (data) => {
-    //   // Convertit l'ArrayBuffer en AudioBuffer
-    //   this.audioContext.decodeAudioData(data, (audioBuffer) => {
-    //     // Crée un nouveau buffer source et le connecte à l'audio context
-    //     const bufferSource = this.audioContext.createBufferSource();
-    //     bufferSource.buffer = audioBuffer;
-    //     bufferSource.connect(this.gainNode);
-    //
-    //     // Démarre la lecture du buffer source
-    //     bufferSource.start();
-    //   });
-    // });
-  },
   methods: {
-    quitLive() {
-      this.$router.push({path: "/"});
+    async setupAudioStream() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)(); // || window.webkitAudioContext)
+        this.audioContext.latencyHint = 'interactive'; // or 'playback'
+
+        this.mediaStreamSource = this.audioContext.createMediaStreamSource(stream);
+      } catch (error) {
+        console.error('Error accessing microphone:', error);
+      }
     },
-    reqInvite() {
-      const genRanHex = (size) =>
-          [...Array(size)]
-              .map(() => Math.floor(Math.random() * 16).toString(16))
-              .join("");
-      this.id = genRanHex(20);
-      console.log(this.id);
-      this.socket.emit("invite", {id: this.id, accepted: false});
+    toggleMicrophone() {
+      if (this.micImage.classList.contains('bi-mic-mute')) {
+        this.micImage.classList.remove('bi-mic-mute');
+        this.micImage.classList.add('bi-mic');
+        this.microphoneState.textContent = "Unmuted";
+
+        // Connect the media stream source to the audio context destination
+        //mediaStreamSource.connect(audioContext.destination);
+
+        // Start sending audio data to the server in real-time
+        this.startStreaming();
+      } else {
+        this.micImage.classList.remove('bi-mic');
+        this.micImage.classList.add('bi-mic-mute');
+        this.microphoneState.textContent = "Muted";
+
+        // Stop sending audio data to the server
+        this.stopStreaming();
+      }
     },
-    // playAudio() {
-    //   // Emet l'événement audio avec un buffer audio mock
-    //   this.socket.emit("audio", new ArrayBuffer(1024));
-    // }
+    startStreaming() {
+      if (!this.mediaStreamSource) {
+        return;
+      }
+      const bufferSize = 2048;
+
+      const scriptNode = this.audioContext.createScriptProcessor(bufferSize, 1, 1);
+
+      scriptNode.onaudioprocess = (audioProcessingEvent) => {
+        const inputBuffer = audioProcessingEvent.inputBuffer;
+        const audioData = inputBuffer.getChannelData(0);
+
+        // Send the audio data to the server
+        if (!this.micImage.includes('bi-mic-mute')) {
+          this.socket.emit("audio", audioData);
+        }
+      };
+
+      this.mediaStreamSource.connect(scriptNode);
+      scriptNode.connect(this.audioContext.destination);
+    },
+    stopStreaming() {
+      // Disconnect the script node from the audio context
+      if (this.mediaStreamSource && this.mediaStreamSource.isConnected) {
+      this.mediaStreamSource.disconnect();
+      }
+    },
+  },
+  mounted() {
+    this.microphoneState = document.getElementById('microphone-state');
+    this.micImage = document.getElementById('mic-image');
+    window.onload = function () {
+      do {
+        this.userInput = prompt("Enter Your name");
+        this.socket.emit("joinedusername", this.userInput)
+      } while (userInput === null || this.userInput === "");
+
+      this.socket.username = this.userInput;
+
+      this.setupAudioStream();
+    }
+
+    this.socket.on("allonlineusers", (myArray) => {
+      const fixedDiv = document.querySelector(".fixed");
+
+      fixedDiv.innerHTML = "";
+
+      myArray.forEach((user) => {
+        const joinedUserDiv = document.createElement("div");
+        joinedUserDiv.className = "joineduser";
+
+        const h2Element = document.createElement("h2");
+
+        const userSpan = document.createElement("span");
+        userSpan.textContent = user;
+
+        h2Element.appendChild(userSpan);
+
+        joinedUserDiv.appendChild(h2Element);
+
+        fixedDiv.appendChild(joinedUserDiv);
+      });
+    });
+    this.socket.on("audio1", (data) => {
+      const audioContext1 = new (window.AudioContext || window.webkitAudioContext)();
+
+      const typedArray = new Float32Array(data);
+
+      const audioBuffer = audioContext1.createBuffer(1, typedArray.length, audioContext1.sampleRate);
+
+      const channelData = audioBuffer.getChannelData(0);
+
+      channelData.set(typedArray);
+
+      const audioBufferSource = audioContext1.createBufferSource();
+      audioBufferSource.buffer = audioBuffer;
+      audioBufferSource.connect(audioContext1.destination);
+
+      audioBufferSource.start();
+    });
   }
 
-};
+
+}
+;
 </script>
 
 <template>
@@ -142,22 +150,20 @@ export default {
       <img :src="emission.photo" alt="image de l'émission en direct">
     </div>
 
-    <button @click="playAudio">Play Audio</button>
-    <audio ref="audioElement"></audio>
+    <button id="microphone-icon" @click="toggleMicrophone()">Muted</button>
+    <p id="microphone-state">Muted</p>
+    <i class="bi bi-mic-mute" id="mic-image"></i>
 
-    <audio-recorder />
-    <audio-player />
-    <!--    <button @click="play()"> Play</button>-->
-    <!--    -->
-    <!--    <audio id="audio" src=""></audio>-->
-    <!--      <button @click="quitLive" type="submit" id="btn-stop">-->
-    <!--        Quitter le direct-->
-    <!--      </button>-->
-    <!--      <button @click="reqInvite" type="submit" id="invitation">-->
-    <!--        Demander à participer-->
-    <!--      </button>-->
-    <!--    <Footer />-->
+    <div class="userlist">
+      <div class="header">
+        <h2>Joined Users</h2>
+      </div>
+      <div class="fixed">
+      </div>
+    </div>
   </section>
+
+
 </template>
 
 <style lang="scss">
