@@ -34,8 +34,6 @@ export default {
 
 <template>
   <div>
-    {{mail}}
-    {{password}}
     <div class="login-form form">
       <h2>Connexion</h2>
       <div v-if="errorMessage" class="error">{{errorMessage}}</div>

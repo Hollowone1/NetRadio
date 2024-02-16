@@ -17,7 +17,7 @@ export default {
     }
   },
   created() {
-    this.$api.get("/podcasts")
+    this.$api.get("/podcasts?sort=date")
         .then((response) => {
           this.podcasts = response.data.podcasts
           this.podcastsToday = this.getPodcastsDate(new Date().toISOString().split('T')[0]);
