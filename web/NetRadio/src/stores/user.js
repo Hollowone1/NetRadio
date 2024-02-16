@@ -12,7 +12,9 @@ export const useUserStore = defineStore('user', {
         loginUser(tokens) {
             this.loggedIn = true;
             this.tokens = tokens;
-            //this.user = user;
+        },
+        setUser(user) {
+            this.user = user;
         },
         logoutUser() {
             this.loggedIn = false;

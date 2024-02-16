@@ -1,6 +1,7 @@
 <script>
 import { mapState, mapActions } from "pinia";
 import { useUserStore } from "@/stores/user.js";
+import VueJwtDecode from 'vue-jwt-decode';
 
 export default {
   computed: {
@@ -11,14 +12,9 @@ export default {
 
     }
   },
-  created() {
-    console.log("han", this.tokens)
-  },
+
   methods: {
     ...mapActions(useUserStore, ['logoutUser']),
-    toggleConnexion() {
-      this.connected = !this.connected
-    },
     logOut() {
       this.logoutUser()
       this.$router.push('/connexion')
@@ -35,7 +31,7 @@ export default {
         <input class="search" type="search" src="/icons/search.svg" placeholder="Rechercher ...">
         <router-link to="/mon-compte" v-if="loggedIn"><img class="header-user-co" src="/icons/user.svg" alt="user icon"/></router-link>
 
-        <button v-if="loggedIn" class="header-boutons-deconnecter" @click="logoutUser">Se déconnecter</button>
+        <button v-if="loggedIn" class="header-boutons-deconnecter" @click="logOut">Se déconnecter</button>
         <router-link v-else to="/connexion"><button class="header-boutons-connecter" >Se connecter</button></router-link>
       </div>
     </div>
