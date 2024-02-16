@@ -38,7 +38,7 @@ export default {
           console.log(error)
         });
 
-    this.$api.get("/podcasts")
+    this.$api.get("/podcasts?sort=date")
         .then((response) => {
           this.podcasts = response.data.podcasts.slice(0, 6)
         })
@@ -51,7 +51,7 @@ export default {
 
 <template>
   <en-direct></en-direct>
-  <Calendar></Calendar>
+ <Calendar></Calendar>
   <Creneaux></Creneaux>
   <div class="emissions">
     <div class="top">
