@@ -6,8 +6,6 @@ import ListePodcasts from '@/views/ListePodcastsView.vue'
 import PresentationEmission from '@/views/PresentationEmissionView.vue'
 import ResultatEmission from '@/views/ResultatsEmissionsView.vue'
 import ResultatPodcast from '@/views/ResultatsPodcastsView.vue'
-import ToutesLesEmissions from '@/views/ToutesEmissionsView.vue'
-//import ProfilUtilisateur from '@/views/ProfilUtilisateurView.vue'
 import MonCompte from '@/views/MonCompteView.vue'
 import Connexion from '@/views/ConnexionView.vue'
 import Inscription from '@/views/InscriptionView.vue'
@@ -49,11 +47,6 @@ const router = createRouter({
       path: '/resultat-podcast',
       name: 'résultat des podcast',
       component: ResultatPodcast
-    },
-    {
-      path: '/toutes-les-emissions',
-      name: 'résultat des emissions',
-      component: ToutesLesEmissions
     },
     {
       path: '/mon-compte',
