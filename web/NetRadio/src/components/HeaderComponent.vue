@@ -1,7 +1,6 @@
 <script>
 import { mapState, mapActions } from "pinia";
 import { useUserStore } from "@/stores/user.js";
-import VueJwtDecode from 'vue-jwt-decode';
 
 export default {
   computed: {
