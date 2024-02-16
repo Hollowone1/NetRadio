@@ -34,7 +34,7 @@ const router = createRouter({
       component: ListePodcasts
     },
     {
-      path: '/emission/:id',
+      path: '/emissions/:id',
       name: 'presentation emission',
       component: PresentationEmission
     },

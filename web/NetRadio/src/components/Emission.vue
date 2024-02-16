@@ -21,7 +21,7 @@ export default {
   },
   methods : {
     redirect(id) {
-      this.$router.push(`/emission/${id}`)
+      this.$router.push(`/emissions/${id}`)
     }
   },
   directives : {
