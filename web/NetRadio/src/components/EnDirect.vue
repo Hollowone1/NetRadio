@@ -1,29 +1,38 @@
-Direct
+<script>
+export default {
+  data() {
+    return {
+      emission: [],
+    }
+  },
+  created() {
+    this.$api.get("/emissions")
+        .then((response) => {
+          this.emission = response.data.emission.find(emission => emission.onDirect === true)
+          console.log(this.emission)
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+  }
+}
+</script>
+
+
 <template>
   <section class="direct">
     <div class="direct-infos">
       <div class="direct-infos-titre">
         <embed src="/icons/direct.svg"/>
-        <h1>Nom émission</h1>
+        <h1>{{ emission.titre }}</h1>
       </div>
       <p class="direct-infos-sous-titre">EN DIRECT</p>
-      <p class="direct-infos-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-      <button class="direct-infos-ecouter" @click="listenDirect">Écouter</button>
+      <p class="direct-infos-desc">{{ emission.description }}</p>
+      <button class="direct-infos-ecouter">Écouter</button>
     </div>
-    <img class="direct-image" src="/icons/Desktop.png" alt="image de l'émission en direct">
+    <img class="direct-image" :src="emission.photo" alt="image de l'émission en direct">
   </section>
 </template>
-
-<script>
-export default {
-  name: "EnDirect",
-  methods: {
-    listenDirect() {
-      this.$router.push({path: '/ecouterEmission/' + this.$route.params.id});
-    }
-  }
-}
-</script>
 
 <style scoped lang="scss">
 @import "@/assets/var";
@@ -101,30 +110,31 @@ export default {
 
 @media screen and (min-width: 1024px) {
   .direct {
-    padding: 5rem;
+    padding: 3rem;
     @include flex(row, nowrap, 5vw, space-between);
     &-infos-titre {
-      @include grid(1fr 8fr);
+      @include grid(1fr 15fr);
       h1 {
-        @include text-style(3.5vw, inherit, bold);
+        @include text-style(2.5em, inherit, bold);
       }
       embed {
-        height: 3vw;
+        height: 2em;
       }
     }
     &-infos-sous-titre {
-      @include text-style(2vw, inherit, 100);
+      @include text-style(1.5em, inherit, 100);
     }
     &-infos-desc {
       text-align: justify;
-      @include text-style(1.5vw, inherit, normal);
+      @include text-style(1.2em, inherit, normal);
       margin-bottom: 2em;
     }
     button {
-      @include buttonStyle($purple, $purple, white, auto, 1.5vw, .5em 0em .5em 0em, 0px);
+      @include buttonStyle($purple, $purple, white, auto, 1.2em, .5em 0em .5em 0em, 0px);
     }
     img {
-      width: 40vw;
+      width: 30vw;
+      height: auto;
     }
   }
 }

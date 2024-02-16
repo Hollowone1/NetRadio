@@ -10,3 +10,10 @@ export default {
         })
     }
 }
+
+export const $api = axios.create({
+    baseURL: 'http://localhost:2080',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+});

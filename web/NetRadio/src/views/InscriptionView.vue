@@ -42,16 +42,27 @@ export default {
     }*/
     ...mapActions(useUserStore, ['loginUser']),
     inscrire() {
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+      const passwordRegex = /^(?=.*[A-Z])[a-zA-Z\d]{8,}$/
+
+      if (!emailRegex.test(this.mail)) {
+        this.errorMessage = "Format d'email invalide.";
+      }
+
+      if (!passwordRegex.test(this.password)) {
+        this.errorMessage = "Mot de passe invalide. Il doit contenir 8 caractères et au moins une majuscule.";
+      }
+
       this.$api.post('/users/signup', {
-        email: this.mail,
-        username: this.username,
-        password: this.password
+        email: this.mail.trim(),
+        username: this.username.trim(),
+        password: this.password.trim()
       }).then(resp => {
         this.connexionAfter()
         this.$router.push('/')
       }).catch(err => {
-        err.response.data.error ? this.errorMessage = err.response.data.error : this.errorMessage = null
-        err.response.data.exception[0].message ? this.errorMessage = err.response.data.exception[0].message : this.errorMessage = null
+        //err.response.data.error ? this.errorMessage = err.response.data.error : this.errorMessage = null
+        //err.response.data.exception[0].message ? this.errorMessage = err.response.data.exception[0].message : this.errorMessage = null
         console.log(err.response.data)
       })
     },
@@ -73,9 +84,6 @@ export default {
 </script>
 
 <template>
-  {{ password}}
-  {{ mail}}
-  {{ username}}
   <div class="login-container">
     <div class="login-form">
       <h2>Inscription</h2>

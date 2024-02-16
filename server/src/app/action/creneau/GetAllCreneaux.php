@@ -30,7 +30,7 @@ class GetAllCreneaux extends Action
         foreach ($creneaux as $creneau) {
             $creneauDTO [] = [
                 'id' => $creneau->id,
-                'jourSemaine' => $creneau->joutSemaine,
+                'jourSemaine' => $creneau->jourSemaine,
                 'heureDepart' => $creneau->heureDeDepart,
                 'heureFin' => $creneau->heureDeFin,
                 'links' => [
