@@ -24,7 +24,7 @@ class Cors
                 ->withHeader('Access-Control-Allow-Credentials', 'true')
                 ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         } else {
-            $response = $response->withHeader('Access-Control-Allow-Origin', 'http://localhost:2080/')
+            $response = $response->withHeader('Access-Control-Allow-Origin', '*')
                 ->withHeader('Access-Control-Allow-Credentials', 'false')
                 ->withHeader('Access-Control-Allow-Headers', 'Content-Type');
         }
