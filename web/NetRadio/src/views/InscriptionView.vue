@@ -11,7 +11,7 @@ export default {
   methods: {
     inscrire() {
       const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+      const passwordRegex = /^(?=.*[A-Z])[a-zA-Z\d]{8,}$/
 
       if (!emailRegex.test(this.mail)) {
         this.errorMessage = "Format d'email invalide.";
@@ -21,7 +21,7 @@ export default {
       if (!passwordRegex.test(this.password)) {
         this.errorMessage = "Mot de passe invalide. Il doit contenir 8 caractères et au moins une majuscule.";
         return;
-    }
+    } 
 
       this.$api.post('/users/signup', {
         username: this.username.trim(),
