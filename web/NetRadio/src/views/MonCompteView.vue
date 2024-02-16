@@ -4,7 +4,8 @@ import Emission from '@/components/Emission.vue'
 import SideBar from "@/components/SideBarComponent.vue";
 import {mapState, mapActions} from "pinia";
 import {useUserStore} from "@/stores/user.js";
-import VueJwtDecode from "vue-jwt-decode";
+//import VueJwtDecode from "vue-jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 export default {
   components: {
@@ -28,7 +29,7 @@ export default {
         .then((response) => {
           this.emissions = response.data.emission
           this.emissions.forEach(emission => {
-            this.$api.get(emission.user)
+            this.$api.get(emission.links.users.href)
                 .then((response2) => {
                   emission.user = `${response2.data.user.nom} ${response2.data.user.prenom}`
                 })
@@ -40,7 +41,8 @@ export default {
         .catch((error) => {
           console.log(error)
         });
-    const mail = VueJwtDecode.decode(this.tokens.access_token).mail
+    //const mail = VueJwtDecode.decode(this.tokens.access_token).upr.email
+    const mail = jwtDecode(this.tokens.access_token).upr.email
     console.log(mail)
     /*this.$api.get(`/users/mail/${mail}`)
         .then((response) => {
