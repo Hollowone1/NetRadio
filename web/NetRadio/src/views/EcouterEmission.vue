@@ -1,12 +1,14 @@
 <template>
   <div>
-    <button @click="startStreaming">Start Streaming</button>
-    <button @click="stopStreaming">Stop Streaming</button>
-    <button @click="downloadWav">Download Wav</button>
+    <button @click="startStreaming">Commencer l'enregistrement</button>
+    <button @click="stopStreaming">Arreter l'enregistrement</button>
+    <button @click="downloadWav">Télécharger au format WAV</button>
+    <img src="@/assets/telechargement.jpg">
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import { ref, onMounted, onUnmounted } from "vue";
 
 export default {
@@ -23,40 +25,23 @@ export default {
     // Create a reactive reference to a boolean indicating if we are currently streaming
     const isStreaming = ref(false);
 
-    // Create a reactive reference to an array of recorded chunks
+    // Create a reactive reference to store recorded audio chunks
     const recordedChunks = ref([]);
 
     // A function to set up the connection to the server
     const connectToServer = async () => {
       try {
-        // Request access to the user's microphone
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-        // Create a new audio context
         audioContext.value = new (window.AudioContext || window.webkitAudioContext)();
-
-        // Create a media stream source from the user's microphone stream
         mediaStreamSource.value = audioContext.value.createMediaStreamSource(stream);
 
-        // Create a media stream destination
-        const destination = audioContext.value.createMediaStreamDestination();
-
-        // Connect the media stream source to the media stream destination
-        mediaStreamSource.value.connect(destination);
-
-        // Create a new media recorder using the media stream destination's stream
-        mediaRecorder.value = new MediaRecorder(destination.stream);
-
-        // Add an event listener to the dataavailable event on the media recorder
-        mediaRecorder.value.ondataavailable = (e) => {
-          if (e.data.size > 0) {
-            // Add the recorded chunk to the array of recorded chunks
-            recordedChunks.value.push(e.data);
+        // Create a new media recorder and handle data available events
+        mediaRecorder.value = new MediaRecorder(stream);
+        mediaRecorder.value.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            recordedChunks.value.push(event.data);
           }
         };
-
-        // Start the media recorder
-        mediaRecorder.value.start();
       } catch (error) {
         console.error("Error accessing microphone:", error);
       }
@@ -65,81 +50,83 @@ export default {
     // A function to start streaming
     const startStreaming = () => {
       if (!audioContext.value) {
-        // If the audio context is not yet initialized, call connectToServer
         connectToServer();
       }
       if (!isStreaming.value) {
-        // If we are not currently streaming, reset the array of recorded chunks
-        recordedChunks.value = [];
-        // If the media recorder is in the "inactive" state, start it
-        if (mediaRecorder.value.state === "inactive") {
-          mediaRecorder.value.start();
-        }
-        // Set the streaming boolean to true
         isStreaming.value = true;
+
+        // Start recording
+        recordedChunks.value = []; // Clear any previous recorded chunks
+        mediaRecorder.value.start();
       }
     };
 
     // A function to stop streaming
     const stopStreaming = () => {
-      if (mediaRecorder.value) {
-        // Stop the media recorder
+      if (mediaRecorder.value && isStreaming.value) {
         mediaRecorder.value.stop();
+        isStreaming.value = false;
+
+        // Send the recorded audio to the server when the recording is stopped
+        const blob = new Blob(recordedChunks.value, { type: "audio/wav" });
+        const formData = new FormData();
+        formData.append("title", "My Podcast");
+        formData.append("description", "This is my podcast description.");
+        formData.append("file", blob);
+        axios.post("http://localhost:2080/podcasts", formData).then((response) => {
+          console.log(response);
+        });
       }
-      if (mediaStreamSource.value) {
-        // Disconnect the media stream source
-        mediaStreamSource.value.disconnect();
-      }
-      // Set the streaming boolean to false
-      isStreaming.value = false;
     };
 
     // A function to download the recorded audio as a WAV file
     const downloadWav = () => {
-      // Create a new Blob from the array of recorded chunks
-      const blob = new Blob(recordedChunks.value, { type: "audio/wav" });
-
-      // Create a URL object from the Blob
-      const url = URL.createObjectURL(blob);
-
-      // Create a new link element
-      const link = document.createElement("a");
-
-      // Set the link's href to the URL object
-      link.href = url;
-
-            // Set the link's download attribute to "audio.wav"
-            link.download = "audio.wav";
-
-            // Append the link to the body of the page
-            document.body.appendChild(link);
-
-        // Programmatically click the link to initiate the download
-        link.click();
-
-        // Clean up by removing the link from the page
-        document.body.removeChild(link);
-
-        // Revoke the object URL to free up memory
+      if (recordedChunks.value.length > 0) {
+        const blob = new Blob(recordedChunks.value, { type: 'audio/wav' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'recording.wav';
+        a.click();
         URL.revokeObjectURL(url);
-      };
+      }
+    };
 
-      // Run the connectToServer function when the component is mounted
-      onMounted(() => {
+    // Run the connectToServer function when the component is mounted
+    onMounted(() => {
       connectToServer();
-      });
+    });
 
-      // Stop streaming and clean up when the component is unmounted
-      onUnmounted(() => {
+    // Stop streaming and clean up when the component is unmounted
+    onUnmounted(() => {
       stopStreaming();
-      });
+    });
 
-      // Return the functions to be used in the template
-      return {
-      startStreaming,
-      stopStreaming,
-      downloadWav,
-      };
-    },
-  };
+    // Return the functions to be used in the template
+    return { startStreaming, stopStreaming, downloadWav };
+  },
+};
 </script>
+
+
+<style scoped>
+div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  height: 100vh;
+}
+
+button {
+  background-color: #A568BB;
+  color: white;
+  margin-bottom: 10px;
+  cursor: pointer;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+</style>
