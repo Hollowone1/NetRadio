@@ -1,6 +1,6 @@
 <template>
-    <div>
-      <h1>Les Creneaux à ce jour</h1>
+    <div class="creneaux">
+      <h1>Les Creneaux à ce jour </h1>
       <ul>
         <li v-for="creneau in creneaux" :key="creneau.id">
           <router-link :to="creneau.links.emission.href">
@@ -11,15 +11,22 @@
     </div>
   </template>
   
-  <script>
+  <script setup>
   import { ref, onMounted } from 'vue';
   import { $api } from '@/plugin/api';
   import { shuffle } from 'lodash';
+  import { computed } from 'vue';
+
   
-  export default {
-    name: 'Creneaux',
-    setup() {
+ 
+  const props = defineProps({
+  selectedDate: Object,
+})
+
+  // On récupère les données de l'API
       const creneaux = ref([]);
+      const currentDate = computed(() => props.selectedDate)
+
   
       const fetchData = async () => {
         try {
@@ -37,17 +44,21 @@
       };
   
       onMounted(fetchData);
-  
-      return {
-        creneaux,
-      };
-    },
-  };
+
+
   </script>
   
   <style scoped>
   a {
     color: black;
   }
+
+    .creneaux{
+      margin-left: 3em;
+    
+
+  }
+    
+  
   </style>
   
