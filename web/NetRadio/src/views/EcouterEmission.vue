@@ -1,153 +1,145 @@
 <template>
   <div>
-    <button @click="connectToServer">Connecter au serveur</button>
-    <button @click="startStreaming" v-if="isConnected && !isStreaming">Démarrer le Stream</button>
-    <button @click="stopStreaming" v-if="isStreaming">Arrêter le Stream</button>
+    <button @click="startStreaming">Start Streaming</button>
+    <button @click="stopStreaming">Stop Streaming</button>
+    <button @click="downloadWav">Download Wav</button>
   </div>
 </template>
 
 <script>
-import { io } from "socket.io-client";
-import HeaderComponent from "@/App.vue";
-import AudioPlayer from "@/components/AudioPlayer.vue";
+import { ref, onMounted, onUnmounted } from "vue";
 
 export default {
-  components: { HeaderComponent, AudioPlayer },
-  data() {
-    return {
-      isConnected: false,
-      socket: null,
-      audioContext: new (window.AudioContext || window.webkitAudioContext)(),
-      mediaStreamSource: null,
-      scriptNode: null,
-      wavencoder: null,
-      isStreaming: false,
+  setup() {
+    // Create a reactive reference to the audio context
+    const audioContext = ref(null);
+
+    // Create a reactive reference to the media stream source
+    const mediaStreamSource = ref(null);
+
+    // Create a reactive reference to the media recorder
+    const mediaRecorder = ref(null);
+
+    // Create a reactive reference to a boolean indicating if we are currently streaming
+    const isStreaming = ref(false);
+
+    // Create a reactive reference to an array of recorded chunks
+    const recordedChunks = ref([]);
+
+    // A function to set up the connection to the server
+    const connectToServer = async () => {
+      try {
+        // Request access to the user's microphone
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        // Create a new audio context
+        audioContext.value = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Create a media stream source from the user's microphone stream
+        mediaStreamSource.value = audioContext.value.createMediaStreamSource(stream);
+
+        // Create a media stream destination
+        const destination = audioContext.value.createMediaStreamDestination();
+
+        // Connect the media stream source to the media stream destination
+        mediaStreamSource.value.connect(destination);
+
+        // Create a new media recorder using the media stream destination's stream
+        mediaRecorder.value = new MediaRecorder(destination.stream);
+
+        // Add an event listener to the dataavailable event on the media recorder
+        mediaRecorder.value.ondataavailable = (e) => {
+          if (e.data.size > 0) {
+            // Add the recorded chunk to the array of recorded chunks
+            recordedChunks.value.push(e.data);
+          }
+        };
+
+        // Start the media recorder
+        mediaRecorder.value.start();
+      } catch (error) {
+        console.error("Error accessing microphone:", error);
+      }
     };
-  },
-  methods: {
-    connectToServer() {
-      this.socket = io("http://localhost:3000");
-      this.socket.on("connect", () => {
-        console.log("Connected to server");
-        this.isConnected = true;
-      });
-      this.socket.on("disconnect", () => {
-        console.log("Disconnected from server");
-        this.isConnected = false;
-      });
-    },
-    startStreaming() {
-      navigator.mediaDevices
-        .getUserMedia({ audio: true })
-        .then((stream) => {
-          this.mediaStreamSource = this.audioContext.createMediaStreamSource(stream);
-          this.wavencoder = new WavEncoder(this.audioContext.sampleRate, this.audioContext.numberOfChannels);
-          this.scriptNode = this.audioContext.createScriptProcessor();
-          this.mediaStreamSource.connect(this.scriptNode);
-          this.scriptNode.connect(this.audioContext.destination);
-          this.scriptNode.onaudioprocess = (audioProcessingEvent) => {
-            const inputData = audioProcessingEvent.inputBuffer.getChannelData(0);
-            this.wavencoder.encode(inputData);
-            if (this.isConnected && this.isStreaming) {
-              this.socket.emit("audio", { type: "wav", data: this.wavencoder.getData() });
-            }
-          };
-          this.isStreaming = true;
-        })
-        .catch((error) => {
-          console.error("Error accessing microphone:", error);
-        });
-    },
-    stopStreaming() {
-      if (this.scriptNode) {
-        this.scriptNode.onaudioprocess = null;
-        this.scriptNode.disconnect();
+
+    // A function to start streaming
+    const startStreaming = () => {
+      if (!audioContext.value) {
+        // If the audio context is not yet initialized, call connectToServer
+        connectToServer();
       }
-      if (this.mediaStreamSource) {
-        this.mediaStreamSource.disconnect();
+      if (!isStreaming.value) {
+        // If we are not currently streaming, reset the array of recorded chunks
+        recordedChunks.value = [];
+        // If the media recorder is in the "inactive" state, start it
+        if (mediaRecorder.value.state === "inactive") {
+          mediaRecorder.value.start();
+        }
+        // Set the streaming boolean to true
+        isStreaming.value = true;
       }
-      this.isStreaming = false;
+    };
+
+    // A function to stop streaming
+    const stopStreaming = () => {
+      if (mediaRecorder.value) {
+        // Stop the media recorder
+        mediaRecorder.value.stop();
+      }
+      if (mediaStreamSource.value) {
+        // Disconnect the media stream source
+        mediaStreamSource.value.disconnect();
+      }
+      // Set the streaming boolean to false
+      isStreaming.value = false;
+    };
+
+    // A function to download the recorded audio as a WAV file
+    const downloadWav = () => {
+      // Create a new Blob from the array of recorded chunks
+      const blob = new Blob(recordedChunks.value, { type: "audio/wav" });
+
+      // Create a URL object from the Blob
+      const url = URL.createObjectURL(blob);
+
+      // Create a new link element
+      const link = document.createElement("a");
+
+      // Set the link's href to the URL object
+      link.href = url;
+
+            // Set the link's download attribute to "audio.wav"
+            link.download = "audio.wav";
+
+            // Append the link to the body of the page
+            document.body.appendChild(link);
+
+        // Programmatically click the link to initiate the download
+        link.click();
+
+        // Clean up by removing the link from the page
+        document.body.removeChild(link);
+
+        // Revoke the object URL to free up memory
+        URL.revokeObjectURL(url);
+      };
+
+      // Run the connectToServer function when the component is mounted
+      onMounted(() => {
+      connectToServer();
+      });
+
+      // Stop streaming and clean up when the component is unmounted
+      onUnmounted(() => {
+      stopStreaming();
+      });
+
+      // Return the functions to be used in the template
+      return {
+      startStreaming,
+      stopStreaming,
+      downloadWav,
+      };
     },
-  },
-  mounted() {
-    this.connectToServer();
-  },
-};
-
-class WavEncoder {
-  constructor(sampleRate, numberOfChannels, durationInSeconds) {
-    this.sampleRate = sampleRate;
-    this.numberOfChannels = numberOfChannels;
-    this.bufferSize = Math.ceil(sampleRate * numberOfChannels * durationInSeconds);
-    this.buffer = new Float32Array(this.bufferSize);
-    this.currentSample = 0;
-    this.dataLength = 0;
-    this.reset();
-  }
-
-  reset() {
-    this.currentSample = 0;
-    this.dataLength = 0;
-    this.writeString("RIFF");
-    this.writeUint32(0);
-    this.writeString("WAVE");
-    this.writeString("fmt ");
-    this.writeUint32(16);
-    this.writeUint16(1);
-    this.writeUint16(this.numberOfChannels);
-    this.writeUint32(this.sampleRate);
-    this.writeUint32(this.sampleRate * this.numberOfChannels * 2);
-    this.writeUint16(4);
-    this.writeUint16(16);
-    this.writeString("data");
-    this.writeUint32(0);
-  }
-
-  writeUint32(num) {
-    if (this.currentSample + 4 <= this.bufferSize) {
-      const view = new DataView(this.buffer.buffer);
-      view.setUint32(this.currentSample, num, true);
-      this.currentSample += 4;
-    } else {
-      console.error("Buffer overrun!");
-    }
-  }
-
-  writeUint16(num) {
-    if (this.currentSample + 2 <= this.bufferSize) {
-      const view = new DataView(this.buffer.buffer);
-      view.setUint16(this.currentSample, num, true);
-      this.currentSample += 2;
-    } else {
-      console.error("Buffer overrun!");
-    }
-  }
-
-  writeString(str) {
-    for (let i = 0; i < str.length; i++) {
-      this.writeUint16(str.charCodeAt(i));
-    }
-  }
-
-  write(data) {
-    const remainingSpace = this.bufferSize - this.currentSample;
-    const writeLength = Math.min(data.length, remainingSpace);
-
-    if (writeLength > 0) {
-      this.buffer.set(data.subarray(0, writeLength), this.currentSample);
-      this.currentSample += writeLength;
-      this.dataLength += writeLength;
-    } else {
-      console.error("Buffer overrun!");
-    }
-  }
-
-  getData() {
-    this.writeUint32(this.dataLength);
-    this.writeUint32(this.dataLength + 36);
-    return this.buffer.subarray(0, this.currentSample);
-  }
-}
-
-
+  };
 </script>
