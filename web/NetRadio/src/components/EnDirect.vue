@@ -9,7 +9,6 @@ export default {
     this.$api.get("/emissions")
         .then((response) => {
           this.emission = response.data.emission.find(emission => emission.onDirect === true)
-          console.log(this.emission)
         })
         .catch((error) => {
           console.log(error)
