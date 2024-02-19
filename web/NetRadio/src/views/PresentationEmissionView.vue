@@ -16,13 +16,12 @@ export default {
     this.$api.get(`/emissions/${this.$route.params.id}`)
         .then((response) => {
           this.emission = response.data.emission
-          //console.log(this.emission)
-          this.$api.get(this.emission.user)
+          this.$api.get(response.data.emission.links.users.href)
               .then((response2) => {
                 this.emission.user = `${response2.data.user.nom} ${response2.data.user.prenom}`
               })
-              .catch((error) => {
-                console.log(error)
+              .catch((error2) => {
+                console.log(error2.response.data)
               });
         })
         .catch((error) => {
@@ -31,7 +30,6 @@ export default {
 
     this.$api.get(`/emissions/${this.$route.params.id}/podcasts`)
         .then((response) => {
-          //console.log("podcasrs", response.data.podcasts)
           this.podcasts = response.data.podcasts
           this.podcasts.forEach(podcast => {
             podcast.playing = false
