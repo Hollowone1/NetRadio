@@ -67,7 +67,7 @@ export default {
 <template>
   <en-direct></en-direct>
   <div class="resultats">
-    <h2>Toutes les émissions</h2>
+    <h1>Toutes les émissions</h1>
     <div class="recherche">
       <div class="barre-recherche">
         <img src="/icons/loupe.svg" alt="icone recherche">
@@ -79,12 +79,6 @@ export default {
         <button @click="filterByTheme(theme)" v-for="theme in allThemes" class="genre">{{ theme }}</button>
       </div>
     </div>
-<!--    <div v-if="searching" v-for="theme in displayThemes" class="theme">
-      <h3>{{ theme }}</h3>
-      <div class="emissions-liste">
-        <emission v-for="emission in getEmissionsTheme(theme)" :emission="emission" :key="emission.id"></emission>
-      </div>
-    </div>-->
     <div v-if="filter" v-for="theme in displayThemes" class="emissions-liste">
         <emission v-for="emission in getEmissionsTheme(theme)" :emission="emission" :key="emission.id"></emission>
     </div>
