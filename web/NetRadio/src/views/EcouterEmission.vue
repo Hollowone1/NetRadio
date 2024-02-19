@@ -3,7 +3,7 @@
     <button @click="startStreaming">Commencer l'enregistrement</button>
     <button @click="stopStreaming">Arreter l'enregistrement</button>
     <button @click="downloadWav">Télécharger au format WAV</button>
-    <img src="@/assets/telechargement.jpg">
+    <img src="@/assets/telechargement.jpg" alt="image">
   </div>
 </template>
 
@@ -69,13 +69,34 @@ export default {
 
         // Send the recorded audio to the server when the recording is stopped
         const blob = new Blob(recordedChunks.value, { type: "audio/wav" });
-        const formData = new FormData();
-        formData.append("title", "My Podcast");
-        formData.append("description", "This is my podcast description.");
-        formData.append("file", blob);
-        axios.post("http://localhost:2080/podcasts", formData).then((response) => {
+        // const formData = new FormData();
+        // formData.append("title", "My Podcast");
+        // formData.append("description", "This is my podcast description.");
+        // formData.append("file", blob);
+
+        let emission = getEmission();
+
+        let body = {
+          titre: emission.titre,
+          description: emission.description,
+          audio: blob,
+          emission_id: emission.id,
+        }
+
+        axios.post("http://localhost:2080/podcasts", body).then((response) => {
           console.log(response);
         });
+      }
+    };
+
+    // faire une fonction pour récupérer les infos de l'émission à partir de son id dans la route
+    // A function to get the emission information from its id in the route
+    const getEmission = async () => {
+      try {
+        const response = await axios.get(`/emissions/${this.$route.params.id}`);
+        return response.data.emission;
+      } catch (error) {
+        console.error(error);
       }
     };
 
@@ -86,7 +107,7 @@ export default {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'recording.wav';
+        a.download = `emission${this.$route.params.id}.wav`;
         a.click();
         URL.revokeObjectURL(url);
       }
