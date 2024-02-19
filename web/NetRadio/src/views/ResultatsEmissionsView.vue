@@ -4,7 +4,6 @@ import EnDirect from '@/components/EnDirect.vue';
 
 export default {
   components: {
-    RouterView,
     EnDirect
   },
   data() {
@@ -22,9 +21,8 @@ export default {
 </script>
 
 <template>
-    <main>
+    <div>
         <en-direct></en-direct>
-        <RouterView />
         <div class="resultats">
             <h2>Résultats de votre recherche</h2>
             <div class="recherche">
@@ -52,7 +50,7 @@ export default {
                 </section>
             </div>
         </div>
-    </main>
+    </div>
 </template>
 
 <style scoped lang="scss">
