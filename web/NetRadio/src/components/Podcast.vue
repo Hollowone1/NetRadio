@@ -31,7 +31,7 @@ export default {
       <p>{{ emission.titre }}</p>
       <p>{{ podcast.titre }}</p>
     </div>
-    <embed src="/icons/play.svg">
+    <img src="/icons/play.svg" alt="play icon">
   </section>
 </template>
 
