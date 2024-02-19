@@ -30,7 +30,7 @@ export default {
     nextDate() {
       this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate() + 1))
     },
-    getCreneaux() {
+    /*getCreneaux() {
       let jour = this.currentDate.getDay()
       if (jour === 0) {
         jour = 7
@@ -61,6 +61,8 @@ export default {
                   .then((resp2) => {
                     //on affecte la rep de l'api à la variable émission pr que ça soit plus facile
                     let emission = resp2.data.emission
+                    emission.presentateur = this.getUser(emission.links.users.href)
+                    //console.log("emission", emission)
 
                     //on récupère le présentateur avec encore un call api
                     this.$api.get(emission.links.users.href)
@@ -82,9 +84,75 @@ export default {
           .catch((error) => {
             console.log(error)
           });
+    },*/
+    getCreneaux() {
+      let jour = this.currentDate.getDay();
+      if (jour === 0) {
+        jour = 7;
+      }
+      const creneaux = [];
+      const heures = [];
+      const getEmissionPromises = [];
+
+      this.$api.get("/creneaux")
+          .then((resp) => {
+            resp.data.creneaux.forEach(creneau => {
+              if (creneau.jourSemaine === jour) {
+                creneaux.push(creneau);
+                if (!heures.includes(creneau.heureDepart)) {
+                  heures.push(creneau.heureDepart);
+                }
+                getEmissionPromises.push(
+                    this.getEmission(creneau.links.emission.href)
+                        .then(emission => {
+                          return this.getUser(emission.links.users.href)
+                              .then(user => {
+                                emission.presentateur = user.prenom + " " + user.nom;
+                                creneau.emission = emission;
+                              });
+                        })
+                );
+              }
+            });
+            Promise.all(getEmissionPromises)
+                .then(() => {
+                  this.creneaux = creneaux;
+                  this.heures = heures;
+                });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
     },
     getCreneauHeure(heure) {
       return this.creneaux.filter(creneau => creneau.heureDepart === heure)
+    },
+    async getEmission(link) {
+      let promise = new Promise((resolve, reject) => {
+        this.$api.get(link)
+            .then((resp) => {
+              resolve(resp.data.emission)
+            })
+            .catch((error) => {
+              reject(error)
+            })
+      });
+      return await promise
+    },
+    async getUser(link) {
+      let promise = new Promise((resolve, reject) => {
+        this.$api.get(link)
+            .then((resp) => {
+              resolve(resp.data.user)
+            })
+            .catch((error) => {
+              reject(error)
+            })
+      });
+      return await promise
+    },
+    redirect(id) {
+      this.$router.push(`/emissions/${id}`)
     }
   },
   created() {
@@ -115,7 +183,7 @@ export default {
       <section v-for="heure in heures">
         <h4>{{ heure }}</h4>
         <div v-for="creneau in getCreneauHeure(heure)" class="prog">
-          <div class="prog-infos">
+          <div @click="redirect(creneau.emission.id)" class="prog-infos">
             <div class="prog-infos-texte">
               <h5> {{creneau.emission.titre}} </h5>
               <p>{{creneau.emission.presentateur}}</p>
@@ -188,6 +256,7 @@ h4 {
     background-color: $lightField;
     border-radius: 10px;
     @include flex(row, nowrap, 1.5em, space-between, center);
+    cursor: pointer;
   }
 
   img {
