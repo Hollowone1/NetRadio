@@ -64,7 +64,6 @@ export default {
   <en-direct></en-direct>
   <div class="resultats">
     <h1>Tous nos podcasts</h1>
-    {{research}}
     <div class="recherche">
       <div class="barre-recherche">
         <img src="/icons/loupe.svg" alt="icone recherche">
