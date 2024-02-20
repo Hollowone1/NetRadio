@@ -37,7 +37,7 @@ class ValidateAction extends Action
 
             $response->getBody()->write(json_encode($userDTO));
 
-            return $response->withStatus(201)->withHeader('Content-Type', 'application/json;charset=utf-8');
+            return $response->withStatus(200)->withHeader('Content-Type', 'application/json;charset=utf-8');
         } catch (AuthServiceExpiredTokenException $e) {
             $response->getBody()->write(json_encode(['error' => 'Expired', 'message' => $e->getMessage()]));
             return $response->withStatus(401)->withHeader('Location', $routeParser->urlFor('refresh'))->withHeader('Content-Type', 'application/json;charset=utf-8');
