@@ -1,26 +1,27 @@
 <script>
 export default {
   props: {
-    emission: {
+    user: {
       type: Object,
       required: true,
     }
   },
   data() {
     return {
-      edit: false,
-      editedEmission: {
-        titre: this.emission.titre,
-        user: this.emission.user,
-        theme: this.emission.theme,
-        description: this.emission.description
-      }
+      editedUser: {
+        email: this.user.email,
+        nom: this.user.nom,
+        prenom: this.user.prenom,
+        role: this.user.role,
+        username: this.user.username
+      },
+      roles: ['Auditeur', 'Animateur', 'Administrateur']
     }
   },
   directives: {
-    outside : {
+    outside: {
       beforeMount(el, binding) {
-        el.clickOutsideEvent = function(event) {
+        el.clickOutsideEvent = function (event) {
           if (!(el === event.target || el.contains(event.target))) {
             console.log('click outside', binding.value)
 
@@ -36,14 +37,25 @@ export default {
       }
     },
   },
+  created() {
+    const roleIndex = parseInt(this.user.role) - 1;
+    this.editedUser = {
+      email: this.user.email,
+      nom: this.user.nom,
+      prenom: this.user.prenom,
+      role: this.roles[roleIndex], // Utiliser l'index pour accéder au rôle correspondant dans roles
+      username: this.user.username
+    };
+  },
   methods: {
     stopEditing() {
-      this.edit = false
       this.$emit('edited')
       //console.log(this.editedEmission)
-      this.editEmission()
+      this.editUser()
     },
-    editEmission() {
+    editUser() {
+      this.editedUser.role = this.roles.indexOf(this.editedUser.role) + 1; // Utiliser indexOf pour récupérer l'index du rôle dans roles
+      console.log("edited User", this.editedUser);
       //faire un put sur l'API avec les valeurs du v-model
     }
   }
@@ -54,36 +66,29 @@ export default {
 <template>
   <div class="modal-mask">
     <div class="modal-wrapper">
-
-      <div v-outside="edit" v-if="edit === false" class="popup-emission">
-        <div class="top">
-          <h3>{{ emission.titre }}</h3>
-          <img @click="edit = true" src="/icons/editPurple.svg" alt="edit icon"/>
-        </div>
-        <div class="infos">
-          <p><strong>Présentateur / animateur :</strong> {{ emission.user }}</p>
-          <p>{{ emission.theme }}</p>
-          <p>{{ emission.description }}</p>
-        </div>
-      </div>
-
-      <div v-outside v-if="edit === true" class="popup-emission-edit">
+      <div v-outside class="popup-user-edit">
         <div><img @click="stopEditing" src="/icons/check.svg" alt="edit icon"/></div>
-        <div class="titre">
-          <label for="titre">Titre de l'émission :</label>
-          <input type="text" id="titre" v-model="editedEmission.titre">
+        <div class="info">
+          <label for="nom">Nom :</label>
+          <input type="text" id="nom" v-model="editedUser.nom">
         </div>
-        <div class="presentateur">
-          <label for="presentateur">Présentateur :</label>
-          <input type="text" id="presentateur" v-model="editedEmission.user">
+        <div class="info">
+          <label for="prenom">Prénom :</label>
+          <input type="text" id="prenom" v-model="editedUser.prenom">
         </div>
-        <div class="theme">
-          <label for="theme">Thème :</label>
-          <input type="text" id="theme" v-model="editedEmission.theme">
+        <div class="info">
+          <label for="username">Nom d'utilisateur :</label>
+          <input type="text" id="username" v-model="editedUser.username">
         </div>
-        <div class="description">
-          <label for="description">Description :</label>
-          <textarea id="description" v-model="editedEmission.description"/>
+        <div class="info">
+          <label for="email">E-mail :</label>
+          <input type="email" id="email" v-model="editedUser.email"/>
+        </div>
+        <div class="info">
+          <label for="role">Rôle :</label>
+          <select id="role" v-model="editedUser.role">
+            <option v-for="role in roles" :value="role">{{ role }}</option>
+          </select>
         </div>
       </div>
 
@@ -98,7 +103,7 @@ export default {
 @import "@/assets/fonts";
 @import "@/assets/buttons";
 
-$widthPopup : 60vw;
+$widthPopup: 60vw;
 $widthPopupEm: 30em;
 
 .modal-mask {
@@ -118,8 +123,8 @@ $widthPopupEm: 30em;
   vertical-align: middle;
 }
 
-.popup-emission, .popup-emission-edit {
-  width:$widthPopup;
+.popup-user, .popup-user-edit {
+  width: $widthPopup;
   max-width: calc($widthPopupEm * 1.5);
   min-width: calc($widthPopupEm / 1.5);
 
@@ -131,7 +136,7 @@ $widthPopupEm: 30em;
   margin: 0px auto;
 }
 
-.popup-emission {
+.popup-user {
   .top {
     @include flex(row, nowrap, 1em, space-between, center);
     padding-bottom: .5em;
@@ -152,6 +157,7 @@ $widthPopupEm: 30em;
     p:nth-child(1) {
 
       @include text-style(1.1em, inherit, inherit);
+
       strong {
         @include text-style(1em, inherit, 500);
       }
@@ -168,19 +174,19 @@ $widthPopupEm: 30em;
   }
 }
 
-.popup-emission-edit {
+.popup-user-edit {
   @include flex(column, nowrap, 1em, start, flex-start);
+
   div {
     @include flex(column, nowrap, .5em, start, flex-start);
   }
+
   label {
     @include text-style(1.2em, $lightBlack, 500);
   }
-  textarea{
-    min-height: 6em;
-  }
-  input, textarea {
-    width:calc($widthPopup - 1em);
+
+  input {
+    width: calc($widthPopup - 1em);
     max-width: calc($widthPopupEm * 1.5);
     min-width: calc($widthPopupEm / 1.5);
     resize: none;
@@ -192,18 +198,22 @@ $widthPopupEm: 30em;
     padding: .3em .5em;
     @include text-style(.95em, $darkGrey, 300);
   }
+
   input:focus, textarea:focus {
     @include text-style(.95em, black, 350);
     outline: none !important;
   }
-  div:nth-child(1){
+
+  div:nth-child(1) {
     position: relative;
     height: 0;
     align-self: flex-end;
+
     img {
       height: 2em;
     }
   }
+
   .theme {
     margin-bottom: 0;
   }
