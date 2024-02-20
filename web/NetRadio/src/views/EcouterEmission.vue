@@ -1,153 +1,153 @@
 <template>
   <div>
-    <button @click="connectToServer">Connecter au serveur</button>
-    <button @click="startStreaming" v-if="isConnected && !isStreaming">Démarrer le Stream</button>
-    <button @click="stopStreaming" v-if="isStreaming">Arrêter le Stream</button>
+    <button @click="startStreaming">Commencer l'enregistrement</button>
+    <button @click="stopStreaming">Arreter l'enregistrement</button>
+    <button @click="downloadWav">Télécharger au format WAV</button>
+    <img src="@/assets/telechargement.jpg" alt="image">
   </div>
 </template>
 
 <script>
-import { io } from "socket.io-client";
-import HeaderComponent from "@/App.vue";
-import AudioPlayer from "@/components/AudioPlayer.vue";
+import axios from "axios";
+import { ref, onMounted, onUnmounted } from "vue";
 
 export default {
-  components: { HeaderComponent, AudioPlayer },
-  data() {
-    return {
-      isConnected: false,
-      socket: null,
-      audioContext: new (window.AudioContext || window.webkitAudioContext)(),
-      mediaStreamSource: null,
-      scriptNode: null,
-      wavencoder: null,
-      isStreaming: false,
+  setup() {
+    // Create a reactive reference to the audio context
+    const audioContext = ref(null);
+
+    // Create a reactive reference to the media stream source
+    const mediaStreamSource = ref(null);
+
+    // Create a reactive reference to the media recorder
+    const mediaRecorder = ref(null);
+
+    // Create a reactive reference to a boolean indicating if we are currently streaming
+    const isStreaming = ref(false);
+
+    // Create a reactive reference to store recorded audio chunks
+    const recordedChunks = ref([]);
+
+    // A function to set up the connection to the server
+    const connectToServer = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioContext.value = new (window.AudioContext || window.webkitAudioContext)();
+        mediaStreamSource.value = audioContext.value.createMediaStreamSource(stream);
+
+        // Create a new media recorder and handle data available events
+        mediaRecorder.value = new MediaRecorder(stream);
+        mediaRecorder.value.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            recordedChunks.value.push(event.data);
+          }
+        };
+      } catch (error) {
+        console.error("Error accessing microphone:", error);
+      }
     };
-  },
-  methods: {
-    connectToServer() {
-      this.socket = io("http://localhost:3000");
-      this.socket.on("connect", () => {
-        console.log("Connected to server");
-        this.isConnected = true;
-      });
-      this.socket.on("disconnect", () => {
-        console.log("Disconnected from server");
-        this.isConnected = false;
-      });
-    },
-    startStreaming() {
-      navigator.mediaDevices
-        .getUserMedia({ audio: true })
-        .then((stream) => {
-          this.mediaStreamSource = this.audioContext.createMediaStreamSource(stream);
-          this.wavencoder = new WavEncoder(this.audioContext.sampleRate, this.audioContext.numberOfChannels);
-          this.scriptNode = this.audioContext.createScriptProcessor();
-          this.mediaStreamSource.connect(this.scriptNode);
-          this.scriptNode.connect(this.audioContext.destination);
-          this.scriptNode.onaudioprocess = (audioProcessingEvent) => {
-            const inputData = audioProcessingEvent.inputBuffer.getChannelData(0);
-            this.wavencoder.encode(inputData);
-            if (this.isConnected && this.isStreaming) {
-              this.socket.emit("audio", { type: "wav", data: this.wavencoder.getData() });
-            }
-          };
-          this.isStreaming = true;
-        })
-        .catch((error) => {
-          console.error("Error accessing microphone:", error);
+
+    // A function to start streaming
+    const startStreaming = () => {
+      if (!audioContext.value) {
+        connectToServer();
+      }
+      if (!isStreaming.value) {
+        isStreaming.value = true;
+
+        // Start recording
+        recordedChunks.value = []; // Clear any previous recorded chunks
+        mediaRecorder.value.start();
+      }
+    };
+
+    // A function to stop streaming
+    const stopStreaming = () => {
+      if (mediaRecorder.value && isStreaming.value) {
+        mediaRecorder.value.stop();
+        isStreaming.value = false;
+
+        // Send the recorded audio to the server when the recording is stopped
+        const blob = new Blob(recordedChunks.value, { type: "audio/wav" });
+        // const formData = new FormData();
+        // formData.append("title", "My Podcast");
+        // formData.append("description", "This is my podcast description.");
+        // formData.append("file", blob);
+
+        let emission = getEmission();
+
+        let body = {
+          titre: emission.titre,
+          description: emission.description,
+          audio: blob,
+          emission_id: emission.id,
+        }
+
+        axios.post("http://localhost:2080/podcasts", body).then((response) => {
+          console.log(response);
         });
-    },
-    stopStreaming() {
-      if (this.scriptNode) {
-        this.scriptNode.onaudioprocess = null;
-        this.scriptNode.disconnect();
       }
-      if (this.mediaStreamSource) {
-        this.mediaStreamSource.disconnect();
+    };
+
+    // faire une fonction pour récupérer les infos de l'émission à partir de son id dans la route
+    // A function to get the emission information from its id in the route
+    const getEmission = async () => {
+      try {
+        const response = await axios.get(`/emissions/${this.$route.params.id}`);
+        return response.data.emission;
+      } catch (error) {
+        console.error(error);
       }
-      this.isStreaming = false;
-    },
-  },
-  mounted() {
-    this.connectToServer();
+    };
+
+    // A function to download the recorded audio as a WAV file
+    const downloadWav = () => {
+      if (recordedChunks.value.length > 0) {
+        const blob = new Blob(recordedChunks.value, { type: 'audio/wav' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `emission${this.$route.params.id}.wav`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    };
+
+    // Run the connectToServer function when the component is mounted
+    onMounted(() => {
+      connectToServer();
+    });
+
+    // Stop streaming and clean up when the component is unmounted
+    onUnmounted(() => {
+      stopStreaming();
+    });
+
+    // Return the functions to be used in the template
+    return { startStreaming, stopStreaming, downloadWav };
   },
 };
+</script>
 
-class WavEncoder {
-  constructor(sampleRate, numberOfChannels, durationInSeconds) {
-    this.sampleRate = sampleRate;
-    this.numberOfChannels = numberOfChannels;
-    this.bufferSize = Math.ceil(sampleRate * numberOfChannels * durationInSeconds);
-    this.buffer = new Float32Array(this.bufferSize);
-    this.currentSample = 0;
-    this.dataLength = 0;
-    this.reset();
-  }
 
-  reset() {
-    this.currentSample = 0;
-    this.dataLength = 0;
-    this.writeString("RIFF");
-    this.writeUint32(0);
-    this.writeString("WAVE");
-    this.writeString("fmt ");
-    this.writeUint32(16);
-    this.writeUint16(1);
-    this.writeUint16(this.numberOfChannels);
-    this.writeUint32(this.sampleRate);
-    this.writeUint32(this.sampleRate * this.numberOfChannels * 2);
-    this.writeUint16(4);
-    this.writeUint16(16);
-    this.writeString("data");
-    this.writeUint32(0);
-  }
-
-  writeUint32(num) {
-    if (this.currentSample + 4 <= this.bufferSize) {
-      const view = new DataView(this.buffer.buffer);
-      view.setUint32(this.currentSample, num, true);
-      this.currentSample += 4;
-    } else {
-      console.error("Buffer overrun!");
-    }
-  }
-
-  writeUint16(num) {
-    if (this.currentSample + 2 <= this.bufferSize) {
-      const view = new DataView(this.buffer.buffer);
-      view.setUint16(this.currentSample, num, true);
-      this.currentSample += 2;
-    } else {
-      console.error("Buffer overrun!");
-    }
-  }
-
-  writeString(str) {
-    for (let i = 0; i < str.length; i++) {
-      this.writeUint16(str.charCodeAt(i));
-    }
-  }
-
-  write(data) {
-    const remainingSpace = this.bufferSize - this.currentSample;
-    const writeLength = Math.min(data.length, remainingSpace);
-
-    if (writeLength > 0) {
-      this.buffer.set(data.subarray(0, writeLength), this.currentSample);
-      this.currentSample += writeLength;
-      this.dataLength += writeLength;
-    } else {
-      console.error("Buffer overrun!");
-    }
-  }
-
-  getData() {
-    this.writeUint32(this.dataLength);
-    this.writeUint32(this.dataLength + 36);
-    return this.buffer.subarray(0, this.currentSample);
-  }
+<style scoped>
+div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  height: 100vh;
 }
 
-
-</script>
+button {
+  background-color: #A568BB;
+  color: white;
+  margin-bottom: 10px;
+  cursor: pointer;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+</style>

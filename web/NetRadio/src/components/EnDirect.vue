@@ -13,6 +13,11 @@ export default {
         .catch((error) => {
           console.log(error)
         });
+  },
+  methods: {
+    redirectToDirect() {
+      this.$router.push({path: '/ecouterEmission/' + this.$route.params.id});
+    }
   }
 }
 </script>
@@ -27,7 +32,7 @@ export default {
       </div>
       <p class="direct-infos-sous-titre">EN DIRECT</p>
       <p class="direct-infos-desc">{{ emission.description }}</p>
-      <button class="direct-infos-ecouter">Écouter</button>
+      <button class="direct-infos-ecouter" @click="redirectToDirect()">Écouter</button>
     </div>
     <img class="direct-image" :src="emission.photo" alt="image de l'émission en direct">
   </section>
