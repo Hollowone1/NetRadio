@@ -25,7 +25,7 @@
 
   // On récupère les données de l'API
       const creneaux = ref([]);
-      const currentDate = computed(() => props.selectedDate)
+      const currentDate = computed(() => props.selectedDate);
 
   
       const fetchData = async () => {
@@ -55,9 +55,33 @@
 
     .creneaux{
       margin-left: 3em;
-    
+      width: fit-content;
+      position: relative;
+      height:max-content;
+      border-radius: 15px;
+      transition: 0.5s;
 
-  }
+    }
+
+
+    li{
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    li:hover{
+      color: #A568BB;
+      transform: scale(1.05);
+      cursor: pointer;
+    }
+    
+    ul{
+      list-style-type: none;
+      justify-content: space-around;}
+
+  .creneaux:hover {
+  transform: translateY(-20px);
+}
     
   
   </style>
