@@ -37,7 +37,7 @@ class GetEmissionById extends Action
                         "href" => $route->urlFor('emission.show', ['id_emission' => $emission->id])
                     ],
                     'users' => [
-                        "href" => $route->urlFor('user.show', ['email' => $emission->user])
+                        "href" => $route->urlFor('emission.presentateur', ['id_emission' => $emission->id])
                     ],
                     'creneaux' => [
                         "href" => $route->urlFor('creneaux.emission', ['id_emission' => $emission->id])

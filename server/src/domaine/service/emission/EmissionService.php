@@ -19,6 +19,19 @@ class EmissionService implements iEmissionService
         }
     }
 
+    public function getUserByEmission ($id) {
+        try {
+            $userDTO = [];
+            $users = Emission::findOrFail($id)->user();
+            foreach ($users as $user) {
+                $userDTO [] = $user;
+            }
+            return $userDTO;
+        }catch (\Exception) {
+            throw new EmissionNotFoundException('Emission not found');
+        }
+    }
+
     public function getEmissions () {
         try {
             $emissionsDTO = [];

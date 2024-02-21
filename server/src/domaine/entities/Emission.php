@@ -26,7 +26,7 @@ class Emission extends Model
     }
 
     public function user () {
-        return $this->belongsTo(User::class, 'user_mail')->first();
+        return $this->belongsTo(User::class, 'user_mail')->get();
     }
 
     public function creneaux()

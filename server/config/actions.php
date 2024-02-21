@@ -54,6 +54,9 @@ return array(
     \radio\net\app\action\emission\GetCreneauByEmission::class => function (ContainerInterface $container) {
         return new \radio\net\app\action\emission\GetCreneauByEmission($container->get('EmissionService'));
     },
+    \radio\net\app\action\emission\GetUserByEmission::class => function (ContainerInterface $container) {
+        return new \radio\net\app\action\emission\GetUserByEmission($container->get('EmissionService'));
+    },
 
     //user
     GetUserAllInfo::class => function (ContainerInterface $container) {
