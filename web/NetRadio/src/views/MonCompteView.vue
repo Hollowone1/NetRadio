@@ -6,19 +6,26 @@ import {mapState, mapActions} from "pinia";
 import {useUserStore} from "@/stores/user.js";
 //import VueJwtDecode from "vue-jwt-decode";
 import { jwtDecode } from "jwt-decode";
+import PopupUtilisateur from "@/components/PopupUtilisateur.vue";
 
 export default {
   components: {
     PopupEmission,
     Emission,
-    SideBar
+    SideBar,
+    PopupUtilisateur
   },
   data() {
     return {
       showPopupEmission: false,
+      showPopupUser: false,
       emissionToDisplay: {},
+      userToDisplay: {},
       display: 1,
       emissions: [],
+      users: [],
+      roles: ['Auditeur', 'Animateur', 'Administrateur']
+
     }
   },
   computed: {
@@ -52,9 +59,20 @@ export default {
           console.log(error)
         });
 
+    this.user.role === '3' ? this.getUsers() : null
+
   },
   methods: {
     ...mapActions(useUserStore, ['setUser']),
+    getUsers() {
+      this.$api.get('/users')
+          .then((response) => {
+            this.users = response.data.users
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+    },
     changeDisplay(number) {
       this.display = number;
     },
@@ -65,7 +83,15 @@ export default {
     updateEmission() {
       this.showPopupEmission = false;
       //aller refetch les infos de l'émission quand elle a été mise à jour !
-    }
+    },
+    displayUser(email) {
+      this.userToDisplay = this.users.find(user => user.email === email);
+      this.showPopupUser = true;
+    },
+    updateUser() {
+      this.showPopupUser = false;
+      this.getUsers()
+    },
   }
 }
 
@@ -86,7 +112,7 @@ export default {
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
           <div>
-            <p><strong>Nom d'utilisateur :</strong> {{ user.username }}</p>
+            <p><strong>Nom d'utilisateur : </strong> {{ user.username }}</p>
             <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
         </div>
@@ -115,11 +141,12 @@ export default {
   </div>
 
 
-  <div class="view" v-if="user.role === `2`">
+  <div class="view" v-if="user.role === `3`">
     <side-bar @change="changeDisplay">
       <template v-slot:1>Mon compte</template>
       <template v-slot:2>Émissions</template>
       <template v-slot:3>Calendrier</template>
+      <template v-slot:4>Utilisateurs</template>
     </side-bar>
     <main>
       <div v-if="display === 1" class="display mon-compte">
@@ -130,8 +157,8 @@ export default {
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
           <div>
-            <p><strong>Nom d'utilisateur :</strong>{{ user.prenom }} {{ user.nom }} </p>
-            <p><strong>Email :</strong> {{ user.mail }}</p>
+            <p><strong>Nom d'utilisateur : </strong>{{ user.prenom }} {{ user.nom }} </p>
+            <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
         </div>
       </div>
@@ -140,8 +167,25 @@ export default {
         <popup-emission :emission="emissionToDisplay" v-if="showPopupEmission" @close="showPopupEmission = false"
                         @edited="updateEmission"></popup-emission>
         <div class="emissions-liste">
-          <emission :edit="true" @edit="displayEmission(emission.id)" v-for="emission in emissions" :emission="emission"
+          <emission :redirect="false" :edit="true" @edit="displayEmission(emission.id)" v-for="emission in emissions" :emission="emission"
                     :key="emission.id"></emission>
+        </div>
+      </div>
+      <div v-if="display === 4" class="display users">
+        <h1>Tous les utilisateurs</h1>
+        <popup-utilisateur :user="userToDisplay" v-if="showPopupUser" @close="showPopupUser = false"
+                        @edited="updateUser"></popup-utilisateur>
+        <div class="users-liste">
+          <section v-for="user in users" class="user">
+            <div class="top">
+              <p>{{ roles[user.role - 1] }}</p>
+              <img @click="displayUser(user.email)" src="/icons/editPurple.svg" alt="play icon">
+            </div>
+            <div class="user-info">
+              <p><strong>{{ user.nom }}</strong> {{ user.prenom }}</p>
+              <p>{{ user.email }}</p>
+            </div>
+          </section>
         </div>
       </div>
     </main>
@@ -217,9 +261,45 @@ export default {
   }
 }
 
-.emissions-liste {
-  @include grid(repeat(auto-fit, 13em), auto, 1em, start, center);
+.users-liste {
+  @include grid(repeat(auto-fill, minmax(15em, 1fr)), auto, 2em, center, center);
 }
+
+.user {
+  @include flex(column, nowrap, 0, start, stretch);
+  background-color : $white;
+  border-radius: 10px;
+  padding: 1em .7em;
+  border: 2px solid $lightGrey;
+
+  .top {
+    @include flex(row, nowrap, 1em, space-between, center);
+    padding-bottom: .5em;
+
+    img {
+      height: 1.5em;
+    }
+
+    p {
+      margin: 0;
+      @include text-style(1em, $purple, 200);
+      text-transform: uppercase;
+    }
+  }
+
+  .user-info {
+    @include flex(column, nowrap, .5em, start);
+
+    p {
+      @include text-style(1.1em, inherit, 300);
+      strong {
+        @include text-style(1em, inherit, 700);
+        text-transform: uppercase;
+      }
+    }
+  }
+}
+
 
 @media screen and (min-width: 800px) {
   .display {

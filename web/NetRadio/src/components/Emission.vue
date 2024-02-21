@@ -12,16 +12,16 @@ export default {
       type : Boolean,
       required : false,
       default : false
-    }
-  },
-  data() {
-    return {
-
+    },
+    redirect: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   methods : {
-    redirect(id) {
-      this.$router.push(`/emission/${id}`)
+    redirectToPage(id) {
+      this.redirect ? this.$router.push(`/emissions/${id}`) : null;
     }
   },
   directives : {
@@ -36,7 +36,7 @@ export default {
 </script>
 
 <template>
-  <section @click="redirect(emission.id)" v-image="emission.photo" class="emission">
+  <section @click="redirectToPage(emission.id)" v-image="emission.photo" class="emission">
     <img v-if="edit" @click="$emit('edit')" src="/icons/edit.svg" alt="edit">
     <div v-if="!edit"></div>
     <div>
@@ -47,12 +47,6 @@ export default {
 </template>
 
 <style scoped lang="scss">
-
-@import "@/assets/var";
-@import "@/assets/layout";
-@import "@/assets/fonts";
-@import "@/assets/buttons";
-@import "@/assets/listeEmissionsPodcasts";
 
 
 </style>

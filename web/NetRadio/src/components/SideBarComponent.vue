@@ -1,4 +1,7 @@
 <script>
+import {mapActions} from "pinia";
+import {useUserStore} from "@/stores/user.js";
+
 export default {
   emits: ['change'],
   data() {
@@ -19,6 +22,11 @@ export default {
       if (this.display === number) {
         return true;
       }
+    },
+    ...mapActions(useUserStore, ['logoutUser']),
+    logOut() {
+      this.logoutUser()
+      this.$router.push('/connexion')
     }
   },
 }
@@ -37,9 +45,12 @@ export default {
         <div :class="{ selected: classSelected(3) }" @click="changeDisplay(3)">
           <slot name="3"></slot>
         </div>
+        <div :class="{ selected: classSelected(4) }" @click="changeDisplay(4)">
+          <slot name="4"></slot>
+        </div>
       </div>
     </div>
-    <div>Déconnexion</div>
+    <div @click="logOut" class="deco">Déconnexion</div>
   </aside>
 
   <div class="burger">
@@ -58,8 +69,11 @@ export default {
         <div :class="{ selected: classSelected(3) }" @click="changeDisplay(3)">
           <slot name="3"></slot>
         </div>
+        <div :class="{ selected: classSelected(4) }" @click="changeDisplay(4)">
+          <slot name="4"></slot>
+        </div>
       </div>
-      <div>Déconnexion</div>
+      <div @click="logOut" class="deco">Déconnexion</div>
     </div>
   </div>
 
@@ -101,7 +115,12 @@ aside {
   }
 }
 
+.deco {
+  @include text-style(inherit, $purple, 400);
+}
+
 @media screen and (max-width: 800px) {
+
   aside {
     display: none;
   }

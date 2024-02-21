@@ -132,21 +132,11 @@ body {
 }
 
 
-@font-face {
-  font-family: "Inter";
-  src: url("../fonts/Inter/Inter-VariableFont_slnt,wght.ttf");
-}
-
-* {
-  font-family: "Inter", Helvetica, Arial, sans-serif;
-}
-
 p {
   text-align: justify;
 }
 
 h2 {
-  font-family: "Inter", sans-serif;
   font-size: 35px;
   color: inherit;
   font-weight: inherit;
@@ -159,7 +149,6 @@ h2 {
 }
 
 label {
-  font-family: "Inter", sans-serif;
   font-size: inherit;
   color: inherit;
   font-weight: inherit;
@@ -177,7 +166,6 @@ label {
 
 button {
   cursor: pointer;
-  font-family: "Inter", Helvetica, Arial, sans-serif;
   font-weight: 400;
   display: flex;
   width: 30em;

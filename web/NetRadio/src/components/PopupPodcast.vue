@@ -1,4 +1,3 @@
-Fonctionne
 <script>
 export default {
   props: {

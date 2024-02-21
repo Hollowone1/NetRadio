@@ -3,21 +3,30 @@ import EnDirect from '@/components/EnDirect.vue'
 import Emission from '@/components/Emission.vue'
 import Podcast from '@/components/Podcast.vue'
 import Calendar from '@/components/Calendar.vue'
+import Creneaux from '@/components/creneaux.vue'
 export default {
   components: {
     EnDirect,
     Emission,
     Podcast,
     Calendar,
+    Creneaux,
 
   },
   data() {
     return {
       emissions: [],
       podcasts: [],
+      selectedDate: null,
+      showSlots: false,
     }
   },
-  methods: {},
+  methods: {
+    displaySlots(date) {
+      this.selectedDate = date
+      this.showSlots = true
+    },
+  },
   created() {
     this.$api.get("/emissions")
         .then((response) => {
@@ -49,7 +58,8 @@ export default {
 
 <template>
   <en-direct></en-direct>
-<!--  <Calendar></Calendar>-->
+ <Calendar @dayclick="displaySlots" />
+  <Creneaux v-if="showSlots" :selected-date="selectedDate" />
   <div class="emissions">
     <div class="top">
       <h2>Émissions</h2>

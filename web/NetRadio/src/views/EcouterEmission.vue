@@ -1,165 +1,153 @@
-
+<template>
+  <div>
+    <button @click="startStreaming">Commencer l'enregistrement</button>
+    <button @click="stopStreaming">Arreter l'enregistrement</button>
+    <button @click="downloadWav">Télécharger au format WAV</button>
+    <img src="@/assets/telechargement.jpg" alt="image">
+  </div>
+</template>
 
 <script>
-import AudioRecorder from "@/components/AudioRecorder.vue";
-import {io} from "socket.io-client";
-import HeaderComponent from "@/App.vue";
-import AudioPlayer from "@/components/AudioPlayer.vue";
+import axios from "axios";
+import { ref, onMounted, onUnmounted } from "vue";
 
 export default {
-  components: {HeaderComponent, AudioRecorder, AudioPlayer},
-  data() {
-    return {
-      socket: io("http://localhost:3000/"),
-      blob: {},
-      audio: null,
-      id: null,
-      invite: false,
-      emission: null
+  setup() {
+    // Create a reactive reference to the audio context
+    const audioContext = ref(null);
+
+    // Create a reactive reference to the media stream source
+    const mediaStreamSource = ref(null);
+
+    // Create a reactive reference to the media recorder
+    const mediaRecorder = ref(null);
+
+    // Create a reactive reference to a boolean indicating if we are currently streaming
+    const isStreaming = ref(false);
+
+    // Create a reactive reference to store recorded audio chunks
+    const recordedChunks = ref([]);
+
+    // A function to set up the connection to the server
+    const connectToServer = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioContext.value = new (window.AudioContext || window.webkitAudioContext)();
+        mediaStreamSource.value = audioContext.value.createMediaStreamSource(stream);
+
+        // Create a new media recorder and handle data available events
+        mediaRecorder.value = new MediaRecorder(stream);
+        mediaRecorder.value.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            recordedChunks.value.push(event.data);
+          }
+        };
+      } catch (error) {
+        console.error("Error accessing microphone:", error);
+      }
     };
+
+    // A function to start streaming
+    const startStreaming = () => {
+      if (!audioContext.value) {
+        connectToServer();
+      }
+      if (!isStreaming.value) {
+        isStreaming.value = true;
+
+        // Start recording
+        recordedChunks.value = []; // Clear any previous recorded chunks
+        mediaRecorder.value.start();
+      }
+    };
+
+    // A function to stop streaming
+    const stopStreaming = () => {
+      if (mediaRecorder.value && isStreaming.value) {
+        mediaRecorder.value.stop();
+        isStreaming.value = false;
+
+        // Send the recorded audio to the server when the recording is stopped
+        const blob = new Blob(recordedChunks.value, { type: "audio/wav" });
+        // const formData = new FormData();
+        // formData.append("title", "My Podcast");
+        // formData.append("description", "This is my podcast description.");
+        // formData.append("file", blob);
+
+        let emission = getEmission();
+
+        let body = {
+          titre: emission.titre,
+          description: emission.description,
+          audio: blob,
+          emission_id: emission.id,
+        }
+
+        axios.post("http://localhost:2080/podcasts", body).then((response) => {
+          console.log(response);
+        });
+      }
+    };
+
+    // faire une fonction pour récupérer les infos de l'émission à partir de son id dans la route
+    // A function to get the emission information from its id in the route
+    const getEmission = async () => {
+      try {
+        const response = await axios.get(`/emissions/${this.$route.params.id}`);
+        return response.data.emission;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    // A function to download the recorded audio as a WAV file
+    const downloadWav = () => {
+      if (recordedChunks.value.length > 0) {
+        const blob = new Blob(recordedChunks.value, { type: 'audio/wav' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `emission${this.$route.params.id}.wav`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    };
+
+    // Run the connectToServer function when the component is mounted
+    onMounted(() => {
+      connectToServer();
+    });
+
+    // Stop streaming and clean up when the component is unmounted
+    onUnmounted(() => {
+      stopStreaming();
+    });
+
+    // Return the functions to be used in the template
+    return { startStreaming, stopStreaming, downloadWav };
   },
-  mounted() {
-
-    // console.log("You joined the live");
-    // this.socket.on("voice", (arrayBuffer) => {
-    //   let blob = new Blob([arrayBuffer], { type: "audio/mp3; codecs=opus" });
-    //   let audio = document.createElement("audio");
-    //   audio.src = window.URL.createObjectURL(blob);
-    //   audio.play();
-    // });
-    // this.socket.on("voiceInvite", (arrayBuffer) => {
-    //   console.log("test");
-    //   if (this.invite) {
-    //     let blob = new Blob([arrayBuffer], { type: "audio/mp3; codecs=opus" });
-    //     let audio = document.createElement("audio");
-    //     audio.src = window.URL.createObjectURL(blob);
-    //     audio.play();
-    //   }
-    // });
-    // this.socket.on("diconnect", () => {
-    //   this.invite = false;
-    // });
-    // this.socket.on("authorisation", (invite) => {
-    //   if (this.id === invite.id) {
-    //     if (invite.response) {
-    //       console.log("je suis invité");
-    //       this.invite = invite.response;
-    //
-    //       let constraints = {
-    //         audio: true,
-    //       };
-    //       let mediaRecorder;
-    //
-    //       navigator.mediaDevices
-    //           .getUserMedia(constraints)
-    //           .then((mediaStream) => {
-    //             mediaRecorder = new MediaRecorder(mediaStream);
-    //             mediaRecorder.onstart = () => {
-    //               this.chunks = [];
-    //             };
-    //
-    //             mediaRecorder.ondataavailable = (e) => {
-    //               this.chunks.push(e.data);
-    //               let blob = new Blob(this.chunks, {
-    //                 type: "audio/mp3; codecs=opus",
-    //               });
-    //               if (this.invite) {
-    //                 this.socket.emit("radioInvite", blob);
-    //               }
-    //             };
-    //
-    //             mediaRecorder.start();
-    //
-    //
-    //             setInterval(() => {
-    //               if (this.invite) {
-    //                 mediaRecorder.stop();
-    //                 mediaRecorder.start();
-    //               }
-    //             }, 1000);
-    //           });
-    //     } else {
-    //       console.log("Demande refusée !");
-    //     }
-    //   }
-    // });
-    //
-    // this.$api
-    //     .get("emissions/" + this.$route.params.id) //  + this.$route.params.id
-    //     .then((response) => {
-    //       this.emission = response.data.emission;
-    //       console.log(response.data);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-
-    // this.audioContext = new AudioContext();
-    // this.gainNode = this.audioContext.createGain();
-    // this.gainNode.connect(this.audioContext.destination);
-    //
-    // this.socket.on("audio", (data) => {
-    //   // Convertit l'ArrayBuffer en AudioBuffer
-    //   this.audioContext.decodeAudioData(data, (audioBuffer) => {
-    //     // Crée un nouveau buffer source et le connecte à l'audio context
-    //     const bufferSource = this.audioContext.createBufferSource();
-    //     bufferSource.buffer = audioBuffer;
-    //     bufferSource.connect(this.gainNode);
-    //
-    //     // Démarre la lecture du buffer source
-    //     bufferSource.start();
-    //   });
-    // });
-  },
-  methods: {
-    quitLive() {
-      this.$router.push({path: "/"});
-    },
-    reqInvite() {
-      const genRanHex = (size) =>
-          [...Array(size)]
-              .map(() => Math.floor(Math.random() * 16).toString(16))
-              .join("");
-      this.id = genRanHex(20);
-      console.log(this.id);
-      this.socket.emit("invite", {id: this.id, accepted: false});
-    },
-    // playAudio() {
-    //   // Emet l'événement audio avec un buffer audio mock
-    //   this.socket.emit("audio", new ArrayBuffer(1024));
-    // }
-  }
-
 };
 </script>
 
-<template>
-  <section>
-    <!--    <HeaderComponent />-->
-    <div v-if="emission">
-      <h1><u>{{ emission.titre }} </u></h1>
-      <p>{{ emission.description }}</p>
-      <img :src="emission.photo" alt="image de l'émission en direct">
-    </div>
 
-    <button @click="playAudio">Play Audio</button>
-    <audio ref="audioElement"></audio>
+<style scoped>
+div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  height: 100vh;
+}
 
-    <audio-recorder />
-    <audio-player />
-    <!--    <button @click="play()"> Play</button>-->
-    <!--    -->
-    <!--    <audio id="audio" src=""></audio>-->
-    <!--      <button @click="quitLive" type="submit" id="btn-stop">-->
-    <!--        Quitter le direct-->
-    <!--      </button>-->
-    <!--      <button @click="reqInvite" type="submit" id="invitation">-->
-    <!--        Demander à participer-->
-    <!--      </button>-->
-    <!--    <Footer />-->
-  </section>
-</template>
-
-<style lang="scss">
-
+button {
+  background-color: #A568BB;
+  color: white;
+  margin-bottom: 10px;
+  cursor: pointer;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+}
 </style>

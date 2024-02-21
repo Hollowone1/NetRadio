@@ -11,17 +11,24 @@ export default {
   },
   data() {
     return {
-      podcasts: [],
+      allPodcasts: [],
+      displayPodcasts: [],
       podcastsToday: [],
-      recentPodcasts: []
+      recentPodcasts: [],
+      remainingPodcasts: [],
+      searching: false,
+      research: "",
     }
   },
   created() {
     this.$api.get("/podcasts?sort=date")
         .then((response) => {
-          this.podcasts = response.data.podcasts
+          this.allPodcasts = response.data.podcasts
+          this.displayPodcasts = response.data.podcasts
+
           this.podcastsToday = this.getPodcastsDate(new Date().toISOString().split('T')[0]);
-          this.recentPodcasts = this.podcasts.slice(-6)
+          this.recentPodcasts = this.allPodcasts.slice(-6)
+          this.remainingPodcasts = this.allPodcasts.slice(0, -6)
         })
         .catch((error) => {
           console.log(error)
@@ -29,25 +36,62 @@ export default {
   },
   methods: {
     getPodcastsDate(date) {
-      return this.podcasts.filter(podcast => podcast.date === date);
+      return this.allPodcasts.filter(podcast => podcast.date === date);
+    },
+    search() {
+      this.searching = true;
+      this.displayPodcasts = this.allPodcasts.filter(podcast =>
+          podcast.titre.toLowerCase().includes(this.research.toLowerCase())
+      );
+    },
+    endSearch() {
+      this.searching = false;
+      this.research = "";
+      this.displayPodcasts = this.allPodcasts;
     },
   },
+  watch: {
+    research() {
+      if (this.research === "") {
+        this.endSearch();
+      }
+    }
+  }
 };
 </script>
 
 <template>
   <en-direct></en-direct>
-  <div class="podcasts">
-    <div class="jour">
-      <h2>Aujourd'hui</h2>
-      <div class="podcasts-liste">
-        <podcast v-for="podcast in podcastsToday" :podcast="podcast" :key="podcast.id"></podcast>
+  <div class="resultats">
+    <h1>Tous nos podcasts</h1>
+    <div class="recherche">
+      <div class="barre-recherche">
+        <img src="/icons/loupe.svg" alt="icone recherche">
+        <input @keyup.enter="search()" v-model="research" type="text" placeholder="Rechercher">
+        <img @click="endSearch()" v-if="research" src="/icons/croix.svg" alt="icone croix">
       </div>
     </div>
-    <div class="jour">
-      <h2>Récemment</h2>
-      <div class="podcasts-liste">
-        <podcast v-for="podcast in recentPodcasts" :podcast="podcast" :key="podcast.id"></podcast>
+    <div v-if="searching" class="podcasts-liste">
+      <podcast v-for="podcast in displayPodcasts" :podcast="podcast" :key="podcast.id"></podcast>
+    </div>
+    <div v-else class="podcasts">
+      <div v-if="podcastsToday[0]" class="jour">
+        <h2>Aujourd'hui</h2>
+        <div class="podcasts-liste">
+          <podcast v-for="podcast in podcastsToday" :podcast="podcast" :key="podcast.id"></podcast>
+        </div>
+      </div>
+      <div class="jour">
+        <h2>Récemment</h2>
+        <div class="podcasts-liste">
+          <podcast v-for="podcast in recentPodcasts" :podcast="podcast" :key="podcast.id"></podcast>
+        </div>
+      </div>
+      <div class="jour">
+        <h2>Précédemment</h2>
+        <div class="podcasts-liste">
+          <podcast v-for="podcast in remainingPodcasts" :podcast="podcast" :key="podcast.id"></podcast>
+        </div>
       </div>
     </div>
   </div>
@@ -80,8 +124,6 @@ h2 {
 
 .podcasts {
   padding-top: 1em;
-  padding-left: 3em;
-  padding-right: 3em;
 }
 
 </style>

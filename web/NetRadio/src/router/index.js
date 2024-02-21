@@ -4,11 +4,11 @@ import GrilleDesProgrammes from '@/views/GrilleProgrammesView.vue'
 import ListeEmission from '@/views/ListeEmissionsView.vue'
 import ListePodcasts from '@/views/ListePodcastsView.vue'
 import PresentationEmission from '@/views/PresentationEmissionView.vue'
-import ResultatEmission from '@/views/ResultatsEmissionsView.vue'
-import ResultatPodcast from '@/views/ResultatsPodcastsView.vue'
 import MonCompte from '@/views/MonCompteView.vue'
 import Connexion from '@/views/ConnexionView.vue'
 import Inscription from '@/views/InscriptionView.vue'
+
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,19 +34,9 @@ const router = createRouter({
       component: ListePodcasts
     },
     {
-      path: '/emission/:id',
+      path: '/emissions/:id',
       name: 'presentation emission',
       component: PresentationEmission
-    },
-    {
-      path: '/resultat-emission',
-      name: 'résultat des émissions',
-      component: ResultatEmission
-    },
-    {
-      path: '/resultat-podcast',
-      name: 'résultat des podcast',
-      component: ResultatPodcast
     },
     {
       path: '/mon-compte',

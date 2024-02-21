@@ -1,31 +1,168 @@
 <script>
 import EnDirect from '@/components/EnDirect.vue'
+
 export default {
-  components : {
+  components: {
     EnDirect
   },
   data() {
     return {
-      creneaux : [],
-      currentDate : new Date(),
-      emissions : []
+      creneaux: [],
+      currentDate: new Date(),
+      heures: [],
+      emissions: []
     }
   },
-  computed : {
+  computed: {
     formaterDate() {
-      return this.currentDate.toLocaleDateString('fr-FR', {year: 'numeric', month: 'long', day: 'numeric', weekday: 'long'})
+      return this.currentDate.toLocaleDateString('fr-FR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long'
+      })
     },
   },
-  methods : {
+  methods: {
     prevDate() {
       this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate() - 1))
     },
     nextDate() {
       this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate() + 1))
+    },
+    /*getCreneaux() {
+      let jour = this.currentDate.getDay()
+      if (jour === 0) {
+        jour = 7
+      }
+      const creneaux = []
+      const heures = []
+      this.$api.get("/creneaux")
+          .then((resp) => {
+            resp.data.creneaux.forEach(creneau => {
+              //si le créneau correspond au jour de la semaine, on le met dans nos data
+              if (creneau.jourSemaine === jour) {
+                creneaux.push(creneau)
+                //on récupère une liste d'heures de départ, afin d'afficher les heures dans la vue, mais que pr les créneaux qui sont ajrd
+                if (!heures.includes(creneau.heureDepart)) {
+                  heures.push(creneau.heureDepart)
+                }
+              }
+
+            })
+            this.creneaux = creneaux
+            this.heures = heures
+
+            //pour chaque créneau du jour, on récup son émission
+            this.creneaux.forEach(creneau => {
+              creneau.emission = {}
+              //vu qu'un créneau n'a qu'une seule émission (peut pas y en avoir deux en même temps)
+              this.$api.get(creneau.links.emission.href)
+                  .then((resp2) => {
+                    //on affecte la rep de l'api à la variable émission pr que ça soit plus facile
+                    let emission = resp2.data.emission
+                    emission.presentateur = this.getUser(emission.links.users.href)
+                    //console.log("emission", emission)
+
+                    //on récupère le présentateur avec encore un call api
+                    this.$api.get(emission.links.users.href)
+                        .then((resp3) => {
+                          emission.presentateur = resp3.data.prenom + " " + resp3.data.nom
+                        })
+                        .catch((error3) => {
+                          console.log(error3)
+                        })
+                    //on affecte l'émission avec le présentateur au créneau
+                    creneau.emission = emission
+                  })
+                  .catch((error2) => {
+                    console.log(error2)
+                  })
+            })
+            console.log("this creneaux", this.creneaux)
+          })
+          .catch((error) => {
+            console.log(error)
+          });
+    },*/
+    getCreneaux() {
+      let jour = this.currentDate.getDay();
+      if (jour === 0) {
+        jour = 7;
+      }
+      const creneaux = [];
+      const heures = [];
+      const getEmissionPromises = [];
+
+      this.$api.get("/creneaux")
+          .then((resp) => {
+            resp.data.creneaux.forEach(creneau => {
+              if (creneau.jourSemaine === jour) {
+                creneaux.push(creneau);
+                if (!heures.includes(creneau.heureDepart)) {
+                  heures.push(creneau.heureDepart);
+                }
+                getEmissionPromises.push(
+                    this.getEmission(creneau.links.emission.href)
+                        .then(emission => {
+                          return this.getUser(emission.links.users.href)
+                              .then(user => {
+                                emission.presentateur = user.prenom + " " + user.nom;
+                                creneau.emission = emission;
+                              });
+                        })
+                );
+              }
+            });
+            Promise.all(getEmissionPromises)
+                .then(() => {
+                  this.creneaux = creneaux;
+                  this.heures = heures;
+                });
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+    },
+    getCreneauHeure(heure) {
+      return this.creneaux.filter(creneau => creneau.heureDepart === heure)
+    },
+    async getEmission(link) {
+      let promise = new Promise((resolve, reject) => {
+        this.$api.get(link)
+            .then((resp) => {
+              resolve(resp.data.emission)
+            })
+            .catch((error) => {
+              reject(error)
+            })
+      });
+      return await promise
+    },
+    async getUser(link) {
+      let promise = new Promise((resolve, reject) => {
+        this.$api.get(link)
+            .then((resp) => {
+              resolve(resp.data.user)
+            })
+            .catch((error) => {
+              reject(error)
+            })
+      });
+      return await promise
+    },
+    redirect(id) {
+      this.$router.push(`/emissions/${id}`)
     }
   },
   created() {
-
+    this.getCreneaux()
+  },
+  watch: {
+    //à chaque changement de valeur de currentDate, on refresh les créneaux, et donc la page
+    currentDate() {
+      this.getCreneaux()
+    }
   }
 }
 
@@ -34,7 +171,6 @@ export default {
   <main>
 
     <en-direct></en-direct>
-
     <div class="programme">
       <h2>Grille des programmes</h2>
       <h3>Net Radio</h3>
@@ -44,15 +180,15 @@ export default {
         <img src="/icons/droite.svg" @click="nextDate">
       </div>
 
-      <section>
-        <div class="prog">
-          <div class="prog-infos">
+      <section v-for="heure in heures">
+        <h4>{{ heure }}</h4>
+        <div v-for="creneau in getCreneauHeure(heure)" class="prog">
+          <div @click="redirect(creneau.emission.id)" class="prog-infos">
             <div class="prog-infos-texte">
-              <h5> Titre émission </h5>
-              <p>Nom préentateur</p>
-              <p>Nom des invites</p>
+              <h5> {{creneau.emission.titre}} </h5>
+              <p>{{creneau.emission.presentateur}}</p>
             </div>
-            <img src="" alt="image de l'émission">
+            <img :src="creneau.emission.photo" alt="image de l'émission">
           </div>
         </div>
       </section>
@@ -92,6 +228,11 @@ h3 {
     background-color: $purple;
     padding: 1em;
     border-radius: 100px;
+    text-align: center;
+
+    &:first-letter {
+      text-transform: uppercase;
+    }
   }
 
   img:hover {
@@ -115,6 +256,7 @@ h4 {
     background-color: $lightField;
     border-radius: 10px;
     @include flex(row, nowrap, 1.5em, space-between, center);
+    cursor: pointer;
   }
 
   img {
