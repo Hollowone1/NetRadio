@@ -46,10 +46,10 @@ class UserService implements iUserService
                 return $user->toDTO();
             } else {
                 // Si aucun enregistrement n'a été mis à jour, lancez une exception
-                throw new UserNotFoundException("Vous avez déjà cette utilisateur");
+                throw new UserNotFoundException("Vous avez déjà modifié cette utilisateur");
             }
         } catch (\Exception $e) {
-            throw new UserNotFoundException("Vous avez déjà cette utilisateur");
+            throw new UserNotFoundException("Vous avez déjà modifié cette utilisateur");
         }
     }
 }
