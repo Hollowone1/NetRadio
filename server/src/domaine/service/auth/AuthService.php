@@ -32,7 +32,7 @@ class AuthService implements AuthServiceInterface
     public function signup(CredentialsDTO $c)
     {
         try {
-            $this->authProvider->register($c->email, $c->password, $c->username);
+            $this->authProvider->register($c->email, $c->password, $c->username, $c->nom, $c->prenom);
         } catch (AuthProviderInvalidCredentialsException $e) {
             throw new AuthServiceCredentialsException($e->getMessage());
         }
