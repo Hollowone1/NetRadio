@@ -5,7 +5,10 @@ export const useUserStore = defineStore('user', {
         return {
             loggedIn: false,
             user : [],
-            tokens : []
+            tokens : {
+                access_token: '',
+                refresh_token: ''
+            }
         }
     },
     actions: {
@@ -19,7 +22,10 @@ export const useUserStore = defineStore('user', {
         logoutUser() {
             this.loggedIn = false;
             this.user = [];
-            this.tokens = [];
+            this.tokens = {
+                access_token: '',
+                refresh_token: ''
+            };
         },
     },
     persist: {

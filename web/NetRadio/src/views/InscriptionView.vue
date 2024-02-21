@@ -7,39 +7,12 @@ export default {
       mail: "",
       password: "",
       username: "",
+      nom: "",
+      prenom: "",
       errorMessage: null
     }
   },
   methods: {
-    /*inscrire() {
-      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-      const passwordRegex = /^(?=.*[A-Z])[a-zA-Z\d]{8,}$/
-
-      if (!emailRegex.test(this.mail)) {
-        this.errorMessage = "Format d'email invalide.";
-        return;
-      }
-
-      if (!passwordRegex.test(this.password)) {
-        this.errorMessage = "Mot de passe invalide. Il doit contenir 8 caractères et au moins une majuscule.";
-        return;
-      }
-
-      this.$api.post('/users/signup', {
-        username: this.username.trim(),
-        email: this.mail.trim(),
-        password: this.password.trim(),
-      })
-          .then(response => {
-            console.log('Inscription réussie :', response);
-            this.errorMessage = "Inscription réussie.";
-            this.$router.push('/');
-          })
-          .catch(error => {
-            console.error('Erreur lors de l\'inscription :', error);
-            this.errorMessage = "Une erreur s'est produite lors de l'inscription.";
-          });
-    }*/
     ...mapActions(useUserStore, ['loginUser']),
     inscrire() {
       const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -56,7 +29,9 @@ export default {
       this.$api.post('/users/signup', {
         email: this.mail.trim(),
         username: this.username.trim(),
-        password: this.password.trim()
+        password: this.password.trim(),
+        nom: this.nom.trim(),
+        prenom: this.prenom.trim()
       }).then(resp => {
         this.connexionAfter()
         this.$router.push('/')
@@ -88,6 +63,14 @@ export default {
     <div class="login-form">
       <h2>Inscription</h2>
       <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
+      <div class="form-group">
+        <label for="nom">Nom</label>
+        <input v-model="nom" type="text" id="nom" placeholder=" " required/>
+      </div>
+      <div class="form-group">
+        <label for="prenom">Prénom</label>
+        <input v-model="prenom" type="text" id="prenom" placeholder=" " required/>
+      </div>
       <div class="form-group">
         <label for="username">Nom d'utilisateur</label>
         <input v-model="username" type="text" id="username" placeholder=" " required/>
