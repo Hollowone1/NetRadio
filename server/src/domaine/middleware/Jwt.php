@@ -37,9 +37,9 @@ class Jwt
 
             $request = $request->withAttribute('user', $userDTO);
         } catch (AuthServiceExpiredTokenException $e) {
-            return $next->handle($request)->withStatus(401)->withHeader('Location', $routeParser->urlFor('signin'));
+            throw new HttpUnauthorizedException($request ,$e->getMessage());
         } catch (AuthServiceInvalidTokenException $e) {
-            return $next->handle($request)->withStatus(401)->withHeader('Location', $routeParser->urlFor('refresh'));
+            throw new HttpUnauthorizedException($request, $e->getMessage());
         }
         return $next->handle($request);
     }
