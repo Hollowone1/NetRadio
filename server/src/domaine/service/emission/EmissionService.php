@@ -2,6 +2,7 @@
 
 namespace radio\net\domaine\service\emission;
 
+use radio\net\domaine\dto\EmissionDTO;
 use radio\net\domaine\entities\Emission;
 
 class EmissionService implements iEmissionService
@@ -52,5 +53,26 @@ class EmissionService implements iEmissionService
         } catch (EmissionNotFoundException $e) {
             throw new EmissionNotFoundException("Emission not found");
         }
+    }
+
+    public function postEmission($emissionDTO) : EmissionDTO
+    {
+            $titre = filter_var($emissionDTO->titre, FILTER_SANITIZE_SPECIAL_CHARS);
+            $description = filter_var($emissionDTO->description, FILTER_SANITIZE_SPECIAL_CHARS);
+            $onDirect = $emissionDTO->onDirect;
+            $theme = $emissionDTO->theme;
+            $photo = filter_var($emissionDTO->photo,FILTER_SANITIZE_SPECIAL_CHARS);
+            $user = filter_var($emissionDTO->user, FILTER_VALIDATE_EMAIL);
+
+            $emission = new Emission();
+            $emission->titre = $titre;
+            $emission->description = $description;
+            $emission->onDirect = $onDirect;
+            $emission->theme = $theme;
+            $emission->photo = $photo;
+            $emission->user_mail = $user;
+            $emission->save();
+
+            return $emission->toDTO();
     }
 }
