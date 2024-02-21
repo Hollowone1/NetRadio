@@ -5,8 +5,11 @@ use radio\net\app\action\auth\RefreshAction;
 use radio\net\app\action\auth\SigninAction;
 use radio\net\app\action\auth\SignupAction;
 use radio\net\app\action\auth\ValidateAction;
+use radio\net\app\action\emission\GetCreneauByEmission;
 use radio\net\app\action\emission\GetEmissionById;
 use radio\net\app\action\emission\GetEmissionsAction;
+use radio\net\app\action\emission\PostEmission;
+use radio\net\app\action\emission\PutEmission;
 use radio\net\app\action\playlist\GetPlaylistByIdAction;
 use radio\net\app\action\podcast\GetAllPodcasts;
 use radio\net\app\action\podcast\GetPodcastByEmission;
@@ -51,9 +54,18 @@ return array(
     GetEmissionsAction::class => function (ContainerInterface $container) {
         return new GetEmissionsAction($container->get('EmissionService'));
     },
-    \radio\net\app\action\emission\GetCreneauByEmission::class => function (ContainerInterface $container) {
+    GetCreneauByEmission::class => function (ContainerInterface $container) {
         return new \radio\net\app\action\emission\GetCreneauByEmission($container->get('EmissionService'));
     },
+
+    PostEmission::class => function (ContainerInterface $container) {
+        return new PostEmission($container->get('EmissionService'));
+    },
+    PutEmission::class => function (ContainerInterface $container) {
+        return new PutEmission($container->get('EmissionService'));
+    },
+    
+
     \radio\net\app\action\emission\GetUserByEmission::class => function (ContainerInterface $container) {
         return new \radio\net\app\action\emission\GetUserByEmission($container->get('EmissionService'));
     },

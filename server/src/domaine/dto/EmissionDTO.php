@@ -10,11 +10,10 @@ class EmissionDTO extends DTO
     public string $theme;
     public string $photo;
     public ?bool $onDirect;
-    public string $user;
+    public ?string $user;
 
 
-    public function __construct ($p_id, $p_titre, $p_description, $p_theme, $p_photo, $p_onDirect, $p_user) {
-        $this->id = $p_id;
+    public function __construct ($p_titre, $p_description, $p_theme, $p_photo, $p_onDirect, $p_user) {
         $this->titre = $p_titre;
         $this->description = $p_description;
         $this->theme = $p_theme;

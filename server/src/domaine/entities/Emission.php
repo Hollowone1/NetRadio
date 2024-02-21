@@ -9,6 +9,7 @@ class Emission extends Model
 {
 
     public $connection = 'radio';
+    protected $primaryKey='id';
     protected $table = 'Emission';
     public $timestamps = false;
     protected $fillable = [
@@ -35,8 +36,7 @@ class Emission extends Model
     }
 
     public function toDTO () {
-        return new EmissionDTO(
-            $this->id,
+        $emission = new EmissionDTO(
             $this->titre,
             $this->description,
             $this->theme,
@@ -44,5 +44,8 @@ class Emission extends Model
             $this->onDirect,
             $this->user_mail
         );
+        $emission->id = $this->id;
+        return $emission;
+
     }
 }

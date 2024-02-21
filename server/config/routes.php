@@ -11,6 +11,8 @@ use radio\net\app\action\emission\GetCreneauByEmission;
 use radio\net\app\action\emission\GetEmissionsAction;
 use radio\net\app\action\emission\GetEmissionById;
 use radio\net\app\action\emission\GetUserByEmission;
+use radio\net\app\action\emission\PostEmission;
+use radio\net\app\action\emission\PutEmission;
 use radio\net\app\action\playlist\GetPlaylistByEmailUserAction;
 use radio\net\app\action\playlist\GetPlaylistByIdAction;
 use radio\net\app\action\playlist\PostPlaylist;
@@ -52,6 +54,8 @@ return function (App $app) {
         $app->get("/{id_emission}[/]", GetEmissionById::class)->setName('emission.show'); // v
         $app->get("/{id_emission}/podcasts", GetPodcastByEmission::class)->setName('podcasts.emission'); //v
         $app->get("/{id_emission}/creneau", GetCreneauByEmission::class)->setName('creneaux.emission');
+        $app->post("[/]", PostEmission::class)->setName('emission.create');
+        $app->put("/{id}[/]", PutEmission::class)->setName('emission.update');
         $app->get("/{id_emission}/user", GetUserByEmission::class)->setName('emission.presentateur');
     });
 
