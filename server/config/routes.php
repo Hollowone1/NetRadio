@@ -9,7 +9,6 @@ use radio\net\app\action\creneau\GetAllCreneaux;
 use radio\net\app\action\creneau\GetCreneauById;
 use radio\net\app\action\emission\GetCreneauByEmission;
 use radio\net\app\action\emission\GetEmissionById;
-use radio\net\app\action\emission\GetEmissionByTheme;
 use radio\net\app\action\emission\GetEmissionsAction;
 use radio\net\app\action\playlist\GetPlaylistByEmailUserAction;
 use radio\net\app\action\playlist\GetPlaylistByIdAction;
@@ -25,12 +24,11 @@ use radio\net\app\action\son\GetSonByIdAction;
 use radio\net\app\action\son\GetSonsByPlaylistId;
 use radio\net\app\action\user\GetUserAllInfo;
 use radio\net\app\action\user\GetUserByMail;
+use radio\net\app\action\user\PostUser;
 use radio\net\domaine\middleware\Jwt;
 use Slim\App;
 
 return function (App $app) {
-
-    $JwtVerification = new Jwt();
 
     $app->options('/{routes:.+}', function ($request, $response) {
         return $response;
@@ -59,6 +57,7 @@ return function (App $app) {
         $app->get("[/]", GetUserAllInfo::class)->setName('users.index');
         $app->get('/mail/{email}', GetUserByMail::class)->setName('user.show');
         $app->get("/{email_user}/playlists", GetPlaylistByEmailUserAction::class)->setName('playlists.user');
+        $app->post("[/]", PostUser::class)->setName('user.update');
 
         //auth
         $app->post('/signin', SigninAction::class)->setName('signin');
