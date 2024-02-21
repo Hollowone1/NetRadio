@@ -25,9 +25,12 @@ use radio\net\app\action\son\GetSonByIdAction;
 use radio\net\app\action\son\GetSonsByPlaylistId;
 use radio\net\app\action\user\GetUserAllInfo;
 use radio\net\app\action\user\GetUserByMail;
+use radio\net\domaine\middleware\Jwt;
 use Slim\App;
 
 return function (App $app) {
+
+    $JwtVerification = new Jwt();
 
     $app->options('/{routes:.+}', function ($request, $response) {
         return $response;
