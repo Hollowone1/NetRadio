@@ -1,29 +1,33 @@
 <script>
 import PopupEmission from "@/components/PopupEmission.vue";
+import PopupUtilisateur from "@/components/PopupUtilisateur.vue";
+import PopupPlaylist from "@/components/PopupPlaylist.vue";
 import Emission from '@/components/Emission.vue'
 import SideBar from "@/components/SideBarComponent.vue";
 import {mapState, mapActions} from "pinia";
 import {useUserStore} from "@/stores/user.js";
-//import VueJwtDecode from "vue-jwt-decode";
-import { jwtDecode } from "jwt-decode";
-import PopupUtilisateur from "@/components/PopupUtilisateur.vue";
+import {jwtDecode} from "jwt-decode";
 
 export default {
   components: {
     PopupEmission,
     Emission,
     SideBar,
-    PopupUtilisateur
+    PopupUtilisateur,
+    PopupPlaylist
   },
   data() {
     return {
       showPopupEmission: false,
       showPopupUser: false,
+      showPopUpPlaylist: false,
       emissionToDisplay: {},
       userToDisplay: {},
+      playlistToDisplay: {},
       display: 1,
       emissions: [],
       users: [],
+      playlists: [],
       roles: ['Auditeur', 'Animateur', 'Administrateur']
 
     }
@@ -32,25 +36,12 @@ export default {
     ...mapState(useUserStore, ['user', 'tokens', 'loggedIn'])
   },
   created() {
-    this.$api.get("/emissions")
-        .then((response) => {
-          this.emissions = response.data.emission
-          this.emissions.forEach(emission => {
-            this.$api.get(emission.links.users.href)
-                .then((response2) => {
-                  emission.user = `${response2.data.user.nom} ${response2.data.user.prenom}`
-                })
-                .catch((error) => {
-                  console.log(error)
-                });
-          });
-        })
-        .catch((error) => {
-          console.log(error)
-        });
-
     const mail = jwtDecode(this.tokens.access_token).upr.email
-    this.$api.get(`/users/mail/${mail}`)
+    this.$api.get(`/users/mail/${mail}`, {
+      headers: {
+        Authorization: `Bearer ${this.tokens.access_token}`
+      }
+    })
         .then((response) => {
           //console.log(response.data)
           this.setUser(response.data.user)
@@ -60,6 +51,8 @@ export default {
         });
 
     this.user.role === '3' ? this.getUsers() : null
+    this.user.role === '3' ? this.getEmissions() : null
+    this.user.role === '2' ? this.getPlaylists() : null
 
   },
   methods: {
@@ -73,6 +66,36 @@ export default {
             console.log(error)
           })
     },
+    getEmissions() {
+      this.$api.get('/emissions')
+          .then((response) => {
+            this.emissions = response.data.emission
+            this.emissions.forEach(emission => {
+              this.$api.get(emission.links.users.href)
+                  .then((response2) => {
+                    emission.user = `${response2.data.user.nom} ${response2.data.user.prenom}`
+                  })
+                  .catch((error) => {
+                    console.log(error)
+                  });
+            });
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+    },
+    getEmissionByUser() {
+
+    },
+    getPlaylists() {
+      this.$api.get(`/user/${this.user.email}/playlists`)
+          .then((response) => {
+            this.playlists = response.data
+          })
+          .catch((error) => {
+            console.log(error.response.data)
+          })
+    },
     changeDisplay(number) {
       this.display = number;
     },
@@ -82,7 +105,7 @@ export default {
     },
     updateEmission() {
       this.showPopupEmission = false;
-      //aller refetch les infos de l'émission quand elle a été mise à jour !
+      this.getEmissions()
     },
     displayUser(email) {
       this.userToDisplay = this.users.find(user => user.email === email);
@@ -91,6 +114,14 @@ export default {
     updateUser() {
       this.showPopupUser = false;
       this.getUsers()
+    },
+    displayPlaylist(id) {
+      this.playlistToDisplay = this.playlists.find(playlist => playlist.id === id);
+      this.showPopUpPlaylist = true;
+    },
+    updatePlaylists() {
+      this.showPopUpPlaylist = false;
+      this.getPlaylists()
     },
   }
 }
@@ -141,6 +172,80 @@ export default {
   </div>
 
 
+  <div class="view" v-if="user.role === `2`">
+    <side-bar @change="changeDisplay">
+      <template v-slot:1>Mon compte</template>
+      <template v-slot:2>Mes playlists</template>
+      <template v-slot:3>Mon émission</template>
+    </side-bar>
+    <main>
+      <div v-if="display === 1" class="display mon-compte">
+        <div class="top">
+          <h1>Mon compte</h1>
+          <button>Modifier mes informations</button>
+        </div>
+        <div class="info">
+          <img src="/icons/profile.svg" alt="profile">
+          <div>
+            <p><strong>Nom d'utilisateur : </strong>{{ user.username }} </p>
+            <p><strong>Email :</strong> {{ user.email }}</p>
+          </div>
+        </div>
+      </div>
+      <div v-if="display === 2" class="display playlists">
+        <div class="top">
+          <h1>Mes playlists</h1>
+          <img src="/icons/ajouter.svg" alt="add icon">
+        </div>
+        <div class="playlists-liste">
+          <section class="playlist">
+            <div class="top">
+              <p>Les hits de Noël</p>
+              <img @click="displayPlaylist(1)" src="/icons/editPurple.svg" alt="play icon">
+            </div>
+            <div class="playlist-info">
+              <p>Tous les classiques de Noël sont à retrouver dans cette playlist.</p>
+            </div>
+          </section>
+          <section class="playlist">
+            <div class="top">
+              <p>Les hits de Noël</p>
+              <img @click="displayPlaylist(1)" src="/icons/editPurple.svg" alt="play icon">
+            </div>
+            <div class="playlist-info">
+              <p>Tous les classiques de Noël sont à retrouver dans cette playlist.</p>
+            </div>
+          </section>
+          <section class="playlist">
+            <div class="top">
+              <p>Les hits de Noël</p>
+              <img @click="displayPlaylist(1)" src="/icons/editPurple.svg" alt="play icon">
+            </div>
+            <div class="playlist-info">
+              <p>Tous les classiques de Noël sont à retrouver dans cette playlist.</p>
+            </div>
+          </section>
+          <section class="playlist" v-for="playlist in playlists">
+            <div class="top">
+              <p>{{ playlist.name }}</p>
+              <img @click="displayPlaylist(playlist.id)" src="/icons/editPurple.svg" alt="play icon">
+            </div>
+            <div class="playlist-info">
+              <p>{{ playlist.description }}</p>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div v-if="display === 3" class="display mon-emission">
+        <div class="top">
+          <h1>Mon émission</h1>
+          <img src="/icons/editPurple.svg" alt="add icon">
+        </div>
+      </div>
+    </main>
+  </div>
+
+
   <div class="view" v-if="user.role === `3`">
     <side-bar @change="changeDisplay">
       <template v-slot:1>Mon compte</template>
@@ -157,7 +262,7 @@ export default {
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
           <div>
-            <p><strong>Nom d'utilisateur : </strong>{{ user.prenom }} {{ user.nom }} </p>
+            <p><strong>Nom d'utilisateur : </strong>{{ user.username }} </p>
             <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
         </div>
@@ -167,14 +272,15 @@ export default {
         <popup-emission :emission="emissionToDisplay" v-if="showPopupEmission" @close="showPopupEmission = false"
                         @edited="updateEmission"></popup-emission>
         <div class="emissions-liste">
-          <emission :redirect="false" :edit="true" @edit="displayEmission(emission.id)" v-for="emission in emissions" :emission="emission"
+          <emission :redirect="false" :edit="true" @edit="displayEmission(emission.id)" v-for="emission in emissions"
+                    :emission="emission"
                     :key="emission.id"></emission>
         </div>
       </div>
       <div v-if="display === 4" class="display users">
         <h1>Tous les utilisateurs</h1>
         <popup-utilisateur :user="userToDisplay" v-if="showPopupUser" @close="showPopupUser = false"
-                        @edited="updateUser"></popup-utilisateur>
+                           @edited="updateUser"></popup-utilisateur>
         <div class="users-liste">
           <section v-for="user in users" class="user">
             <div class="top">
@@ -225,23 +331,37 @@ export default {
   }
 }
 
+.playlists {
+  .top {
+    @include flex(row, nowrap, .5em, space-between, center);
+    img {
+      height: 2.5em;
+    }
+  }
+}
+
+
+.top {
+  @include flex(column, nowrap, .5em, start, center);
+  text-align: center;
+
+  h1 {
+    margin: 0
+  }
+
+  img {
+    height: 2em;
+  }
+
+  button {
+    @include buttonStyle($purple, $purple, $white, fit-content, .8em)
+  }
+}
+
 .mon-compte {
   min-height: 40vh;
 
   @include flex(column, nowrap, 3em, start, center);
-
-  .top {
-    @include flex(column, nowrap, .5em, start, center);
-    text-align: center;
-
-    h1 {
-      margin: 0
-    }
-
-    button {
-      @include buttonStyle($purple, $purple, $white, fit-content, .8em)
-    }
-  }
 
   .info {
     @include flex(row, nowrap, 1em, center, center);
@@ -262,12 +382,45 @@ export default {
 }
 
 .users-liste {
-  @include grid(repeat(auto-fill, minmax(15em, 1fr)), auto, 2em, center, center);
+  @include grid(repeat(auto-fill, minmax(15em, 1fr)), auto, 1em, center, center);
+}
+
+.playlists-liste {
+  @include grid(repeat(auto-fill, minmax(20em, 1fr)), auto, 1em, center, center);
+
+}
+
+.playlist {
+  @include flex(column, nowrap, .5em, start, stretch);
+  background-color: $white;
+  border-radius: 10px;
+  padding: 1em .7em;
+  border: 2px solid $lightGrey;
+  .top {
+    @include flex(row, nowrap, 1em, space-between, center);
+    padding-bottom: .5em;
+    margin-bottom : 0;
+
+    img {
+      height: 1.5em;
+    }
+
+    p {
+      margin: 0;
+      @include text-style(1.2em, $purple, 400);
+      text-transform: uppercase;
+    }
+  }
+  p {
+    @include text-style(1em, inherit, 300);
+    margin: 0;
+
+  }
 }
 
 .user {
   @include flex(column, nowrap, 0, start, stretch);
-  background-color : $white;
+  background-color: $white;
   border-radius: 10px;
   padding: 1em .7em;
   border: 2px solid $lightGrey;
@@ -292,6 +445,7 @@ export default {
 
     p {
       @include text-style(1.1em, inherit, 300);
+
       strong {
         @include text-style(1em, inherit, 700);
         text-transform: uppercase;
@@ -323,17 +477,24 @@ export default {
       flex-grow: 0;
     }
   }
+
+
+  .top {
+    @include flex(row, wrap, 2em, space-between, center);
+    margin-bottom: 1em;
+
+    h1 {
+      margin: 0
+    }
+
+    button {
+      @include buttonStyle($purple, $purple, $white);
+      flex: 0 0 fit-content;
+    }
+  }
+
   .mon-compte {
     @include flex(column, nowrap, 2em, start);
-
-    .top {
-      @include flex(row, wrap, 2em, space-between, center);
-
-      button {
-        @include buttonStyle($purple, $purple, $white);
-        flex: 0 0 fit-content;
-      }
-    }
 
     .info {
       @include flex(row, wrap, 2em, start, center);
