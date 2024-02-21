@@ -73,7 +73,7 @@ export default {
             this.emissions.forEach(emission => {
               this.$api.get(emission.links.users.href)
                   .then((response2) => {
-                    emission.user = `${response2.data.user.nom} ${response2.data.user.prenom}`
+                    emission.user = `${response2.data.user[0].nom} ${response2.data.user[0].prenom}`
                   })
                   .catch((error) => {
                     console.log(error)
