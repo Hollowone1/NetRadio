@@ -18,7 +18,7 @@ export default {
           this.emission = response.data.emission
           this.$api.get(response.data.emission.links.users.href)
               .then((response2) => {
-                this.emission.user = `${response2.data.user.nom} ${response2.data.user.prenom}`
+                this.emission.user = `${response2.data.user[0].nom} ${response2.data.user[0].prenom}`
               })
               .catch((error2) => {
                 console.log(error2.response.data)
