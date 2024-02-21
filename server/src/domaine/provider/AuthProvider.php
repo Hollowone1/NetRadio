@@ -47,7 +47,7 @@ class AuthProvider implements AuthProviderInterface
     /**
      * @throws AuthProviderInvalidCredentialsException
      */
-    public function register(string $email, string $pass, string $username): void
+    public function register(string $email, string $pass, string $username, string $nom, string $prenom): void
     {
         $user = User::find($email);
         if (!is_null($user)) {
@@ -58,6 +58,8 @@ class AuthProvider implements AuthProviderInterface
         $user->email = $email;
         $user->password = password_hash($pass, PASSWORD_DEFAULT, ['cost' => 12]);
         $user->username = $username;
+        $user->prenom = $prenom;
+        $user->nom = $nom;
         $user->role = 1;
         $user->save();
 

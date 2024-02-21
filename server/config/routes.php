@@ -9,7 +9,6 @@ use radio\net\app\action\creneau\GetAllCreneaux;
 use radio\net\app\action\creneau\GetCreneauById;
 use radio\net\app\action\emission\GetCreneauByEmission;
 use radio\net\app\action\emission\GetEmissionById;
-use radio\net\app\action\emission\GetEmissionByTheme;
 use radio\net\app\action\emission\GetEmissionsAction;
 use radio\net\app\action\playlist\GetPlaylistByEmailUserAction;
 use radio\net\app\action\playlist\GetPlaylistByIdAction;
@@ -30,22 +29,18 @@ use Slim\App;
 
 return function (App $app) {
 
-
-
+    $JwtVerification = new Jwt();
 
     $app->options('/{routes:.+}', function ($request, $response) {
         return $response;
     });
 
-
-
     //podcast
     $app->group('/podcasts', function ($app) {
-        $jwt = new Jwt($app->getContainer()->get('AuthService'));
         $app->get("[/]", GetAllPodcasts::class)->setName('podcast.index'); // v
         $app->get("/{id_podcast}[/]", GetPodcastByIdAction::class)->setName('podcast.show'); // v
-        $app->post("[/]", PostPodcast::class)->setName('podcast.create')->add($jwt); //
-        $app->put('/{id}[/]', PutPodcast::class)->setName('podcast.update')->add($jwt); //
+        $app->post("[/]", PostPodcast::class)->setName('podcast.create'); //
+        $app->put('/{id}[/]', PutPodcast::class)->setName('podcast.update'); //
         $app->get('/{id}/users', GetUSersByPodcast::class)->setName('podcast.invites'); //
     });
 
@@ -59,11 +54,10 @@ return function (App $app) {
 
     //user
     $app->group('/users', function ($app) {
-        $jwt = new Jwt($app->getContainer()->get('AuthService'));
         //user infos
-        $app->get("[/]", GetUserAllInfo::class)->setName('users.index')->add($jwt);
-        $app->get('/mail/{email}', GetUserByMail::class)->setName('user.show')->add($jwt);
-        $app->get("/{email_user}/playlists", GetPlaylistByEmailUserAction::class)->setName('playlists.user')->add($jwt);
+        $app->get("[/]", GetUserAllInfo::class)->setName('users.index');
+        $app->get('/mail/{email}', GetUserByMail::class)->setName('user.show');
+        $app->get("/{email_user}/playlists", GetPlaylistByEmailUserAction::class)->setName('playlists.user');
 
         //auth
         $app->post('/signin', SigninAction::class)->setName('signin');

@@ -8,7 +8,7 @@ interface AuthProviderInterface
 
     public function checkToken(string $token): void;
 
-    public function register(string $email, string $pass, string $username): void;
+    public function register(string $email, string $pass, string $username, string $nom, string $prenom): void;
 
     public function getAuthenticatedUser(): array;
 }

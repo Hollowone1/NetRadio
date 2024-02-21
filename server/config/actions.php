@@ -19,6 +19,7 @@ use radio\net\app\action\son\GetSonByIdAction;
 use radio\net\app\action\son\GetSonsByPlaylistId;
 use radio\net\app\action\user\GetUserAllInfo;
 use radio\net\app\action\user\GetUserByMail;
+use radio\net\app\action\user\PutUser;
 use radio\net\domaine\service\playlist\PlaylistService;
 use radio\net\domaine\service\son\SonService;
 
@@ -73,6 +74,9 @@ return array(
     },
     GetPlaylistByIdAction::class => function (ContainerInterface $container) {
         return new GetPlaylistByIdAction($container->get(PlaylistService::class));
+    },
+    PutUser::class => function (ContainerInterface $container) {
+        return new PutUser($container->get('UserService'));
     },
 
     //users
