@@ -34,4 +34,7 @@ return [
         $log->pushHandler(new \Monolog\Handler\StreamHandler($c->get('auth.log.file'), $c->get('auth.log.level')));
         return $log;
     },
+    'JWT' => function (ContainerInterface $container) {
+        return new \radio\net\domaine\middleware\Jwt($container->get('AuthService'));
+    }
 ];
