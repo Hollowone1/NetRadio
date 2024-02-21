@@ -54,7 +54,7 @@ return function (App $app) {
         $app->get("/{id_emission}/podcasts", GetPodcastByEmission::class)->setName('podcasts.emission'); //v
         $app->get("/{id_emission}/creneau", GetCreneauByEmission::class)->setName('creneaux.emission');
         $app->post("[/]", PostEmission::class)->setName('emission.create');
-        $app->put("[/]", PutEmission::class)->setName('emission.update');
+        $app->put("/{id}[/]", PutEmission::class)->setName('emission.update');
     });
 
     //user
