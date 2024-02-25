@@ -30,61 +30,6 @@ export default {
     nextDate() {
       this.currentDate = new Date(this.currentDate.setDate(this.currentDate.getDate() + 1))
     },
-    /*getCreneaux() {
-      let jour = this.currentDate.getDay()
-      if (jour === 0) {
-        jour = 7
-      }
-      const creneaux = []
-      const heures = []
-      this.$api.get("/creneaux")
-          .then((resp) => {
-            resp.data.creneaux.forEach(creneau => {
-              //si le créneau correspond au jour de la semaine, on le met dans nos data
-              if (creneau.jourSemaine === jour) {
-                creneaux.push(creneau)
-                //on récupère une liste d'heures de départ, afin d'afficher les heures dans la vue, mais que pr les créneaux qui sont ajrd
-                if (!heures.includes(creneau.heureDepart)) {
-                  heures.push(creneau.heureDepart)
-                }
-              }
-
-            })
-            this.creneaux = creneaux
-            this.heures = heures
-
-            //pour chaque créneau du jour, on récup son émission
-            this.creneaux.forEach(creneau => {
-              creneau.emission = {}
-              //vu qu'un créneau n'a qu'une seule émission (peut pas y en avoir deux en même temps)
-              this.$api.get(creneau.links.emission.href)
-                  .then((resp2) => {
-                    //on affecte la rep de l'api à la variable émission pr que ça soit plus facile
-                    let emission = resp2.data.emission
-                    emission.presentateur = this.getUser(emission.links.users.href)
-                    //console.log("emission", emission)
-
-                    //on récupère le présentateur avec encore un call api
-                    this.$api.get(emission.links.users.href)
-                        .then((resp3) => {
-                          emission.presentateur = resp3.data.prenom + " " + resp3.data.nom
-                        })
-                        .catch((error3) => {
-                          console.log(error3)
-                        })
-                    //on affecte l'émission avec le présentateur au créneau
-                    creneau.emission = emission
-                  })
-                  .catch((error2) => {
-                    console.log(error2)
-                  })
-            })
-            console.log("this creneaux", this.creneaux)
-          })
-          .catch((error) => {
-            console.log(error)
-          });
-    },*/
     getCreneaux() {
       let jour = this.currentDate.getDay();
       if (jour === 0) {
@@ -143,7 +88,7 @@ export default {
       let promise = new Promise((resolve, reject) => {
         this.$api.get(link)
             .then((resp) => {
-              resolve(resp.data.user)
+              resolve(resp.data.user[0])
             })
             .catch((error) => {
               reject(error)
