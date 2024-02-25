@@ -10,28 +10,28 @@ export default {
     return {
       edit: false,
       editedEmission: {
+        id: this.emission.id,
         titre: this.emission.titre,
         user: this.emission.user,
         theme: this.emission.theme,
-        description: this.emission.description
-      }
+        description: this.emission.description,
+        photo: this.emission.photo
+      },
+      changed: false
     }
   },
   directives: {
-    outside : {
-      beforeMount(el, binding) {
-        el.clickOutsideEvent = function(event) {
+    outside: {
+      beforeMount(el, binding, vnode) {
+        el.clickOutsideEvent = function (event) {
           if (!(el === event.target || el.contains(event.target))) {
             console.log('click outside', binding.value)
-
-            //vnode.context.$emit('close')
-            //el.dispatchEvent(event);
+            //vnode.context.$emit(binding.expression);
           }
         };
         document.addEventListener('click', el.clickOutsideEvent);
       },
       unmounted(el) {
-        // Remove the event listener when the bound element is unmounted
         document.removeEventListener('click', el.clickOutsideEvent);
       }
     },
@@ -39,12 +39,31 @@ export default {
   methods: {
     stopEditing() {
       this.edit = false
-      this.$emit('edited')
-      //console.log(this.editedEmission)
+      console.log(this.editedEmission)
       this.editEmission()
+      this.changed ? this.$emit('edited') : this.$emit('close')
     },
     editEmission() {
-      //faire un put sur l'API avec les valeurs du v-model
+      this.$api.put(`emissions/${this.editedEmission.id}`, {
+        titre: this.editedEmission.titre,
+        theme: this.editedEmission.theme,
+        description: this.editedEmission.description,
+        photo: this.editedEmission.photo,
+        onDirect : 0,
+        user: this.editedEmission.user
+      }).then(() => {
+        this.changed = false
+      }).catch((err) => {
+        console.log(err.response.data)
+      })
+    }
+  },
+  watch: {
+    editedEmission: {
+      handler() {
+        this.changed = true
+      },
+      deep: true
     }
   }
 }
@@ -55,36 +74,45 @@ export default {
   <div class="modal-mask">
     <div class="modal-wrapper">
 
-      <div v-outside="edit" v-if="edit === false" class="popup-emission">
-        <div class="top">
-          <h3>{{ emission.titre }}</h3>
-          <img @click="edit = true" src="/icons/editPurple.svg" alt="edit icon"/>
-        </div>
-        <div class="infos">
-          <p><strong>Présentateur / animateur :</strong> {{ emission.user }}</p>
-          <p>{{ emission.theme }}</p>
-          <p>{{ emission.description }}</p>
-        </div>
-      </div>
+      <div class="popup">
 
-      <div v-outside v-if="edit === true" class="popup-emission-edit">
-        <div><img @click="stopEditing" src="/icons/check.svg" alt="edit icon"/></div>
-        <div class="titre">
-          <label for="titre">Titre de l'émission :</label>
-          <input type="text" id="titre" v-model="editedEmission.titre">
+        <div v-if="edit === false" class="popup-emission">
+          <div class="top">
+            <h3>{{ emission.titre }}</h3>
+            <img @click="edit = true" src="/icons/editPurple.svg" alt="edit icon"/>
+          </div>
+          <div class="infos">
+            <p><strong>Présentateur / animateur :</strong> {{ emission.user }}</p>
+            <p>{{ emission.theme }}</p>
+            <p>{{ emission.description }}</p>
+            <p>Photo : <a :href="emission.photo">{{emission.photo}}</a></p>
+          </div>
         </div>
-        <div class="presentateur">
-          <label for="presentateur">Présentateur :</label>
-          <input type="text" id="presentateur" v-model="editedEmission.user">
+
+        <div v-else class="popup-emission-edit">
+          <div><img @click="stopEditing" src="/icons/check.svg" alt="edit icon"/></div>
+          <div class="titre">
+            <label for="titre">Titre de l'émission :</label>
+            <input type="text" id="titre" v-model="editedEmission.titre">
+          </div>
+          <div class="presentateur">
+            <label for="presentateur">Présentateur :</label>
+            <input type="text" id="presentateur" v-model="editedEmission.user">
+          </div>
+          <div class="theme">
+            <label for="theme">Thème :</label>
+            <input type="text" id="theme" v-model="editedEmission.theme">
+          </div>
+          <div class="photo">
+            <label for="photo">Photo :</label>
+            <input type="text" id="photo" v-model="editedEmission.photo">
+          </div>
+          <div class="description">
+            <label for="description">Description :</label>
+            <textarea id="description" v-model="editedEmission.description"/>
+          </div>
         </div>
-        <div class="theme">
-          <label for="theme">Thème :</label>
-          <input type="text" id="theme" v-model="editedEmission.theme">
-        </div>
-        <div class="description">
-          <label for="description">Description :</label>
-          <textarea id="description" v-model="editedEmission.description"/>
-        </div>
+
       </div>
 
     </div>
@@ -118,7 +146,7 @@ $widthPopupEm: 30em;
   vertical-align: middle;
 }
 
-.popup-emission, .popup-emission-edit {
+.popup {
   width:$widthPopup;
   max-width: calc($widthPopupEm * 1.5);
   min-width: calc($widthPopupEm / 1.5);
@@ -148,6 +176,9 @@ $widthPopupEm: 30em;
 
   .infos {
     @include flex(column, nowrap, .5em, start);
+    a {
+      color: $grey;
+    }
 
     p:nth-child(1) {
 

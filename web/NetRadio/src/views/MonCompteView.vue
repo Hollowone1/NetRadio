@@ -29,7 +29,6 @@ export default {
       users: [],
       playlists: [],
       roles: ['Auditeur', 'Animateur', 'Administrateur']
-
     }
   },
   computed: {
@@ -43,11 +42,11 @@ export default {
       }
     })
         .then((response) => {
-          //console.log(response.data)
           this.setUser(response.data.user)
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error.response.data.exception[0].code)
+              //refresh le token ici
         });
 
     this.user.role === '3' ? this.getUsers() : null
