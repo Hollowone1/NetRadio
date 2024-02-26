@@ -11,12 +11,13 @@ export default {
       edit: false,
       sounds: [],
       editedPlaylist: {
-        name : this.playlist.name,
-        description : this.playlist.description
+        name: this.playlist.name,
+        description: this.playlist.description,
+        sounds: this.sounds
       },
-      addedSound : {
-        titre : "",
-        nomArtiste : "",
+      addedSound: {
+        titre: "",
+        nomArtiste: "",
         audio: ""
       }
     }
@@ -42,9 +43,21 @@ export default {
   },
   created() {
     //faire un get sur l'API pour récupérer les sons de la playlist
+    this.$api.get(`/sons/playlist/${this.playlist.id}`)
+        .then((response) => {
+          this.sounds = response.data.sons
+          this.editedPlaylist.sounds = this.sounds
+        })
+        .catch((error) => {
+          console.log(error)
+        });
 
   },
   methods: {
+    cancelEditing() {
+      this.edit = false
+      this.editedPlaylist.sounds = this.sounds
+    },
     stopEditing() {
       this.$emit('edited')
       //console.log(this.editedEmission)
@@ -53,7 +66,11 @@ export default {
     editPlaylist() {
       console.log("edited Playlist", this.editedPlaylist);
       //faire un put sur l'API avec les valeurs du v-model
-    }
+    },
+    removeSound(id) {
+      //console.log(this.editedPlaylist)
+      this.editedPlaylist.sounds = this.editedPlaylist.sounds.filter(sound => sound.id !== id)
+    },
   }
 }
 
@@ -71,12 +88,17 @@ export default {
         <div class="infos">
           <p>{{ playlist.description }}</p>
           <p>Sons dans la playlist : </p>
-          <div class="son" v-for="sound in sounds"></div>
+          <ul class="son">
+            <li v-for="sound in sounds">{{ sound.titre }} - {{ sound.nomArtiste }}</li>
+          </ul>
         </div>
       </div>
 
       <div v-else v-outside class="popup-playlist-edit">
-        <div><img @click="stopEditing" src="/icons/check.svg" alt="edit icon"/></div>
+        <div>
+          <div @click="cancelEditing" class="cancel">Annuler</div>
+          <img @click="stopEditing" src="/icons/check.svg" alt="edit icon"/>
+        </div>
         <div class="info">
           <label for="nom">Nom de la playlist :</label>
           <input type="text" id="nom" v-model="editedPlaylist.name">
@@ -87,7 +109,11 @@ export default {
         </div>
         <div class="info">
           <label for="sons">Sons dans la playlist :</label>
-
+          <div v-for="sound in editedPlaylist.sounds">
+            <p>{{ sound.titre }} - {{ sound.nomArtiste }} (<a
+              :href="sound.audio">{{ sound.audio }}</a>)</p>
+            <img @click="removeSound(sound.id)" src="/icons/poubelle.svg" alt="delete icon"/>
+          </div>
         </div>
       </div>
 
@@ -104,6 +130,12 @@ export default {
 
 $widthPopup: 60vw;
 $widthPopupEm: 30em;
+
+
+
+a {
+  @include text-style(1em, $purple, 500);
+}
 
 .modal-mask {
   width: 100%;
@@ -137,6 +169,7 @@ $widthPopupEm: 30em;
 
 .popup-playlist {
   .top {
+
     @include flex(row, nowrap, 1em, space-between, center);
     padding-bottom: .5em;
 
@@ -174,6 +207,10 @@ $widthPopupEm: 30em;
 }
 
 .popup-playlist-edit {
+  .cancel {
+    cursor:pointer;
+    @include text-style(1.2em, $purple, 500);
+  }
   @include flex(column, nowrap, 1em, start, flex-start);
 
   div {
@@ -205,8 +242,10 @@ $widthPopupEm: 30em;
 
   div:nth-child(1) {
     position: relative;
+    padding-top: 2em;
     height: 0;
-    align-self: flex-end;
+    width: 100%;
+    @include flex(row, nowrap, 1em, space-between, end);
 
     img {
       height: 2em;

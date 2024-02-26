@@ -46,6 +46,7 @@ export default {
         })
         .catch((error) => {
           console.log(error.response.data.exception[0].code)
+          error.response.data.exception[0].code === 401 ? (this.$router.push('/connexion'), this.logoutUser()) : null
               //refresh le token ici
         });
 
@@ -55,7 +56,7 @@ export default {
 
   },
   methods: {
-    ...mapActions(useUserStore, ['setUser']),
+    ...mapActions(useUserStore, ['setUser', 'logoutUser']),
     getUsers() {
       this.$api.get('/users')
           .then((response) => {
@@ -87,9 +88,9 @@ export default {
 
     },
     getPlaylists() {
-      this.$api.get(`/user/${this.user.email}/playlists`)
+      this.$api.get(`/users/${this.user.email}/playlists`)
           .then((response) => {
-            this.playlists = response.data
+            this.playlists = response.data.playlists
           })
           .catch((error) => {
             console.log(error.response.data)
@@ -115,10 +116,12 @@ export default {
       this.getUsers()
     },
     displayPlaylist(id) {
+      console.log("display playlist", id)
       this.playlistToDisplay = this.playlists.find(playlist => playlist.id === id);
+      console.log(this.playlistToDisplay)
       this.showPopUpPlaylist = true;
     },
-    updatePlaylists() {
+    updatePlaylist() {
       this.showPopUpPlaylist = false;
       this.getPlaylists()
     },
@@ -196,34 +199,9 @@ export default {
           <h1>Mes playlists</h1>
           <img src="/icons/ajouter.svg" alt="add icon">
         </div>
+        <popup-playlist :playlist="playlistToDisplay" v-if="showPopUpPlaylist" @close="showPopUpPlaylist = false"
+                        @edited="updatePlaylist"></popup-playlist>
         <div class="playlists-liste">
-          <section class="playlist">
-            <div class="top">
-              <p>Les hits de Noël</p>
-              <img @click="displayPlaylist(1)" src="/icons/editPurple.svg" alt="play icon">
-            </div>
-            <div class="playlist-info">
-              <p>Tous les classiques de Noël sont à retrouver dans cette playlist.</p>
-            </div>
-          </section>
-          <section class="playlist">
-            <div class="top">
-              <p>Les hits de Noël</p>
-              <img @click="displayPlaylist(1)" src="/icons/editPurple.svg" alt="play icon">
-            </div>
-            <div class="playlist-info">
-              <p>Tous les classiques de Noël sont à retrouver dans cette playlist.</p>
-            </div>
-          </section>
-          <section class="playlist">
-            <div class="top">
-              <p>Les hits de Noël</p>
-              <img @click="displayPlaylist(1)" src="/icons/editPurple.svg" alt="play icon">
-            </div>
-            <div class="playlist-info">
-              <p>Tous les classiques de Noël sont à retrouver dans cette playlist.</p>
-            </div>
-          </section>
           <section class="playlist" v-for="playlist in playlists">
             <div class="top">
               <p>{{ playlist.name }}</p>

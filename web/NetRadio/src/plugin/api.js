@@ -8,7 +8,7 @@ export default {
             baseURL : 'http://localhost:2080',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': "Bearer " + useUserStore().tokens.refresh_token
+                'Authorization': "Bearer " + useUserStore().tokens.access_token
             },
         })
     }
