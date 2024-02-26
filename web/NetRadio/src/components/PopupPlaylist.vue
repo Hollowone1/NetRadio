@@ -3,7 +3,13 @@ export default {
   props: {
     playlist: {
       type: Object,
-      required: true,
+      required: false,
+      default: []
+    },
+    newOne: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data() {
@@ -15,6 +21,12 @@ export default {
         description: this.playlist.description,
         sounds: this.sounds
       },
+      newPlaylist: {
+        name: "",
+        description: "",
+        sounds: []
+      },
+      newSound: false,
       addedSound: {
         titre: "",
         nomArtiste: "",
@@ -54,30 +66,53 @@ export default {
 
   },
   methods: {
+    cancelCreating() {
+      this.$emit('close')
+    },
+    createPlaylist() {
+      console.log("created Playlist", this.newPlaylist);
+      //faire un post sur l'API avec les valeurs du v-model
+      this.$emit('created')
+    },
     cancelEditing() {
-      this.edit = false
+      this.$emit('close')
       this.editedPlaylist.sounds = this.sounds
     },
     stopEditing() {
-      this.$emit('edited')
+      this.newOne ? this.createPlaylist() : this.editPlaylist()
       //console.log(this.editedEmission)
-      this.editPlaylist()
     },
     editPlaylist() {
       console.log("edited Playlist", this.editedPlaylist);
       //faire un put sur l'API avec les valeurs du v-model
+      this.$emit('edited')
     },
     removeSound(id) {
-      //console.log(this.editedPlaylist)
-      this.editedPlaylist.sounds = this.editedPlaylist.sounds.filter(sound => sound.id !== id)
+      this.newOne ?
+          this.newPlaylist.sounds = this.newPlaylist.sounds.filter(sound => sound.id !== id)
+           : this.editedPlaylist.sounds = this.editedPlaylist.sounds.filter(sound => sound.id !== id)
     },
+    addSound() {
+      console.log("added Sound", this.addedSound);
+      this.newOne ? this.newPlaylist.sounds.push(this.addedSound) : this.editedPlaylist.sounds.push(this.addedSound)
+      this.newOne ? console.log(this.newPlaylist.sounds) : console.log(this.editedPlaylist.sounds)
+      //this.editedPlaylist.sounds.push(this.addedSound)
+      this.newSound = false
+      this.addedSound = {
+        titre: "",
+        nomArtiste: "",
+        audio: ""
+      }
+    }
   }
 }
 
 </script>
 
 <template>
-  <div class="modal-mask">
+
+
+  <div v-if="!newOne" class="modal-mask">
     <div class="modal-wrapper">
 
       <div v-outside v-if="edit === false" class="popup-playlist">
@@ -109,9 +144,57 @@ export default {
         </div>
         <div class="info">
           <label for="sons">Sons dans la playlist :</label>
+          <button v-if="!newSound" @click="newSound = true">Ajouter un son</button>
+          <div v-if="newSound">
+            <label for="titre">Titre :</label>
+            <input type="text" id="titre" v-model="addedSound.titre">
+            <label for="nom">Nom de l'artiste :</label>
+            <input type="text" id="nom" v-model="addedSound.nomArtiste">
+            <label for="audio">Lien vers l'audio :</label>
+            <input type="text" id="audio" v-model="addedSound.audio">
+            <button @click="addSound">Ajouter</button>
+          </div>
           <div v-for="sound in editedPlaylist.sounds">
             <p>{{ sound.titre }} - {{ sound.nomArtiste }} (<a
               :href="sound.audio">{{ sound.audio }}</a>)</p>
+            <img @click="removeSound(sound.id)" src="/icons/poubelle.svg" alt="delete icon"/>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div v-else class="modal-mask">
+    <div class="modal-wrapper">
+      <div class="popup-playlist-create">
+        <div>
+          <div @click="cancelEditing" class="cancel">Annuler</div>
+          <img @click="stopEditing" src="/icons/check.svg" alt="edit icon"/>
+        </div>
+        <div class="info">
+          <label for="nom">Nom de la playlist :</label>
+          <input type="text" id="nom" v-model="newPlaylist.name">
+        </div>
+        <div class="info">
+          <label for="description">Description :</label>
+          <input type="text" id="description" v-model="newPlaylist.description">
+        </div>
+        <div class="info">
+          <label for="sons">Sons dans la playlist :</label>
+          <button v-if="!newSound" @click="newSound = true">Ajouter un son</button>
+          <div v-if="newSound">
+            <label for="titre">Titre :</label>
+            <input type="text" id="titre" v-model="addedSound.titre">
+            <label for="nom">Nom de l'artiste :</label>
+            <input type="text" id="nom" v-model="addedSound.nomArtiste">
+            <label for="audio">Lien vers l'audio :</label>
+            <input type="text" id="audio" v-model="addedSound.audio">
+            <button @click="addSound">Ajouter</button>
+          </div>
+          <div v-for="sound in newPlaylist.sounds">
+            <p>{{ sound.titre }} - {{ sound.nomArtiste }} (<a
+                :href="sound.audio">{{ sound.audio }}</a>)</p>
             <img @click="removeSound(sound.id)" src="/icons/poubelle.svg" alt="delete icon"/>
           </div>
         </div>
@@ -154,7 +237,7 @@ a {
   vertical-align: middle;
 }
 
-.popup-playlist, .popup-playlist-edit {
+.popup-playlist, .popup-playlist-edit, .popup-playlist-create {
   width: $widthPopup;
   max-width: calc($widthPopupEm * 1.5);
   min-width: calc($widthPopupEm / 1.5);
@@ -205,12 +288,13 @@ a {
     }
   }
 }
+.cancel {
+  cursor:pointer;
+  @include text-style(1.2em, $purple, 500);
+}
 
 .popup-playlist-edit {
-  .cancel {
-    cursor:pointer;
-    @include text-style(1.2em, $purple, 500);
-  }
+
   @include flex(column, nowrap, 1em, start, flex-start);
 
   div {

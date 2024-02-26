@@ -21,6 +21,7 @@ export default {
       showPopupEmission: false,
       showPopupUser: false,
       showPopUpPlaylist: false,
+      showPopUpNewPlaylist: false,
       emissionToDisplay: {},
       userToDisplay: {},
       playlistToDisplay: {},
@@ -116,13 +117,15 @@ export default {
       this.getUsers()
     },
     displayPlaylist(id) {
-      console.log("display playlist", id)
       this.playlistToDisplay = this.playlists.find(playlist => playlist.id === id);
-      console.log(this.playlistToDisplay)
       this.showPopUpPlaylist = true;
+    },
+    addPlaylist() {
+      this.showPopUpNewPlaylist = true;
     },
     updatePlaylist() {
       this.showPopUpPlaylist = false;
+      this.showPopUpNewPlaylist = false;
       this.getPlaylists()
     },
   }
@@ -197,8 +200,10 @@ export default {
       <div v-if="display === 2" class="display playlists">
         <div class="top">
           <h1>Mes playlists</h1>
-          <img src="/icons/ajouter.svg" alt="add icon">
+          <img @click="addPlaylist" src="/icons/ajouter.svg" alt="add icon">
         </div>
+        <popup-playlist newOne v-if="showPopUpNewPlaylist" @close="showPopUpNewPlaylist = false"
+                        @created="updatePlaylist"></popup-playlist>
         <popup-playlist :playlist="playlistToDisplay" v-if="showPopUpPlaylist" @close="showPopUpPlaylist = false"
                         @edited="updatePlaylist"></popup-playlist>
         <div class="playlists-liste">
