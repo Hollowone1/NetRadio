@@ -19,6 +19,7 @@ export default {
   data() {
     return {
       showPopupEmission: false,
+      showPopUpNewEmission: false,
       showPopupUser: false,
       showPopUpPlaylist: false,
       showPopUpNewPlaylist: false,
@@ -106,6 +107,7 @@ export default {
     },
     updateEmission() {
       this.showPopupEmission = false;
+      this.showPopUpNewEmission = false;
       this.getEmissions()
     },
     displayUser(email) {
@@ -122,6 +124,9 @@ export default {
     },
     addPlaylist() {
       this.showPopUpNewPlaylist = true;
+    },
+    addEmission() {
+      this.showPopUpNewEmission = true;
     },
     updatePlaylist() {
       this.showPopUpPlaylist = false;
@@ -250,7 +255,12 @@ export default {
         </div>
       </div>
       <div v-if="display === 2" class="display emissions">
-        <h1>Toutes les émissions</h1>
+        <div class="top">
+          <h1>Toutes les émissions</h1>
+          <img @click="addEmission" src="/icons/ajouter.svg" alt="add icon">
+        </div>
+        <popup-emission newOne v-if="showPopUpNewEmission" @close="showPopUpNewEmission = false"
+                        @created="updateEmission"></popup-emission>
         <popup-emission :emission="emissionToDisplay" v-if="showPopupEmission" @close="showPopupEmission = false"
                         @edited="updateEmission"></popup-emission>
         <div class="emissions-liste">

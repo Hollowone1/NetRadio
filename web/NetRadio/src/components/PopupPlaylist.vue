@@ -1,4 +1,6 @@
 <script>
+
+//TODO : véirfier si il y a vrmnt un changement dans la edtiedPlaylist avant de faire un put inutile
 export default {
   props: {
     playlist: {
@@ -31,27 +33,8 @@ export default {
         titre: "",
         nomArtiste: "",
         audio: ""
-      }
-    }
-  },
-  directives: {
-    outside: {
-      beforeMount(el, binding) {
-        el.clickOutsideEvent = function (event) {
-          if (!(el === event.target || el.contains(event.target))) {
-            console.log('click outside', binding.value)
-
-            //vnode.context.$emit('close')
-            //el.dispatchEvent(event);
-          }
-        };
-        document.addEventListener('click', el.clickOutsideEvent);
       },
-      unmounted(el) {
-        // Remove the event listener when the bound element is unmounted
-        document.removeEventListener('click', el.clickOutsideEvent);
-      }
-    },
+    }
   },
   created() {
     //faire un get sur l'API pour récupérer les sons de la playlist
@@ -68,6 +51,11 @@ export default {
   methods: {
     cancelCreating() {
       this.$emit('close')
+      this.newPlaylist = {
+        name: "",
+        description: "",
+        sounds: []
+      }
     },
     createPlaylist() {
       console.log("created Playlist", this.newPlaylist);
@@ -79,7 +67,8 @@ export default {
       this.editedPlaylist.sounds = this.sounds
     },
     stopEditing() {
-      this.newOne ? this.createPlaylist() : this.editPlaylist()
+      console.log(this.changed)
+          this.newOne ? this.createPlaylist() : this.editPlaylist()
       //console.log(this.editedEmission)
     },
     editPlaylist() {
@@ -115,7 +104,7 @@ export default {
   <div v-if="!newOne" class="modal-mask">
     <div class="modal-wrapper">
 
-      <div v-outside v-if="edit === false" class="popup-playlist">
+      <div v-if="edit === false" class="popup-playlist">
         <div class="top">
           <h3>{{ playlist.name }}</h3>
           <img @click="edit = true" src="/icons/editPurple.svg" alt="edit icon"/>
@@ -129,7 +118,7 @@ export default {
         </div>
       </div>
 
-      <div v-else v-outside class="popup-playlist-edit">
+      <div v-else class="popup-playlist-edit">
         <div>
           <div @click="cancelEditing" class="cancel">Annuler</div>
           <img @click="stopEditing" src="/icons/check.svg" alt="edit icon"/>
@@ -169,7 +158,7 @@ export default {
     <div class="modal-wrapper">
       <div class="popup-playlist-create">
         <div>
-          <div @click="cancelEditing" class="cancel">Annuler</div>
+          <div @click="cancelCreating" class="cancel">Annuler</div>
           <img @click="stopEditing" src="/icons/check.svg" alt="edit icon"/>
         </div>
         <div class="info">

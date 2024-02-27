@@ -1,14 +1,28 @@
 <script>
 export default {
+  emits: ['close', 'edited', 'created'],
   props: {
     emission: {
       type: Object,
-      required: true,
+      required: false,
+      default: []
+    },
+    newOne: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data() {
     return {
       edit: false,
+      newEmission : {
+        titre: "",
+        user: "",
+        theme: "",
+        description: "",
+        photo: ""
+      },
       editedEmission: {
         id: this.emission.id,
         titre: this.emission.titre,
@@ -20,30 +34,37 @@ export default {
       changed: false
     }
   },
-  directives: {
-    outside: {
-      beforeMount(el, binding, vnode) {
-        el.clickOutsideEvent = function (event) {
-          if (!(el === event.target || el.contains(event.target))) {
-            console.log('click outside', binding.value)
-            //vnode.context.$emit(binding.expression);
-          }
-        };
-        document.addEventListener('click', el.clickOutsideEvent);
-      },
-      unmounted(el) {
-        document.removeEventListener('click', el.clickOutsideEvent);
+  methods: {
+    cancelCreating() {
+      this.$emit('close')
+      this.newEmission = {
+        titre: "",
+            user: "",
+            theme: "",
+            description: "",
+            photo: ""
       }
     },
-  },
-  methods: {
-    stopEditing() {
-      this.edit = false
-      console.log(this.editedEmission)
-      this.editEmission()
-      this.changed ? this.$emit('edited') : this.$emit('close')
+    stopPopup() {
+      if (this.newOne) {
+        if (this.changed) {
+          this.createEmission()
+          this.$emit('created')
+        } else {
+          this.$emit('close')
+        }
+      } else {
+        if (this.changed) {
+          this.editEmission()
+          this.$emit('edited')
+        } else {
+          this.$emit('close')
+        }
+      }
     },
     editEmission() {
+      console.log("editEmission", this.editedEmission)
+      this.edit = false
       this.$api.put(`emissions/${this.editedEmission.id}`, {
         titre: this.editedEmission.titre,
         theme: this.editedEmission.theme,
@@ -56,10 +77,20 @@ export default {
       }).catch((err) => {
         console.log(err.response.data)
       })
+    },
+    createEmission() {
+      console.log("createEmission", this.newEmission)
+      //TODO : call API pr créer émission :)
     }
   },
   watch: {
     editedEmission: {
+      handler() {
+        this.changed = true
+      },
+      deep: true
+    },
+    newEmission: {
       handler() {
         this.changed = true
       },
@@ -71,7 +102,7 @@ export default {
 </script>
 
 <template>
-  <div class="modal-mask">
+  <div v-if="!newOne" class="modal-mask">
     <div class="modal-wrapper">
 
       <div class="popup">
@@ -90,7 +121,7 @@ export default {
         </div>
 
         <div v-else class="popup-emission-edit">
-          <div><img @click="stopEditing" src="/icons/check.svg" alt="edit icon"/></div>
+          <div><img @click="stopPopup" src="/icons/check.svg" alt="edit icon"/></div>
           <div class="titre">
             <label for="titre">Titre de l'émission :</label>
             <input type="text" id="titre" v-model="editedEmission.titre">
@@ -110,6 +141,43 @@ export default {
           <div class="description">
             <label for="description">Description :</label>
             <textarea id="description" v-model="editedEmission.description"/>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div v-if="newOne" class="modal-mask">
+    <div class="modal-wrapper">
+
+      <div class="popup">
+
+        <div class="popup-emission-create">
+          <div>
+            <div @click="cancelCreating" class="cancel">Annuler</div>
+            <img @click="stopPopup" src="/icons/check.svg" alt="edit icon"/>
+          </div>
+          <div class="titre">
+            <label for="titre">Titre de l'émission :</label>
+            <input type="text" id="titre" v-model="newEmission.titre">
+          </div>
+          <div class="presentateur">
+            <label for="presentateur">Mail du présentateur :</label>
+            <input type="text" id="presentateur" v-model="newEmission.user">
+          </div>
+          <div class="theme">
+            <label for="theme">Thème :</label>
+            <input type="text" id="theme" v-model="newEmission.theme">
+          </div>
+          <div class="photo">
+            <label for="photo">Photo :</label>
+            <input type="text" id="photo" v-model="newEmission.photo">
+          </div>
+          <div class="description">
+            <label for="description">Description :</label>
+            <textarea id="description" v-model="newEmission.description"/>
           </div>
         </div>
 
