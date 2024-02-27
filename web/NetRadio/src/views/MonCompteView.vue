@@ -87,7 +87,7 @@ export default {
           })
     },
     getEmissionByUser() {
-
+      //Todo : get l'émission du user concerné
     },
     getPlaylists() {
       this.$api.get(`/users/${this.user.email}/playlists`)
@@ -115,6 +115,7 @@ export default {
       this.showPopupUser = true;
     },
     updateUser() {
+      console.log("updateUser donc edited!")
       this.showPopupUser = false;
       this.getUsers()
     },
