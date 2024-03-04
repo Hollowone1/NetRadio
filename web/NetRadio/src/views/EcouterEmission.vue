@@ -20,7 +20,6 @@ export default {
         conversation: null,
       };
     },
-};
 
 setup(){
 
@@ -63,7 +62,7 @@ setup(){
     };
 
     // A function to start streaming
-    const startStreaming = () => {
+    const startStreaming = async () => {
       //==============================
       // 2/ REGISTER
       //==============================
@@ -167,6 +166,7 @@ setup(){
       }
     };
 
+
     // faire une fonction pour récupérer les infos de l'émission à partir de son id dans la route
     // A function to get the emission information from its id in the route
     const getEmission = async () => {
@@ -200,7 +200,8 @@ setup(){
 
     // Return the functions to be used in the template
     return { stopStreaming,localStream,conversation };
-  }
+}
+};
 
 </script>
 
