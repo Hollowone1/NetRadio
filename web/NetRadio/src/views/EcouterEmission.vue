@@ -14,22 +14,35 @@ import { UserAgent, Session } from '@apirtc/apirtc'
 
 
 export default {
-  setup() {
-    // Create a reactive reference to the audio context
+  data() {
+      return {
+        name: "",
+        conversation: null,
+      };
+    },
+};
+
+setup(){
+
+    const localStream = ref(null);
+    const conversation = ref(null);
     const audioContext = ref(null);
-
-    // Create a reactive reference to the media stream source
     const mediaStreamSource = ref(null);
-
-    // Create a reactive reference to the media recorder
     const mediaRecorder = ref(null);
-
-    // Create a reactive reference to a boolean indicating if we are currently streaming
     const isStreaming = ref(false);
-
-    // Create a reactive reference to store recorded audio chunks
     const recordedChunks = ref([]);
+  
+    onMounted(async () => {
+      //==============================
+      // 1/ CREATE USER AGENT
+      //==============================
+      const ua = new UserAgent({
+        uri: "apzkey:myDemoApiKey",
+        })
 
+        connectToServer();
+        startStreaming();
+  });
     // A function to set up the connection to the server
     const connectToServer = async () => {
       try {
@@ -51,108 +64,82 @@ export default {
 
     // A function to start streaming
     const startStreaming = () => {
-      console.log("getOrcreateConversation called");
+      //==============================
+      // 2/ REGISTER
+      //==============================
+      const session = await ua.register();
 
-var localStream = null;
+      //==============================
+      // 3/ CREATE CONVERSATION
+      //==============================
+      const conversationInstance = session.getConversation('myConversation');
+      conversation.value = conversationInstance;
 
-//==============================
-// 1/ CREATE USER AGENT
-//==============================
-var ua = new UserAgent({
-  uri: "apzkey:myDemoApiKey",
-});
+      //==========================================================
+      // 4/ ADD EVENT LISTENER : WHEN NEW STREAM IS AVAILABLE IN CONVERSATION
+      //==========================================================
+      conversationInstance.on("streamListChanged", (streamInfo) => {
+        console.log("streamListChanged :", streamInfo);
+        if (streamInfo.listEventType === "added") {
+          if (streamInfo.isRemote === true) {
+            conversationInstance
+              .subscribeToMedia(streamInfo.streamId)
+              .then((stream) => {
+                console.log("subscribeToMedia success", stream);
+              })
+              .catch((err) => {
+                console.error("subscribeToMedia error", err);
+              });
+          }
+        }
+      });
 
-//==============================
-// 2/ REGISTER
-//==============================
-ua.register().then((session) => {
-  //==============================
-  // 3/ CREATE CONVERSATION
-  //==============================
-  const conversation = session.getConversation(this.name);
-  this.conversation = conversation;
+      //=====================================================
+      // 4 BIS/ ADD EVENT LISTENER : WHEN STREAM IS ADDED/REMOVED TO/FROM THE CONVERSATION
+      //=====================================================
+      conversationInstance
+        .on("streamAdded", (stream) => {
+          stream.addInDiv(
+            "remote-container",
+            "remote-media-" + stream.streamId,
+            {},
+            false
+          );
+        })
+        .on("streamRemoved", (stream) => {
+          stream.removeFromDiv(
+            "remote-container",
+            "remote-media-" + stream.streamId
+          );
+        });
 
-  //==========================================================
-  // 4/ ADD EVENT LISTENER : WHEN NEW STREAM IS AVAILABLE IN CONVERSATION
-  //==========================================================
-  conversation.on("streamListChanged", (streamInfo) => {
-    console.log("streamListChanged :", streamInfo);
-    if (streamInfo.listEventType === "added") {
-      if (streamInfo.isRemote === true) {
-        conversation
-          .subscribeToMedia(streamInfo.streamId)
-          .then((stream) => {
-            console.log("subscribeToMedia success", stream);
-          })
-          .catch((err) => {
-            console.error("subscribeToMedia error", err);
-          });
-      }
-    }
-  });
-  //=====================================================
-  // 4 BIS/ ADD EVENT LISTENER : WHEN STREAM IS ADDED/REMOVED TO/FROM THE CONVERSATION
-  //=====================================================
-  conversation
-    .on("streamAdded", (stream) => {
-      stream.addInDiv(
-        "remote-container",
-        "remote-media-" + stream.streamId,
-        {},
-        false
-      );
-    })
-    .on("streamRemoved", (stream) => {
-      stream.removeFromDiv(
-        "remote-container",
-        "remote-media-" + stream.streamId
-      );
-    });
-
-  //==============================
-  // 5/ CREATE LOCAL STREAM
-  //==============================
-  ua.createStream({
-    constraints: {
-      audio: true,
-      video:true,
-    },
-  })
-    .then((stream) => {
-      console.log("createStream :", stream);
+      //==============================
+      // 5/ CREATE LOCAL STREAM
+      //==============================
+      const createStream = await ua.createStream({
+        constraints: {
+          audio: true,
+          video: true,
+        },
+      });
+      console.log("createStream :", createStream);
 
       // Save local stream
-      localStream = stream;
-      stream.removeFromDiv("local-container", "local-media");
-      stream.addInDiv("local-container", "local-media", {}, true);
+      localStream.value = createStream;
+      createStream.removeFromDiv("local-container", "local-media");
+      createStream.addInDiv("local-container", "local-media", {}, true);
 
       //==============================
       // 6/ JOIN CONVERSATION
       //==============================
-      conversation
-        .join()
-        .then((response) => {
-          console.log("Conversation joined", response);
-          //==============================
-          // 7/ PUBLISH LOCAL STREAM
-          //==============================
-          conversation
-            .publish(localStream)
-            .then((stream) => {
-              console.log("published", stream);
-            })
-            .catch((err) => {
-              console.error("publish error", err);
-            });
-        })
-        .catch((err) => {
-          console.error("Conversation join error", err);
-        });
-    })
-    .catch((err) => {
-      console.error("create stream error", err);
-    });
-    });
+      const joinResponse = await conversationInstance.join();
+      console.log("Conversation joined", joinResponse);
+
+      //==============================
+      // 7/ PUBLISH LOCAL STREAM
+      //==============================
+      const publishResponse = await conversationInstance.publish(localStream.value);
+      console.log("published", publishResponse);
     };
 
     // A function to stop streaming
@@ -163,12 +150,6 @@ ua.register().then((session) => {
 
         // Send the recorded audio to the server when the recording is stopped
         const blob = new Blob(recordedChunks.value, { type: "audio/wav" });
-        // const formData = new FormData();
-        // formData.append("title", "My Podcast");
-        // formData.append("description", "This is my podcast description.");
-        // formData.append("file", blob);
-
-        let emission = getEmission();
 
         let body = {
           titre: emission.titre,
@@ -180,6 +161,9 @@ ua.register().then((session) => {
         axios.post("http://localhost:2080/podcasts", body).then((response) => {
           console.log(response);
         });
+
+        // Download the recorded audio as a WAV file
+        downloadWav();
       }
     };
 
@@ -201,32 +185,22 @@ ua.register().then((session) => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `emission${this.$route.params.id}.wav`;
+        a.download = `emission${$route.params.id}.wav`;
         a.click();
         URL.revokeObjectURL(url);
       }
     };
 
-    // Run the connectToServer function when the component is mounted
-    onMounted(() => {
-      connectToServer();
-    });
 
     // Stop streaming and clean up when the component is unmounted
     onUnmounted(() => {
       stopStreaming();
+      downloadWav()
     });
 
     // Return the functions to be used in the template
-    return { startStreaming, stopStreaming, downloadWav };
-  },
-  data() {
-      return {
-        name: "",
-        conversation: null,
-      };
-    },
-};
+    return { stopStreaming,localStream,conversation };
+  }
 
 </script>
 
