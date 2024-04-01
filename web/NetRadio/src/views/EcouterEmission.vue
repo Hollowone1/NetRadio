@@ -1,16 +1,43 @@
 <template>
-  <div>
-    <button @click="startStreaming">Commencer l'enregistrement</button>
-    <button @click="stopStreaming">Arrêter l'enregistrement</button>
-    <button @click="downloadWav">Télécharger au format WAV</button>
-    <img src="@/assets/telechargement.jpg" alt="image">
+  <body>
+
+  <div id="container">
+    <h2 id="title">Conference demo</h2> <!-- TODO: afficher le nom de l'émission -->
+
+    <form id="create">
+      <input
+          type="text"
+          name="conference_name"
+          id="conference-name"
+          placeholder="Enter your Conference name"
+          autocomplete="off"
+      />
+      <button type="submit" id="create_conference">
+        Join conference
+      </button>
+    </form>
+
+    <div id="conference">
+      <div id="remote-container"></div>
+      <div id="local-container"></div>
+    </div>
   </div>
+
+
+<!--  <div>-->
+<!--    <button @click="startStreaming">Commencer l'enregistrement</button>-->
+<!--    <button @click="stopStreaming">Arrêter l'enregistrement</button>-->
+<!--    <button @click="downloadWav">Télécharger au format WAV</button>-->
+<!--    <img src="@/assets/telechargement.jpg" alt="image">-->
+<!--  </div>-->
+
+  </body>
 </template>
 
 <script>
 import axios from "axios";
-import { ref, onMounted, onUnmounted } from "vue";
-import { UserAgent, Session } from '@apirtc/apirtc'
+import {ref, onMounted, onUnmounted} from "vue";
+import {UserAgent, Session} from '@apirtc/apirtc'
 
 export default {
   setup() {
@@ -28,7 +55,7 @@ export default {
 
     const connectToServer = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({audio: true});
         audioContext.value = new (window.AudioContext || window.webkitAudioContext)();
         mediaStreamSource.value = audioContext.value.createMediaStreamSource(stream);
         mediaRecorder.value = new MediaRecorder(stream);
@@ -51,27 +78,27 @@ export default {
       conversationInstance.on("streamListChanged", (streamInfo) => {
         if (streamInfo.listEventType === "added" && streamInfo.isRemote === true) {
           conversationInstance.subscribeToMedia(streamInfo.streamId)
-            .then((stream) => {
-              console.log("subscribeToMedia success", stream);
-            })
-            .catch((err) => {
-              console.error("subscribeToMedia error", err);
-            });
+              .then((stream) => {
+                console.log("subscribeToMedia success", stream);
+              })
+              .catch((err) => {
+                console.error("subscribeToMedia error", err);
+              });
         }
       });
 
       conversationInstance
-        .on("streamAdded", (stream) => {
-          stream.addInDiv("remote-container", "remote-media-" + stream.streamId, {}, false);
-        })
-        .on("streamRemoved", (stream) => {
-          stream.removeFromDiv("remote-container", "remote-media-" + stream.streamId);
-        });
+          .on("streamAdded", (stream) => {
+            stream.addInDiv("remote-container", "remote-media-" + stream.streamId, {}, false);
+          })
+          .on("streamRemoved", (stream) => {
+            stream.removeFromDiv("remote-container", "remote-media-" + stream.streamId);
+          });
 
       const createStream = await ua.createStream({
         constraints: {
           audio: true,
-          video: true,
+          video: false,
         },
       });
 
@@ -93,7 +120,7 @@ export default {
         mediaRecorder.value.stop();
         isStreaming.value = false;
 
-        const blob = new Blob(recordedChunks.value, { type: "audio/wav" });
+        const blob = new Blob(recordedChunks.value, {type: "audio/wav"});
         const emission = getEmission(); // This function needs to be defined
         if (emission) {
           const body = {
@@ -103,12 +130,12 @@ export default {
             emission_id: emission.id,
           };
           axios.post("http://localhost:2080/podcasts", body)
-            .then((response) => {
-              console.log(response);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
+              .then((response) => {
+                console.log(response);
+              })
+              .catch((error) => {
+                console.error(error);
+              });
         }
         downloadWav();
       }
@@ -116,7 +143,7 @@ export default {
 
     const downloadWav = () => {
       if (recordedChunks.value.length > 0) {
-        const blob = new Blob(recordedChunks.value, { type: 'audio/wav' });
+        const blob = new Blob(recordedChunks.value, {type: 'audio/wav'});
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -144,11 +171,10 @@ export default {
       stopStreaming();
     });
 
-    return { stopStreaming, localStream, conversation };
+    return {stopStreaming, localStream, conversation, startStreaming, downloadWav};
   },
 };
 </script>
-
 
 
 <style scoped>
