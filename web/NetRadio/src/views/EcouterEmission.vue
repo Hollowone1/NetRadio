@@ -1,35 +1,36 @@
 <template>
   <body>
+    <section class="direct">
+    <div id="container">
+    
+      <div class="direct-infos">
+        <div class="direct-infos-titre">
+          <embed src="/icons/direct.svg"/>
+          <h1>{{ emission.titre }}</h1>
+        </div>
+        <h2 id="title">Enregistrer votre émission en direct</h2> 
+          <form id="create">
+            <input
+              type="text"
+              name="conference_name"
+              id="conference-name"
+              placeholder="Entrez le nom de votre émission"
+              autocomplete="off"
+            />
+            <button type="submit" id="create_conference">
+              Commencer l'émission
+            </button>
+          </form>
 
-  <div id="container">
-    <h2 id="title">Conference demo</h2> <!-- TODO: afficher le nom de l'émission -->
-
-    <form id="create">
-      <input
-          type="text"
-          name="conference_name"
-          id="conference-name"
-          placeholder="Enter your Conference name"
-          autocomplete="off"
-      />
-      <button type="submit" id="create_conference">
-        Join conference
-      </button>
-    </form>
-
-    <div id="conference">
-      <div id="remote-container"></div>
-      <div id="local-container"></div>
+        <div id="conference">
+          <div id="remote-container"></div>
+          <div id="local-container"></div>
+        </div>
+      </div>
     </div>
-  </div>
-
-
-<!--  <div>-->
-<!--    <button @click="startStreaming">Commencer l'enregistrement</button>-->
-<!--    <button @click="stopStreaming">Arrêter l'enregistrement</button>-->
-<!--    <button @click="downloadWav">Télécharger au format WAV</button>-->
-<!--    <img src="@/assets/telechargement.jpg" alt="image">-->
-<!--  </div>-->
+    </section>
+        
+    
 
   </body>
 </template>
@@ -40,7 +41,25 @@ import {ref, onMounted, onUnmounted} from "vue";
 import {UserAgent, Session} from '@apirtc/apirtc'
 
 export default {
-  setup() {
+  data() {
+    return {
+      emission: [],
+    }
+  },
+
+  created() {
+    this.$api.get("/emissions")
+        .then((response) => {
+          this.emission = response.data.emission.find(emission => emission.onDirect === true)
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+  },
+
+
+
+setup() {
     const localStream = ref(null);
     const conversation = ref(null);
     const audioContext = ref(null);
@@ -176,15 +195,14 @@ export default {
 };
 </script>
 
+<style scoped lang="scss">
+@import "@/assets/var";
+@import "@/assets/layout";
+@import "@/assets/fonts";
+@import "@/assets/buttons";
 
-<style scoped>
-div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #FFFFFF;
-  height: 100vh;
+input{
+  width: 25%;
 }
 
 button {
@@ -196,5 +214,103 @@ button {
   border: none;
   border-radius: 5px;
   font-size: 1rem;
+}
+
+.direct {
+  color: white;
+  background-color: #334155;
+  padding: 1.5rem;
+  @include flex(column, nowrap, 2vh, space-between);
+  &-infos-titre {
+    h1 {
+      @include text-style(2rem, inherit, bold);
+      display: inline-block;
+      margin: 0;
+    }
+    embed {
+      height: 1.5rem;
+      display: inline-block;
+      margin-right: .5em;
+    }
+  }
+  &-infos-sous-titre {
+    margin-top : .5rem;
+    margin-bottom : 2rem;
+    @include text-style(1em, inherit, 100);
+  }
+  &-infos-desc {
+    text-align: justify;
+  }
+  button {
+    @include buttonStyle($purple, $purple, white, auto, 1em, 1.5em 0em .5em 0em, 0px);
+    font-weight: 500;
+  }
+  img {
+    border-radius : 10px;
+  }
+
+
+@media screen and (min-width : 700px) and (max-width : 1024px){
+  .direct {
+    padding: 2rem;
+    @include flex(row, nowrap, 4vw, space-between);
+    &-infos-titre {
+      @include grid(1fr 8fr);
+      h1 {
+        @include text-style(4vw, inherit, bold);
+      }
+      embed {
+        height: 3vw;
+      }
+    }
+    &-infos-sous-titre {
+      @include text-style(2.5vw, inherit, 100);
+      margin-bottom: .5em
+    }
+    &-infos-desc {
+      text-align: justify;
+      @include text-style(1em, inherit, normal);
+      margin-bottom: 1em;
+    }
+    button {
+      @include buttonStyle($purple, $purple, white, auto, 1em, .5em 0em .5em 0em, 0px);
+    }
+    img {
+      width: 45vw;
+      height: auto
+    }
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .direct {
+    padding: 3rem;
+    @include flex(row, nowrap, 5vw, space-between);
+    &-infos-titre {
+      @include grid(1fr 15fr);
+      h1 {
+        @include text-style(2.5em, inherit, bold);
+      }
+      embed {
+        height: 2em;
+      }
+    }
+    &-infos-sous-titre {
+      @include text-style(1.5em, inherit, 100);
+    }
+    &-infos-desc {
+      text-align: justify;
+      @include text-style(1.2em, inherit, normal);
+      margin-bottom: 2em;
+    }
+    button {
+      @include buttonStyle($purple, $purple, white, auto, 1.2em, .5em 0em .5em 0em, 0px);
+    }
+    img {
+      width: 30vw;
+      height: auto;
+    }
+  }
+}
 }
 </style>
