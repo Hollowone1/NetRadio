@@ -175,7 +175,7 @@ setup() {
 
     const getEmission = async () => {
       try {
-        const response = await axios.get(`/emissions/${this.$route.params.id}`);
+        const response = await axios.get(`http://localhost:2080/emissions/${this.$route.params.id}`);
         return response.data.emission;
       } catch (error) {
         console.error(error);
