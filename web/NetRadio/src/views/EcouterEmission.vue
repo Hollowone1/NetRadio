@@ -20,6 +20,7 @@
             <button type="submit" id="create_conference">
               Commencer l'émission
             </button>
+            <button type="submit" @click="stopStreaming">Arrêter et sauvegarder l'émission</button>
           </form>
 
         <div id="conference">
