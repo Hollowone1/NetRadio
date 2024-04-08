@@ -36,9 +36,9 @@
               placeholder="Entrez le nom de votre émission"
               autocomplete="off"
             />
-          <button type="submit" id="create_conference" @click="startStreaming">Commencer l'émission</button>
+          <button type="button" @click="startStreaming">Commencer l'émission</button>
             <!-- a peut etre remettre en submit -->
-            <button type="submit" @click="stopStreaming">Arrêter et sauvegarder l'émission</button>
+            <button type="button" @click="stopStreaming">Arrêter et sauvegarder l'émission</button>
           </form>
 
         <div id="conference">
