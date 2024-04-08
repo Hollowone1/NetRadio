@@ -1,4 +1,6 @@
 <script>
+import {toast} from "vue3-toastify";
+import ToastOptions from "../toasts/toastOptions.js";
 export default {
   emits: ['close', 'edited', 'created'],
   props: {
@@ -63,35 +65,45 @@ export default {
       }
     },
     editEmission() {
-      console.log("editEmission", this.editedEmission)
-      this.edit = false
-      this.$api.put(`emissions/${this.editedEmission.id}`, {
-        titre: this.editedEmission.titre,
-        theme: this.editedEmission.theme,
-        description: this.editedEmission.description,
-        photo: this.editedEmission.photo,
-        onDirect : 0,
-        user: this.editedEmission.user
-      }).then(() => {
-        this.changed = false
-      }).catch((err) => {
-        console.log(err.response.data)
-      })
+      if (this.changed) {
+        this.edit = false
+        this.$api.put(`emissions/${this.editedEmission.id}`, {
+          titre: this.editedEmission.titre,
+          theme: this.editedEmission.theme,
+          description: this.editedEmission.description,
+          photo: this.editedEmission.photo,
+          onDirect : 0,
+          user: this.editedEmission.user
+        }).then(() => {
+          toast.success('L\'émission a bien été modifiée !', ToastOptions)
+        }).catch(() => {
+          toast.error('Erreur lors de la modification de l\'émission, veuillez rééssayer.', ToastOptions)
+        })
+      } else {
+        toast.warning("Un ou plusieurs champs n'ont pas été remplis", ToastOptions)
+      }
+
     },
     createEmission() {
-      console.log("createEmission", this.newEmission)
-      this.$api.post(`emissions/`, {
-        titre: this.newEmission.titre,
-        theme: this.newEmission.theme,
-        description: this.newEmission.description,
-        photo: this.newEmission.photo,
-        onDirect : 0,
-        user: this.newEmission.user
-      }).then(() => {
+      if (this.changed) {
+        this.$api.post(`emissions/`, {
+          titre: this.newEmission.titre,
+          theme: this.newEmission.theme,
+          description: this.newEmission.description,
+          photo: this.newEmission.photo,
+          onDirect : 0,
+          user: this.newEmission.user
+        }).then(() => {
+          toast.success('L\'émission a bien été créée !', ToastOptions)
+          this.changed = false
+        }).catch((err) => {
+          console.log(err)
+          toast.error('Erreur lors de la création de l\'émission, veuillez rééssayer.', ToastOptions)
+        })
         this.changed = false
-      }).catch((err) => {
-        console.log(err.response.data)
-      })
+      } else {
+        toast.warning("Un champ au moins n'a pas été rempli.", ToastOptions)
+      }
     }
   },
   watch: {
@@ -176,7 +188,7 @@ export default {
           </div>
           <div class="presentateur">
             <label for="presentateur">Email du présentateur :</label>
-            <input type="text" id="presentateur" v-model="newEmission.email">
+            <input type="text" id="presentateur" v-model="newEmission.user">
           </div>
           <div class="theme">
             <label for="theme">Thème :</label>
