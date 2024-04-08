@@ -144,30 +144,39 @@ setup() {
     };
 
     const stopStreaming = () => {
-      if (mediaRecorder.value && isStreaming.value) {
-        mediaRecorder.value.stop();
-        isStreaming.value = false;
+  if (mediaRecorder.value && isStreaming.value) {
+    mediaRecorder.value.stop();
+    isStreaming.value = false;
 
-        const blob = new Blob(recordedChunks.value, {type: "audio/wav"});
-        const emission = getEmission(); // This function needs to be defined
-        if (emission) {
-          const body = {
-            titre: emission.titre,
-            description: emission.description,
-            audio: blob,
-            emission_id: emission.id,
-          };
-          axios.post("http://localhost:2080/podcasts", body)
-              .then((response) => {
-                console.log(response);
-              })
-              .catch((error) => {
-                console.error(error);
-              });
-        }
-        downloadWav();
-      }
-    };
+    const blob = new Blob(recordedChunks.value, {type: "audio/wav"});
+    const emission = getEmission(); // This function needs to be defined
+    if (emission) {
+      const body = {
+        titre: emission.titre,
+        description: emission.description,
+        audio: blob,
+        emission_id: emission.id,
+      };
+      axios.post("http://localhost:2080/podcasts", body)
+        .then((response) => {
+          console.log(response);
+          downloadWav();
+          window.removeEventListener("beforeunload", beforeUnloadHandler);
+        })
+        .catch((error) => {
+          console.error("Error creating podcast:", error);
+          window.removeEventListener("beforeunload", beforeUnloadHandler);
+        });
+    }
+  }
+};
+
+const beforeUnloadHandler = (event) => {
+  if (mediaRecorder.value && isStreaming.value) {
+    event.preventDefault();
+    event.returnValue = "";
+  }
+};
 
     const downloadWav = () => {
       if (recordedChunks.value.length > 0) {
@@ -193,10 +202,11 @@ setup() {
 
     onMounted(() => {
       startStreaming();
+      window.addEventListener("beforeunload", beforeUnloadHandler);
     });
 
     onUnmounted(() => {
-      stopStreaming();
+      stopStreaming(), window.removeEventListener("beforeunload", beforeUnloadHandler);
     });
 
     return {stopStreaming, localStream, conversation, startStreaming, downloadWav};
