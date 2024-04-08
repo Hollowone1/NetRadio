@@ -75,13 +75,7 @@ export default {
         .catch((error) => {
           console.log(error)
         });
-        if (this.userRole === "admin") {
-  // Permettre à l'admin de créer une émission
-  // Ajoutez ici votre logique de création d'émission
-      } else if (this.userRole === "auditeur") {
-  // Permettre à l'auditeur d'écouter une émission
-  // Ajoutez ici votre logique pour démarrer l'écoute d'une émission
-    }
+    
   },
 
 
@@ -217,11 +211,10 @@ setup() {
 
     onMounted(() => {
       startStreaming();
-      window.addEventListener("beforeunload", beforeUnloadHandler);
     });
 
     onUnmounted(() => {
-      stopStreaming(), window.removeEventListener("beforeunload", beforeUnloadHandler);
+      stopStreaming();
     });
 
     return {stopStreaming, localStream, conversation, startStreaming, downloadWav, getRoleUser};
