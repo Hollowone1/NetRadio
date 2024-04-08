@@ -1,31 +1,27 @@
 <template>
-  <section class="direct">
+  <body>
+    <section class="direct">
     <div id="container">
+    
       <div class="direct-infos">
         <div class="direct-infos-titre">
           <embed src="/icons/direct.svg"/>
           <h1>{{ emission.titre }}</h1>
         </div>
         <h2 id="title">Enregistrer votre émission en direct</h2> 
-        <!-- Condition pour l'admin -->
-        <form id="create" v-if="userRole === 'admin'">
-          <input
-            type="text"
-            name="conference_name"
-            id="conference-name"
-            placeholder="Entrez le nom de votre émission"
-            autocomplete="off"
-          />
-          <button type="submit" id="create_conference" @click.prevent="startStreaming">
-            Commencer l'émission
-          </button>
-          <button type="submit" @click="stopStreaming">Arrêter et sauvegarder l'émission</button>
-        </form>
-        <!-- Condition pour l'auditeur -->
-        <div id="listen" v-else-if="userRole === 'auditeur'">
-          <button @click="startStreaming">Écouter l'émission</button>
-          <button @click="stopStreaming">Arrêter l'écoute</button>
-        </div>
+          <form id="create">
+            <input
+              type="text"
+              name="conference_name"
+              id="conference-name"
+              placeholder="Entrez le nom de votre émission"
+              autocomplete="off"
+            />
+            <button type="submit" id="create_conference">
+              Commencer l'émission
+            </button>
+            <button type="submit" @click="stopStreaming">Arrêter et sauvegarder l'émission</button>
+          </form>
 
         <div id="conference">
           <div id="remote-container"></div>
@@ -33,7 +29,11 @@
         </div>
       </div>
     </div>
-  </section>
+    </section>
+        
+    
+
+  </body>
 </template>
 
 <script>
