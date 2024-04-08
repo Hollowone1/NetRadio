@@ -38,11 +38,13 @@ export default {
       emissions: [],
       users: [],
       playlists: [],
-      roles: ['Auditeur', 'Animateur', 'Administrateur']
+      creneaux : [],
+      roles: ['Auditeur', 'Animateur', 'Administrateur'],
+      emissionsOfUser: [],
     }
   },
   computed: {
-    ...mapState(useUserStore, ['user', 'tokens', 'loggedIn'])
+    ...mapState(useUserStore, ['user', 'tokens', 'loggedIn']),
   },
   created() {
     const mail = jwtDecode(this.tokens.access_token).upr.email
@@ -63,6 +65,8 @@ export default {
     this.user.role === '3' ? this.getUsers() : null
     this.user.role === '3' ? this.getEmissions() : null
     this.user.role === '2' ? this.getPlaylists() : null
+    this.user.role === '2' ? this.getEmissionByUser() : null
+
 
   },
   methods: {
@@ -97,7 +101,13 @@ export default {
           })
     },
     getEmissionByUser() {
-      //Todo : get l'émission du user concerné
+      this.$api.get(`/emissions`)
+          .then((response) => {
+            this.emissionsOfUser = response.data.emissions
+          })
+          .catch((error) => {
+            console.log(error)
+          })
     },
     getPlaylists() {
       this.$api.get(`/users/${this.user.email}/playlists`)
@@ -119,7 +129,7 @@ export default {
       this.showPopupEmission = false;
       this.showPopUpNewEmission = false;
       console.log(this.emissionToDisplay)
-      const index = this.emissions.findIndex(emission => this.emissionToDisplay.id === 3);
+      const index = this.emissions.findIndex(emission => emission.id === this.emissionToDisplay.id);
       this.$api.get(`/emissions/${this.emissionToDisplay.id}`)
           .then((response) => {
             if (index !== -1) {
@@ -155,6 +165,28 @@ export default {
       this.showPopUpNewPlaylist = false;
       this.getPlaylists()
     },
+
+    getCreneaux () {
+      // BUT ici est de récupérer les créneaux
+      this.$api.get('/creneaux')
+          .then((response) => {
+            this.creneaux = response.data.emission
+            this.creneaux.forEach(emission => {
+              this.$api.get(emission.links.users.href)
+                  .then((response2) => {
+                    emission.user = `${response2.data.user[0].nom} ${response2.data.user[0].prenom}`
+                    emission.email = response2.data.user[0].email
+                  })
+                  .catch((error) => {
+                    console.log(error)
+                  });
+            });
+            console.log("creneaux", this.creneaux)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+    }
   },
 
   setup() {
@@ -314,7 +346,7 @@ export default {
             <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
         </div>
-        
+
       </div>
       <div v-if="display === 2" class="display enregistrements">
         <h1>Vos enregistrements</h1>
@@ -343,7 +375,7 @@ export default {
         <div class="info">
           <Calendrier :creneaux="creneaux" @dayclick="onDayClick"/>
         </div>
-        
+
       </div>
     </main>
   </div>
@@ -353,7 +385,7 @@ export default {
     <side-bar @change="changeDisplay">
       <template v-slot:1>Mon compte</template>
       <template v-slot:2>Mes playlists</template>
-      <template v-slot:3>Mon émission</template>
+      <template v-slot:3>Mes émissions</template>
       <template v-slot:4>Lancer un direct</template>
     </side-bar>
     <main>
@@ -392,8 +424,10 @@ export default {
       </div>
       <div v-if="display === 3" class="display mon-emission">
         <div class="top">
-          <h1>Mon émission</h1>
-          <img src="/icons/editPurple.svg" alt="add icon">
+          <h1>Mes émissions</h1>
+        </div>
+        <div class="emissions-liste">
+          <emission :redirect="true" v-for="emission in emissionsOfUser" :emission="emission" :key="emission.id"></emission>
         </div>
       </div>
       <div v-if="display === 4" class="display lancer-direct">
@@ -476,7 +510,7 @@ export default {
       <div v-if="display === 3" class="display calendrier">
         <Calendar :columns="columns" @dayclick="onDayClick"/>
       </div>
-      
+
       <div v-if="display === 4" class="display users">
         <h1>Tous les utilisateurs</h1>
         <popup-utilisateur :user="userToDisplay" v-if="showPopupUser" @close="showPopupUser = false"
@@ -675,6 +709,7 @@ export default {
     min-height: 60vh;
 
     main {
+      //flex-basis: 80vw;
       flex-basis: 100vw;
       flex-shrink: 1;
       flex-grow: 0;

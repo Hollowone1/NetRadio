@@ -1,12 +1,30 @@
 <template>
   <body>
-    <section class="direct">
+  <!-- Si l'utilisateur est un auditeur (role 1), il peut seulement écouter l'émission -->
+<!--    <section v-if="getRoleUser() === 1" class="direct">-->
+<!--      <div id="container">-->
+<!--        <div class="direct-infos">-->
+<!--          <div class="direct-infos-titre">-->
+<!--            <embed src="/icons/direct.svg"/>-->
+<!--            <h1>{{ emission.titre }}</h1>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--          <h2 id="title">Écouter l'émission en direct</h2>-->
+<!--          <div id="conference">-->
+<!--            <div id="remote-container"></div>-->
+<!--            <div id="local-container"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--    </section>-->
+
+<!--  &lt;!&ndash; Si l'utilisateur est un animateur (role 2), il peut lancer l'émission et l'écouter &ndash;&gt;-->
+<!--    <section v-if="getRoleUser() === 2" class="direct">-->
+
     <div id="container">
-    
       <div class="direct-infos">
         <div class="direct-infos-titre">
           <embed src="/icons/direct.svg"/>
-          <h1>{{ emission.titre }}</h1>
+<!--          <h1>{{ emission.titre }}</h1>-->
         </div>
         <h2 id="title">Enregistrer votre émission en direct</h2> 
           <form id="create">
@@ -29,7 +47,7 @@
         </div>
       </div>
     </div>
-    </section>
+<!--    </section>-->
         
     
 
@@ -40,6 +58,7 @@
 import axios from "axios";
 import {ref, onMounted, onUnmounted} from "vue";
 import {UserAgent, Session} from '@apirtc/apirtc'
+import {useUserStore} from "@/stores/user.js";
 
 export default {
   data() {
@@ -57,13 +76,7 @@ export default {
         .catch((error) => {
           console.log(error)
         });
-        if (this.userRole === "admin") {
-  // Permettre à l'admin de créer une émission
-  // Ajoutez ici votre logique de création d'émission
-      } else if (this.userRole === "auditeur") {
-  // Permettre à l'auditeur d'écouter une émission
-  // Ajoutez ici votre logique pour démarrer l'écoute d'une émission
-    }
+    
   },
 
 
@@ -149,7 +162,7 @@ setup() {
         isStreaming.value = false;
 
         const blob = new Blob(recordedChunks.value, {type: "audio/wav"});
-        const emission = getEmission(); // This function needs to be defined
+        const emission = getEmission();
         if (emission) {
           const body = {
             titre: emission.titre,
@@ -191,6 +204,12 @@ setup() {
       }
     };
 
+    const getRoleUser = () => {
+      const user = useUserStore();
+      console.log(user.user.role);
+      return user.user.role;
+    };
+
     onMounted(() => {
       startStreaming();
     });
@@ -199,7 +218,7 @@ setup() {
       stopStreaming();
     });
 
-    return {stopStreaming, localStream, conversation, startStreaming, downloadWav};
+    return {stopStreaming, localStream, conversation, startStreaming, downloadWav, getRoleUser};
   },
 };
 </script>
