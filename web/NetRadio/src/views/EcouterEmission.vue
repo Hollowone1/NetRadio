@@ -1,5 +1,4 @@
 <template>
-  <body>
   <!-- Si l'utilisateur est un auditeur (role 1), il peut seulement écouter l'émission -->
 <!--    <section v-if="getRoleUser() === 1" class="direct">-->
 <!--      <div id="container">-->
@@ -26,8 +25,10 @@
           <embed src="/icons/direct.svg"/>
 <!--          <h1>{{ emission.titre }}</h1>-->
         </div>
-        <h2 id="title">Enregistrer votre émission en direct</h2> 
-          <form id="create">
+        <h2 id="title">Enregistrer votre émission en direct</h2>
+
+
+        <form id="create">
             <input
               type="text"
               name="conference_name"
@@ -35,10 +36,9 @@
               placeholder="Entrez le nom de votre émission"
               autocomplete="off"
             />
-            <button type="submit" id="create_conference">
-              Commencer l'émission
-            </button>
-            <button type="submit" @click="stopStreaming">Arrêter et sauvegarder l'émission</button>
+          <button type="button" @click="startStreaming">Commencer l'émission</button>
+            <!-- a peut etre remettre en submit -->
+            <button type="button" @click="stopStreaming">Arrêter et sauvegarder l'émission</button>
           </form>
 
         <div id="conference">
@@ -51,7 +51,6 @@
         
     
 
-  </body>
 </template>
 
 <script>
@@ -59,6 +58,7 @@ import axios from "axios";
 import {ref, onMounted, onUnmounted} from "vue";
 import {UserAgent, Session} from '@apirtc/apirtc'
 import {useUserStore} from "@/stores/user.js";
+import { useRoute } from "vue-router";
 
 export default {
   data() {
@@ -76,7 +76,6 @@ export default {
         .catch((error) => {
           console.log(error)
         });
-    
   },
 
 
@@ -89,6 +88,7 @@ setup() {
     const mediaRecorder = ref(null);
     const isStreaming = ref(false);
     const recordedChunks = ref([]);
+    const route = useRoute();
 
     const ua = new UserAgent({
       uri: "apzkey:myDemoApiKey",
@@ -157,46 +157,62 @@ setup() {
     };
 
     const stopStreaming = () => {
-      if (mediaRecorder.value && isStreaming.value) {
-        mediaRecorder.value.stop();
-        isStreaming.value = false;
+  if (mediaRecorder.value && isStreaming.value) {
+    mediaRecorder.value.stop();
+    isStreaming.value = false;
 
-        const blob = new Blob(recordedChunks.value, {type: "audio/wav"});
-        const emission = getEmission();
-        if (emission) {
-          const body = {
-            titre: emission.titre,
-            description: emission.description,
-            audio: blob,
-            emission_id: emission.id,
-          };
-          axios.post("http://localhost:2080/podcasts", body)
-              .then((response) => {
-                console.log(response);
-              })
-              .catch((error) => {
-                console.error(error);
-              });
+    const blob = new Blob(recordedChunks.value, { type: "audio/wav" });
+    const emission = getEmission(); // Assurez-vous que cette fonction retourne l'émission en cours
+    if (emission) {
+      const formData = new FormData();
+      formData.append('titre', emission.titre);
+      formData.append('date', emission.date);
+      formData.append('duree', emission.duree);
+      formData.append('description', emission.description);
+      formData.append('photo', emission.photo);
+      formData.append('audio', blob);
+      formData.append('emission_id', emission.id);
+
+      axios.post("http://localhost:2080/podcast", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data' // Assurez-vous que le serveur accepte ce type de contenu
         }
-        downloadWav();
-      }
-    };
+      })
+        .then((response) => {
+          console.log(response);
+          downloadWav(blob); // Ajoutez une fonction pour télécharger le fichier audio
+          window.removeEventListener("beforeunload", beforeUnloadHandler);
+        })
+        .catch((error) => {
+          console.error("Error creating podcast:", error);
+          window.removeEventListener("beforeunload", beforeUnloadHandler);
+        });
+    }
+  }
+};
 
-    const downloadWav = () => {
-      if (recordedChunks.value.length > 0) {
-        const blob = new Blob(recordedChunks.value, {type: 'audio/wav'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `emission${this.$route.params.id}.wav`;
-        a.click();
-        URL.revokeObjectURL(url);
-      }
-    };
+const beforeUnloadHandler = (event) => {
+  if (mediaRecorder.value && isStreaming.value) {
+    event.preventDefault();
+    event.returnValue = "";
+  }
+};
+
+const downloadWav = (blob) => {
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.style.display = "none";
+  a.href = url;
+  a.download = "recording.wav";
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+};
 
     const getEmission = async () => {
       try {
-        const response = await axios.get(`http://localhost:2080/emissions/${this.$route.params.id}`);
+        
+        const response = await axios.get(`http://localhost:2080/emissions/${route.params.id}`);
         return response.data.emission;
       } catch (error) {
         console.error(error);
@@ -204,18 +220,55 @@ setup() {
       }
     };
 
+    const userStore = useUserStore();
     const getRoleUser = () => {
-      const user = useUserStore();
-      console.log(user.user.role);
-      return user.user.role;
+      console.log(userStore.user.role);
+      return userStore.user.role;
     };
 
-    onMounted(() => {
-      startStreaming();
+  const startListening = async () => {
+    const session = await ua.register();
+    const conversationInstance = session.getConversation('myConversation');
+    conversation.value = conversationInstance;
+
+    conversationInstance.on("streamListChanged", (streamInfo) => {
+      if (streamInfo.listEventType === "added" && streamInfo.isRemote === true) {
+        conversationInstance.subscribeToMedia(streamInfo.streamId)
+            .then((stream) => {
+              console.log("subscribeToMedia success", stream);
+            })
+            .catch((err) => {
+              console.error("subscribeToMedia error", err);
+            });
+      }
     });
+
+    conversationInstance
+        .on("streamAdded", (stream) => {
+          stream.addInDiv("remote-container", "remote-media-" + stream.streamId, {}, false);
+        })
+        .on("streamRemoved", (stream) => {
+          stream.removeFromDiv("remote-container", "remote-media-" + stream.streamId);
+        });
+
+    const joinResponse = await conversationInstance.join();
+    console.log("Conversation joined", joinResponse);
+  };
+
+    onMounted(() => {
+      if (getRoleUser() === 2) {
+        startStreaming();
+      } else if (getRoleUser() === 1) {
+        connectToServer();
+        startListening();
+      }
+    });
+
+
 
     onUnmounted(() => {
       stopStreaming();
+      window.removeEventListener("beforeunload", beforeUnloadHandler);
     });
 
     return {stopStreaming, localStream, conversation, startStreaming, downloadWav, getRoleUser};
