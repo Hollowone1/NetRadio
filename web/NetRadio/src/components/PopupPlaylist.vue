@@ -21,6 +21,7 @@ export default {
       edit: false,
       sounds: [],
       editedPlaylist: {
+        id: this.playlist.id,
         name: this.playlist.name,
         description: this.playlist.description,
         sounds: this.sounds
@@ -42,7 +43,6 @@ export default {
     ...mapState(useUserStore, ['user'])
   },
   created() {
-    //faire un get sur l'API pour récupérer les sons de la playlist
     this.$api.get(`/sons/playlist/${this.playlist.id}`)
         .then((response) => {
           this.sounds = response.data.sons
@@ -92,8 +92,19 @@ export default {
           : this.editedPlaylist.sounds = this.editedPlaylist.sounds.filter(sound => sound.id !== id)
     },
     addSound() {
-      this.newOne ? this.newPlaylist.sounds.push(this.addedSound) : this.editedPlaylist.sounds.push(this.addedSound)
-      //this.newOne ? console.log(this.newPlaylist.sounds) : console.log(this.editedPlaylist.sounds)
+      console.log(this.editedPlaylist.id)
+      this.$api.post(`/playlists/${this.editedPlaylist.id}/son`, {
+        son: {
+          titre: this.addedSound.titre,
+          nomArtiste: this.addedSound.nomArtiste,
+          audio: this.addedSound.audio
+        },
+        idPlaylist: this.editedPlaylist.id
+      })
+          .catch((error) => {
+            console.log(error)
+          })
+      this.editedPlaylist.sounds.push(this.addedSound)
       this.newSound = false
       this.addedSound = {
         titre: "",
@@ -119,10 +130,11 @@ export default {
         </div>
         <div class="infos">
           <p>{{ playlist.description }}</p>
-          <p>Sons dans la playlist : </p>
-          <ul class="son">
+          <p v-if="sounds.length > 0">Sons dans la playlist :</p>
+          <ul v-if="sounds.length > 0" class="son">
             <li v-for="sound in sounds">{{ sound.titre }} - {{ sound.nomArtiste }}</li>
           </ul>
+          <p v-else>Aucun son</p>
         </div>
       </div>
 
