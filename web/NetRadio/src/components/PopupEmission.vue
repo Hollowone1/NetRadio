@@ -80,7 +80,18 @@ export default {
     },
     createEmission() {
       console.log("createEmission", this.newEmission)
-      //TODO : call API pr créer émission :)
+      this.$api.post(`emissions/`, {
+        titre: this.newEmission.titre,
+        theme: this.newEmission.theme,
+        description: this.newEmission.description,
+        photo: this.newEmission.photo,
+        onDirect : 0,
+        user: this.newEmission.user
+      }).then(() => {
+        this.changed = false
+      }).catch((err) => {
+        console.log(err.response.data)
+      })
     }
   },
   watch: {
@@ -127,7 +138,7 @@ export default {
             <input type="text" id="titre" v-model="editedEmission.titre">
           </div>
           <div class="presentateur">
-            <label for="presentateur">Présentateur :</label>
+            <label for="presentateur">Email du présentateur :</label>
             <input type="text" id="presentateur" v-model="editedEmission.user">
           </div>
           <div class="theme">
@@ -164,7 +175,7 @@ export default {
             <input type="text" id="titre" v-model="newEmission.titre">
           </div>
           <div class="presentateur">
-            <label for="presentateur">Mail du présentateur :</label>
+            <label for="presentateur">Email du présentateur :</label>
             <input type="text" id="presentateur" v-model="newEmission.user">
           </div>
           <div class="theme">
