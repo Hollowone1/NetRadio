@@ -11,6 +11,7 @@ use radio\net\app\action\emission\GetEmissionsAction;
 use radio\net\app\action\emission\PostEmission;
 use radio\net\app\action\emission\PutEmission;
 use radio\net\app\action\playlist\GetPlaylistByIdAction;
+use radio\net\app\action\playlist\PostSonByPlaylistAction;
 use radio\net\app\action\podcast\GetAllPodcasts;
 use radio\net\app\action\podcast\GetPodcastByEmission;
 use radio\net\app\action\podcast\GetPodcastByIdAction;
@@ -90,6 +91,10 @@ return array(
     GetPlaylistByIdAction::class => function (ContainerInterface $container) {
         return new GetPlaylistByIdAction($container->get(PlaylistService::class));
     },
+    PostSonByPlaylistAction::class => function (ContainerInterface $container) {
+        return new PostSonByPlaylistAction($container->get(PlaylistService::class));
+    },
+
     PutUser::class => function (ContainerInterface $container) {
         return new PutUser($container->get('UserService'));
     },

@@ -29,8 +29,6 @@ export default {
       <div class="header-boutons">
         <input class="search" type="search" src="/icons/search.svg" placeholder="Rechercher ...">
         <router-link to="/mon-compte" v-if="loggedIn"><img class="header-user-co" src="/icons/user.svg" alt="user icon"/></router-link>
-
-        <button v-if="loggedIn" class="header-boutons-deconnecter" @click="logOut">Se déconnecter</button>
         <router-link v-else to="/connexion"><button class="header-boutons-connecter" >Se connecter</button></router-link>
       </div>
     </div>
