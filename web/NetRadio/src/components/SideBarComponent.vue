@@ -179,6 +179,11 @@ aside {
   }
 
 
+
 }
 
+
+.nav-list > div {
+  cursor: pointer;
+}
 </style>
