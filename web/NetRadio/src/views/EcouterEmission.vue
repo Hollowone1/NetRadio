@@ -210,8 +210,42 @@ setup() {
       return user.user.role;
     };
 
+  const startListening = async () => {
+    const session = await ua.register();
+    const conversationInstance = session.getConversation('myConversation');
+    conversation.value = conversationInstance;
+
+    conversationInstance.on("streamListChanged", (streamInfo) => {
+      if (streamInfo.listEventType === "added" && streamInfo.isRemote === true) {
+        conversationInstance.subscribeToMedia(streamInfo.streamId)
+            .then((stream) => {
+              console.log("subscribeToMedia success", stream);
+            })
+            .catch((err) => {
+              console.error("subscribeToMedia error", err);
+            });
+      }
+    });
+
+    conversationInstance
+        .on("streamAdded", (stream) => {
+          stream.addInDiv("remote-container", "remote-media-" + stream.streamId, {}, false);
+        })
+        .on("streamRemoved", (stream) => {
+          stream.removeFromDiv("remote-container", "remote-media-" + stream.streamId);
+        });
+
+    const joinResponse = await conversationInstance.join();
+    console.log("Conversation joined", joinResponse);
+  };
+
     onMounted(() => {
-      startStreaming();
+      if (getRoleUser() === 2) {
+        startStreaming();
+      } else if (getRoleUser() === 1) {
+        connectToServer();
+        startListening();
+      }
     });
 
     onUnmounted(() => {
