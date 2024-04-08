@@ -157,42 +157,54 @@ setup() {
     };
 
     const stopStreaming = () => {
-      if (mediaRecorder.value && isStreaming.value) {
-        mediaRecorder.value.stop();
-        isStreaming.value = false;
+  if (mediaRecorder.value && isStreaming.value) {
+    mediaRecorder.value.stop();
+    isStreaming.value = false;
 
-        const blob = new Blob(recordedChunks.value, {type: "audio/wav"});
-        const emission = getEmission();
-        if (emission) {
-          const body = {
-            titre: emission.titre,
-            description: emission.description,
-            audio: blob,
-            emission_id: emission.id,
-          };
-          axios.post("http://localhost:2080/podcasts", body)
-              .then((response) => {
-                console.log(response);
-              })
-              .catch((error) => {
-                console.error(error);
-              });
+    const blob = new Blob(recordedChunks.value, { type: "audio/wav" });
+    const emission = getEmission(); // Assurez-vous que cette fonction retourne l'émission en cours
+    if (emission) {
+      const formData = new FormData();
+      formData.append('titre', emission.titre);
+      formData.append('description', emission.description);
+      formData.append('audio', blob);
+      formData.append('emission_id', emission.id);
+
+      axios.post("http://localhost:2080/podcasts", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data' // Assurez-vous que le serveur accepte ce type de contenu
         }
-        downloadWav();
-      }
-    };
+      })
+        .then((response) => {
+          console.log(response);
+          downloadWav(blob); // Ajoutez une fonction pour télécharger le fichier audio
+          window.removeEventListener("beforeunload", beforeUnloadHandler);
+        })
+        .catch((error) => {
+          console.error("Error creating podcast:", error);
+          window.removeEventListener("beforeunload", beforeUnloadHandler);
+        });
+    }
+  }
+};
 
-    const downloadWav = () => {
-      if (recordedChunks.value.length > 0) {
-        const blob = new Blob(recordedChunks.value, {type: 'audio/wav'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `emission${this.$route.params.id}.wav`;
-        a.click();
-        URL.revokeObjectURL(url);
-      }
-    };
+const beforeUnloadHandler = (event) => {
+  if (mediaRecorder.value && isStreaming.value) {
+    event.preventDefault();
+    event.returnValue = "";
+  }
+};
+
+const downloadWav = (blob) => {
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.style.display = "none";
+  a.href = url;
+  a.download = "recording.wav";
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+};
 
     const getEmission = async () => {
       try {
@@ -212,10 +224,12 @@ setup() {
 
     onMounted(() => {
       startStreaming();
+      window.addEventListener("beforeunload", beforeUnloadHandler);
     });
 
     onUnmounted(() => {
       stopStreaming();
+      window.removeEventListener("beforeunload", beforeUnloadHandler);
     });
 
     return {stopStreaming, localStream, conversation, startStreaming, downloadWav, getRoleUser};
