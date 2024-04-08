@@ -54,7 +54,7 @@ export default {
         .catch((error) => {
           console.log(error.response.data.exception[0].code)
           error.response.data.exception[0].code === 401 ? (this.$router.push('/connexion'), this.logoutUser()) : null
-              //refresh le token ici
+          //refresh le token ici
         });
 
     this.user.role === '3' ? this.getUsers() : null
@@ -290,7 +290,6 @@ export default {
 }
 
 
-
 </script>
 
 <template>
@@ -402,19 +401,19 @@ export default {
           <section class="direct">
             <div id="container">
 
-            <div class="direct-infos">
-              <div class="direct-infos-titre">
-                <embed src="/icons/direct.svg"/>
-                <h1>{{ emission.titre }}</h1>
-              </div>
-              <h2 id="title">Enregistrer votre émission en direct</h2>
+              <div class="direct-infos">
+                <div class="direct-infos-titre">
+                  <embed src="/icons/direct.svg"/>
+                  <h1>{{ emission.titre }}</h1>
+                </div>
+                <h2 id="title">Enregistrer votre émission en direct</h2>
                 <form id="create">
                   <input
-                    type="text"
-                    name="conference_name"
-                    id="conference-name"
-                    placeholder="Entrez le nom de votre émission"
-                    autocomplete="off"
+                      type="text"
+                      name="conference_name"
+                      id="conference-name"
+                      placeholder="Entrez le nom de votre émission"
+                      autocomplete="off"
                   />
                   <button type="submit" id="create_conference">
                     Commencer l'émission
@@ -422,13 +421,13 @@ export default {
                   <button type="submit" @click="stopStreaming">Arrêter et sauvegarder l'émission</button>
                 </form>
 
-              <div id="conference">
-                <div id="remote-container"></div>
-                <div id="local-container"></div>
+                <div id="conference">
+                  <div id="remote-container"></div>
+                  <div id="local-container"></div>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
         </div>
       </div>
     </main>
@@ -532,6 +531,7 @@ export default {
 .playlists {
   .top {
     @include flex(row, nowrap, .5em, space-between, center);
+
     img {
       height: 2.5em;
     }
@@ -594,10 +594,11 @@ export default {
   border-radius: 10px;
   padding: 1em .7em;
   border: 2px solid $lightGrey;
+
   .top {
     @include flex(row, nowrap, 1em, space-between, center);
     padding-bottom: .5em;
-    margin-bottom : 0;
+    margin-bottom: 0;
 
     img {
       height: 1.5em;
@@ -609,6 +610,7 @@ export default {
       text-transform: uppercase;
     }
   }
+
   p {
     @include text-style(1em, inherit, 300);
     margin: 0;
