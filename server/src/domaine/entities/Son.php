@@ -19,12 +19,13 @@ class Son extends Model
     ];
 
     public function toDTO() {
-        return new SonDTO(
-            $this->id,
+        $son = new SonDTO(
             $this->titre,
             $this->nomArtiste,
             $this->audio
         );
+        $son->id = $this->id;
+        return $son;
     }
 
     public function playlist() {
