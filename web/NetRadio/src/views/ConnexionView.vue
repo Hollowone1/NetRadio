@@ -1,6 +1,8 @@
 <script>
-import { mapActions } from 'pinia'
-import { useUserStore } from '@/stores/user.js'
+import {mapActions} from 'pinia'
+import {useUserStore} from '@/stores/user.js'
+import {toast} from "vue3-toastify";
+import ToastOptions from "../toasts/toastOptions.js";
 
 export default {
   data() {
@@ -13,18 +15,18 @@ export default {
   methods: {
     ...mapActions(useUserStore, ['loginUser']),
     connection() {
-      console.log('Connexion !')
       this.$api.post('/users/signin', {}, {
-        auth : {
+        auth: {
           username: this.mail,
           password: this.password
         }
       }).then(resp => {
         this.loginUser(resp.data)
         this.$router.push('/')
+        toast.success('Connexion réussie !', ToastOptions)
       }).catch(err => {
-        err.response.data.error ? this.errorMessage = err.response.data.error : this.errorMessage = null
-        //console.log(err)
+        err.response.data.error ? toast.error(`${err.response.data.error}`, ToastOptions)
+            : null
       })
     }
   }
@@ -36,25 +38,27 @@ export default {
   <div>
     <div class="login-form form">
       <h2>Connexion</h2>
-      <div v-if="errorMessage" class="error">{{errorMessage}}</div>
+      <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input v-model="mail" type="email" id="email" placeholder="Votre adresse e-mail ..." required />
+        <input v-model="mail" type="email" id="email" placeholder="Votre adresse e-mail ..." required/>
       </div>
       <div class="form-group">
         <label for="password">Mot de passe</label>
-        <input v-model="password" type="password" id="password" placeholder="Votre mot de passe ..." required />
+        <input v-model="password" type="password" id="password" placeholder="Votre mot de passe ..." required/>
       </div>
       <button @click="connection()" class="login-button">Se connecter</button>
-      <div class="register"><RouterLink to="/inscription"> Pas encore de compte ? Inscrivez-vous</RouterLink></div>
+      <div class="register">
+        <RouterLink to="/inscription"> Pas encore de compte ? Inscrivez-vous</RouterLink>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 
-.form-group{
-  display:block;
+.form-group {
+  display: block;
   padding: 1em;
 }
 
@@ -106,6 +110,7 @@ button {
   margin-right: auto;
   margin-bottom: 2em;
 }
+
 button:hover {
   background-color: #8d4ba5;
   border: 2px solid #b291fa;
@@ -117,7 +122,7 @@ label {
   color: inherit;
   font-weight: inherit;
   height: 50px;
-  
+
 }
 
 input {
@@ -135,11 +140,13 @@ input {
 hr {
   width: 60em;
 }
-.register{
+
+.register {
   text-align: center;
   color: #8d4ba5;
 }
-input{
+
+input {
   border: transparent;
   border-bottom: 1px solid #a2a2a2;
 }
@@ -151,24 +158,26 @@ input{
   text-align: center;
 
 }
-a{
+
+a {
   color: #8d4ba5;
 }
+
 @media screen and (max-width: 750px) {
-  input{
+  input {
     width: 15em;
   }
-  label{
+  label {
     width: 15em;
   }
-  .login-button{
+  .login-button {
     width: 15em;
   }
   form {
 
-  margin: 9em;
+    margin: 9em;
 
-}
+  }
 }
 
 </style>
