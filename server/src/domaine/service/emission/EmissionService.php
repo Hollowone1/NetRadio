@@ -121,7 +121,7 @@ class EmissionService implements iEmissionService
             }
 
         } catch (\Exception) {
-            throw new EmissionNotFoundException("Vous avez déjà modifier cette emission");
+            throw new EmissionNotFoundException("Les champs sont les mêmes. Aucune modification n'a été effectuée.");
         }
     }
 }
