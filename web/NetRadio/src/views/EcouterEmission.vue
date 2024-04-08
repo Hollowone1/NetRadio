@@ -1,5 +1,4 @@
 <template>
-  <body>
   <!-- Si l'utilisateur est un auditeur (role 1), il peut seulement écouter l'émission -->
 <!--    <section v-if="getRoleUser() === 1" class="direct">-->
 <!--      <div id="container">-->
@@ -26,8 +25,10 @@
           <embed src="/icons/direct.svg"/>
 <!--          <h1>{{ emission.titre }}</h1>-->
         </div>
-        <h2 id="title">Enregistrer votre émission en direct</h2> 
-          <form id="create">
+        <h2 id="title">Enregistrer votre émission en direct</h2>
+
+
+        <form id="create">
             <input
               type="text"
               name="conference_name"
@@ -35,9 +36,8 @@
               placeholder="Entrez le nom de votre émission"
               autocomplete="off"
             />
-            <button type="submit" id="create_conference">
-              Commencer l'émission
-            </button>
+          <button type="submit" id="create_conference" @click="startStreaming">Commencer l'émission</button>
+            <!-- a peut etre remettre en submit -->
             <button type="submit" @click="stopStreaming">Arrêter et sauvegarder l'émission</button>
           </form>
 
@@ -51,7 +51,6 @@
         
     
 
-  </body>
 </template>
 
 <script>
@@ -204,10 +203,10 @@ setup() {
       }
     };
 
+    const userStore = useUserStore();
     const getRoleUser = () => {
-      const user = useUserStore();
-      console.log(user.user.role);
-      return user.user.role;
+      console.log(userStore.user.role);
+      return userStore.user.role;
     };
 
   const startListening = async () => {
@@ -247,6 +246,8 @@ setup() {
         startListening();
       }
     });
+
+
 
     onUnmounted(() => {
       stopStreaming();
