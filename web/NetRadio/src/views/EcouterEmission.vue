@@ -58,6 +58,7 @@ import axios from "axios";
 import {ref, onMounted, onUnmounted} from "vue";
 import {UserAgent, Session} from '@apirtc/apirtc'
 import {useUserStore} from "@/stores/user.js";
+import { useRoute } from "vue-router";
 
 export default {
   data() {
@@ -75,7 +76,6 @@ export default {
         .catch((error) => {
           console.log(error)
         });
-    
   },
 
 
@@ -88,6 +88,7 @@ setup() {
     const mediaRecorder = ref(null);
     const isStreaming = ref(false);
     const recordedChunks = ref([]);
+    const route = useRoute();
 
     const ua = new UserAgent({
       uri: "apzkey:myDemoApiKey",
@@ -165,11 +166,14 @@ setup() {
     if (emission) {
       const formData = new FormData();
       formData.append('titre', emission.titre);
+      formData.append('date', emission.date);
+      formData.append('duree', emission.duree);
       formData.append('description', emission.description);
+      formData.append('photo', emission.photo);
       formData.append('audio', blob);
       formData.append('emission_id', emission.id);
 
-      axios.post("http://localhost:2080/podcasts", formData, {
+      axios.post("http://localhost:2080/podcast", formData, {
         headers: {
           'Content-Type': 'multipart/form-data' // Assurez-vous que le serveur accepte ce type de contenu
         }
@@ -207,7 +211,8 @@ const downloadWav = (blob) => {
 
     const getEmission = async () => {
       try {
-        const response = await axios.get(`http://localhost:2080/emissions/${this.$route.params.id}`);
+        
+        const response = await axios.get(`http://localhost:2080/emissions/${route.params.id}`);
         return response.data.emission;
       } catch (error) {
         console.error(error);
