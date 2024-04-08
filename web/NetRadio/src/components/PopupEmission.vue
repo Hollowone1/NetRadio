@@ -26,7 +26,7 @@ export default {
       editedEmission: {
         id: this.emission.id,
         titre: this.emission.titre,
-        user: this.emission.user,
+        user: this.emission.email,
         theme: this.emission.theme,
         description: this.emission.description,
         photo: this.emission.photo
@@ -124,7 +124,7 @@ export default {
             <img @click="edit = true" src="/icons/editPurple.svg" alt="edit icon"/>
           </div>
           <div class="infos">
-            <p><strong>Présentateur / animateur :</strong> {{ emission.user }}</p>
+            <p><strong>Présentateur / animateur :</strong> {{ emission.email }}</p>
             <p>{{ emission.theme }}</p>
             <p>{{ emission.description }}</p>
             <p>Photo : <a :href="emission.photo">{{emission.photo}}</a></p>
@@ -176,7 +176,7 @@ export default {
           </div>
           <div class="presentateur">
             <label for="presentateur">Email du présentateur :</label>
-            <input type="text" id="presentateur" v-model="newEmission.user">
+            <input type="text" id="presentateur" v-model="newEmission.email">
           </div>
           <div class="theme">
             <label for="theme">Thème :</label>

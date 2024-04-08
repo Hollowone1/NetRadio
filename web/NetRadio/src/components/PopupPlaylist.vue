@@ -1,4 +1,6 @@
 <script>
+import {mapState, mapActions} from "pinia";
+import {useUserStore} from "@/stores/user.js";
 
 //TODO : véirfier si il y a vrmnt un changement dans la edtiedPlaylist avant de faire un put inutile
 export default {
@@ -36,6 +38,9 @@ export default {
       },
     }
   },
+  computed: {
+    ...mapState(useUserStore, ['user'])
+  },
   created() {
     //faire un get sur l'API pour récupérer les sons de la playlist
     this.$api.get(`/sons/playlist/${this.playlist.id}`)
@@ -58,8 +63,14 @@ export default {
       }
     },
     createPlaylist() {
-      console.log("created Playlist", this.newPlaylist);
-      //faire un post sur l'API avec les valeurs du v-model
+      this.$api.post(`/playlists/`, {
+        name: this.newPlaylist.name,
+        description: this.newPlaylist.description,
+        emailUser: this.user.email
+      })
+          .catch((error) => {
+            console.log(error)
+          });
       this.$emit('created')
     },
     cancelEditing() {
@@ -68,8 +79,7 @@ export default {
     },
     stopEditing() {
       console.log(this.changed)
-          this.newOne ? this.createPlaylist() : this.editPlaylist()
-      //console.log(this.editedEmission)
+      this.newOne ? this.createPlaylist() : this.editPlaylist()
     },
     editPlaylist() {
       console.log("edited Playlist", this.editedPlaylist);
@@ -79,13 +89,11 @@ export default {
     removeSound(id) {
       this.newOne ?
           this.newPlaylist.sounds = this.newPlaylist.sounds.filter(sound => sound.id !== id)
-           : this.editedPlaylist.sounds = this.editedPlaylist.sounds.filter(sound => sound.id !== id)
+          : this.editedPlaylist.sounds = this.editedPlaylist.sounds.filter(sound => sound.id !== id)
     },
     addSound() {
-      console.log("added Sound", this.addedSound);
       this.newOne ? this.newPlaylist.sounds.push(this.addedSound) : this.editedPlaylist.sounds.push(this.addedSound)
-      this.newOne ? console.log(this.newPlaylist.sounds) : console.log(this.editedPlaylist.sounds)
-      //this.editedPlaylist.sounds.push(this.addedSound)
+      //this.newOne ? console.log(this.newPlaylist.sounds) : console.log(this.editedPlaylist.sounds)
       this.newSound = false
       this.addedSound = {
         titre: "",
@@ -145,7 +153,7 @@ export default {
           </div>
           <div v-for="sound in editedPlaylist.sounds">
             <p>{{ sound.titre }} - {{ sound.nomArtiste }} (<a
-              :href="sound.audio">{{ sound.audio }}</a>)</p>
+                :href="sound.audio">{{ sound.audio }}</a>)</p>
             <img @click="removeSound(sound.id)" src="/icons/poubelle.svg" alt="delete icon"/>
           </div>
         </div>
@@ -169,24 +177,6 @@ export default {
           <label for="description">Description :</label>
           <input type="text" id="description" v-model="newPlaylist.description">
         </div>
-        <div class="info">
-          <label for="sons">Sons dans la playlist :</label>
-          <button v-if="!newSound" @click="newSound = true">Ajouter un son</button>
-          <div v-if="newSound">
-            <label for="titre">Titre :</label>
-            <input type="text" id="titre" v-model="addedSound.titre">
-            <label for="nom">Nom de l'artiste :</label>
-            <input type="text" id="nom" v-model="addedSound.nomArtiste">
-            <label for="audio">Lien vers l'audio :</label>
-            <input type="text" id="audio" v-model="addedSound.audio">
-            <button @click="addSound">Ajouter</button>
-          </div>
-          <div v-for="sound in newPlaylist.sounds">
-            <p>{{ sound.titre }} - {{ sound.nomArtiste }} (<a
-                :href="sound.audio">{{ sound.audio }}</a>)</p>
-            <img @click="removeSound(sound.id)" src="/icons/poubelle.svg" alt="delete icon"/>
-          </div>
-        </div>
       </div>
 
     </div>
@@ -202,7 +192,6 @@ export default {
 
 $widthPopup: 60vw;
 $widthPopupEm: 30em;
-
 
 
 a {
@@ -277,8 +266,9 @@ a {
     }
   }
 }
+
 .cancel {
-  cursor:pointer;
+  cursor: pointer;
   @include text-style(1.2em, $purple, 500);
 }
 

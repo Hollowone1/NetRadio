@@ -25,7 +25,7 @@ CREATE TABLE `Emission` (
                             `description` varchar(512) NOT NULL,
                             `onDirect` tinyint(4) DEFAULT NULL,
                             `theme` varchar(128) NOT NULL,
-                            `photo` varchar(128) DEFAULT NULL,
+                            `photo` varchar(500) DEFAULT NULL,
                             `user_mail` varchar(128) DEFAULT NULL,
                             PRIMARY KEY (`id`),
                             KEY `user_mail` (`user_mail`),
