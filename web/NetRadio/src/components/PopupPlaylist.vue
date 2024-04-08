@@ -18,6 +18,7 @@ export default {
   },
   data() {
     return {
+      changed: false,
       edit: false,
       sounds: [],
       editedPlaylist: {
@@ -63,15 +64,17 @@ export default {
       }
     },
     createPlaylist() {
-      this.$api.post(`/playlists/`, {
-        name: this.newPlaylist.name,
-        description: this.newPlaylist.description,
-        emailUser: this.user.email
-      })
-          .catch((error) => {
-            console.log(error)
-          });
-      this.$emit('created')
+      if (this.changed) {
+        this.$api.post(`/playlists/`, {
+          name: this.newPlaylist.name,
+          description: this.newPlaylist.description,
+          emailUser: this.user.email
+        })
+            .catch((error) => {
+              console.log(error)
+            });
+        this.$emit('created')
+      }
     },
     cancelEditing() {
       this.$emit('close')
@@ -82,8 +85,6 @@ export default {
       this.newOne ? this.createPlaylist() : this.editPlaylist()
     },
     editPlaylist() {
-      console.log("edited Playlist", this.editedPlaylist);
-      //faire un put sur l'API avec les valeurs du v-model
       this.$emit('edited')
     },
     removeSound(id) {
@@ -92,25 +93,41 @@ export default {
           : this.editedPlaylist.sounds = this.editedPlaylist.sounds.filter(sound => sound.id !== id)
     },
     addSound() {
-      console.log(this.editedPlaylist.id)
-      this.$api.post(`/playlists/${this.editedPlaylist.id}/son`, {
-        son: {
-          titre: this.addedSound.titre,
-          nomArtiste: this.addedSound.nomArtiste,
-          audio: this.addedSound.audio
-        },
-        idPlaylist: this.editedPlaylist.id
-      })
-          .catch((error) => {
-            console.log(error)
-          })
-      this.editedPlaylist.sounds.push(this.addedSound)
-      this.newSound = false
-      this.addedSound = {
-        titre: "",
-        nomArtiste: "",
-        audio: ""
-      }
+     if(this.changed) {
+       this.$api.post(`/playlists/${this.editedPlaylist.id}/son`, {
+         son: {
+           titre: this.addedSound.titre,
+           nomArtiste: this.addedSound.nomArtiste,
+           audio: this.addedSound.audio
+         },
+         idPlaylist: this.editedPlaylist.id
+       })
+           .catch((error) => {
+             console.log(error)
+           })
+       this.editedPlaylist.sounds.push(this.addedSound)
+       this.newSound = false
+       this.changed = false
+       this.addedSound = {
+         titre: "",
+         nomArtiste: "",
+         audio: ""
+       }
+     }
+    }
+  },
+  watch: {
+    addedSound: {
+      handler() {
+        this.changed = true
+      },
+      deep: true
+    },
+    newPlaylist: {
+      handler() {
+        this.changed = true
+      },
+      deep: true
     }
   }
 }
@@ -145,16 +162,17 @@ export default {
         </div>
         <div class="info">
           <label for="nom">Nom de la playlist :</label>
-          <input type="text" id="nom" v-model="editedPlaylist.name">
+          <input readonly="readonly" type="text" id="nom" v-model="editedPlaylist.name">
         </div>
         <div class="info">
           <label for="description">Description :</label>
-          <input type="text" id="description" v-model="editedPlaylist.description">
+          <input readonly="readonly" type="text" id="description" v-model="editedPlaylist.description">
         </div>
         <div class="info">
           <label for="sons">Sons dans la playlist :</label>
           <button v-if="!newSound" @click="newSound = true">Ajouter un son</button>
           <div v-if="newSound">
+
             <label for="titre">Titre :</label>
             <input type="text" id="titre" v-model="addedSound.titre">
             <label for="nom">Nom de l'artiste :</label>

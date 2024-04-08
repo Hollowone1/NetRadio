@@ -27,6 +27,8 @@ class GetEmissionsAction extends Action
 
             if (isset($queryParams['theme'])) {
                 $emissions = $this->emissionService->getEmissionByTheme($queryParams['theme']);
+            } else if (isset($queryParams['email'])) {
+                $emissions = $this->emissionService->getEmissionByUser($queryParams['email']);
             } else {
                 $emissions = $this->emissionService->getEmissions();
             }
