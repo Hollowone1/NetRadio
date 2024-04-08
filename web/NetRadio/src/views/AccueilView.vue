@@ -2,14 +2,13 @@
 import EnDirect from '@/components/EnDirect.vue'
 import Emission from '@/components/Emission.vue'
 import Podcast from '@/components/Podcast.vue'
-import Calendar from '@/components/Calendar.vue'
 import Creneaux from '@/components/creneaux.vue'
+import  axios  from 'axios'
 export default {
   components: {
     EnDirect,
     Emission,
     Podcast,
-    Calendar,
     Creneaux,
 
   },
@@ -28,7 +27,7 @@ export default {
     },
   },
   created() {
-    this.$api.get("/emissions")
+    axios.get("http://localhost:2080/emissions")
         .then((response) => {
           this.emissions = response.data.emission.slice(0, 6)
           this.emissions.forEach(emission => {
@@ -45,7 +44,7 @@ export default {
           console.log(error)
         });
 
-    this.$api.get("/podcasts?sort=date")
+    axios.get("http://localhost:2080/podcasts?sort=date")
         .then((response) => {
           this.podcasts = response.data.podcasts.slice(0, 6)
         })
@@ -58,8 +57,6 @@ export default {
 
 <template>
   <en-direct></en-direct>
- <Calendar @dayclick="displaySlots" />
-  <Creneaux v-if="showSlots" :selected-date="selectedDate" />
   <div class="emissions">
     <div class="top">
       <h2>Émissions</h2>

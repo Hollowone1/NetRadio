@@ -1,41 +1,83 @@
 <template>
-  <div>
-    <button @click="startStreaming">Commencer l'enregistrement</button>
-    <button @click="stopStreaming">Arreter l'enregistrement</button>
-    <button @click="downloadWav">Télécharger au format WAV</button>
-    <img src="@/assets/telechargement.jpg" alt="image">
-  </div>
+  <body>
+    <section class="direct">
+    <div id="container">
+    
+      <div class="direct-infos">
+        <div class="direct-infos-titre">
+          <embed src="/icons/direct.svg"/>
+          <h1>{{ emission.titre }}</h1>
+        </div>
+        <h2 id="title">Enregistrer votre émission en direct</h2> 
+          <form id="create">
+            <input
+              type="text"
+              name="conference_name"
+              id="conference-name"
+              placeholder="Entrez le nom de votre émission"
+              autocomplete="off"
+            />
+            <button type="submit" id="create_conference">
+              Commencer l'émission
+            </button>
+            <button type="submit" @click="stopStreaming">Arrêter et sauvegarder l'émission</button>
+          </form>
+
+        <div id="conference">
+          <div id="remote-container"></div>
+          <div id="local-container"></div>
+        </div>
+      </div>
+    </div>
+    </section>
+        
+    
+
+  </body>
 </template>
 
 <script>
 import axios from "axios";
-import { ref, onMounted, onUnmounted } from "vue";
+import {ref, onMounted, onUnmounted} from "vue";
+import {UserAgent, Session} from '@apirtc/apirtc'
 
 export default {
-  setup() {
-    // Create a reactive reference to the audio context
+  data() {
+    return {
+      emission: [],
+    }
+  },
+
+  created() {
+    this.$api.get("/emissions")
+        .then((response) => {
+          this.emission = response.data.emission.find(emission => emission.onDirect === true)
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+  },
+
+
+
+setup() {
+    const localStream = ref(null);
+    const conversation = ref(null);
     const audioContext = ref(null);
-
-    // Create a reactive reference to the media stream source
     const mediaStreamSource = ref(null);
-
-    // Create a reactive reference to the media recorder
     const mediaRecorder = ref(null);
-
-    // Create a reactive reference to a boolean indicating if we are currently streaming
     const isStreaming = ref(false);
-
-    // Create a reactive reference to store recorded audio chunks
     const recordedChunks = ref([]);
 
-    // A function to set up the connection to the server
+    const ua = new UserAgent({
+      uri: "apzkey:myDemoApiKey",
+    });
+
     const connectToServer = async () => {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({audio: true});
         audioContext.value = new (window.AudioContext || window.webkitAudioContext)();
         mediaStreamSource.value = audioContext.value.createMediaStreamSource(stream);
-
-        // Create a new media recorder and handle data available events
         mediaRecorder.value = new MediaRecorder(stream);
         mediaRecorder.value.ondataavailable = (event) => {
           if (event.data.size > 0) {
@@ -47,63 +89,81 @@ export default {
       }
     };
 
-    // A function to start streaming
-    const startStreaming = () => {
-      if (!audioContext.value) {
-        connectToServer();
-      }
-      if (!isStreaming.value) {
-        isStreaming.value = true;
+    const startStreaming = async () => {
+      await connectToServer();
+      const session = await ua.register();
+      const conversationInstance = session.getConversation('myConversation');
+      conversation.value = conversationInstance;
 
-        // Start recording
-        recordedChunks.value = []; // Clear any previous recorded chunks
-        mediaRecorder.value.start();
-      }
+      conversationInstance.on("streamListChanged", (streamInfo) => {
+        if (streamInfo.listEventType === "added" && streamInfo.isRemote === true) {
+          conversationInstance.subscribeToMedia(streamInfo.streamId)
+              .then((stream) => {
+                console.log("subscribeToMedia success", stream);
+              })
+              .catch((err) => {
+                console.error("subscribeToMedia error", err);
+              });
+        }
+      });
+
+      conversationInstance
+          .on("streamAdded", (stream) => {
+            stream.addInDiv("remote-container", "remote-media-" + stream.streamId, {}, false);
+          })
+          .on("streamRemoved", (stream) => {
+            stream.removeFromDiv("remote-container", "remote-media-" + stream.streamId);
+          });
+
+      const createStream = await ua.createStream({
+        constraints: {
+          audio: true,
+          video: false,
+        },
+      });
+
+      localStream.value = createStream;
+      createStream.removeFromDiv("local-container", "local-media");
+      createStream.addInDiv("local-container", "local-media", {}, true);
+
+      const joinResponse = await conversationInstance.join();
+      console.log("Conversation joined", joinResponse);
+
+      const publishResponse = await conversationInstance.publish(localStream.value);
+      console.log("published", publishResponse);
+
+      isStreaming.value = true;
     };
 
-    // A function to stop streaming
     const stopStreaming = () => {
       if (mediaRecorder.value && isStreaming.value) {
         mediaRecorder.value.stop();
         isStreaming.value = false;
 
-        // Send the recorded audio to the server when the recording is stopped
-        const blob = new Blob(recordedChunks.value, { type: "audio/wav" });
-        // const formData = new FormData();
-        // formData.append("title", "My Podcast");
-        // formData.append("description", "This is my podcast description.");
-        // formData.append("file", blob);
-
-        let emission = getEmission();
-
-        let body = {
-          titre: emission.titre,
-          description: emission.description,
-          audio: blob,
-          emission_id: emission.id,
+        const blob = new Blob(recordedChunks.value, {type: "audio/wav"});
+        const emission = getEmission(); // This function needs to be defined
+        if (emission) {
+          const body = {
+            titre: emission.titre,
+            description: emission.description,
+            audio: blob,
+            emission_id: emission.id,
+          };
+          axios.post("http://localhost:2080/podcasts", body)
+              .then((response) => {
+                console.log(response);
+              })
+              .catch((error) => {
+                console.error(error);
+              });
         }
-
-        axios.post("http://localhost:2080/podcasts", body).then((response) => {
-          console.log(response);
-        });
+        downloadWav();
       }
     };
 
-    // faire une fonction pour récupérer les infos de l'émission à partir de son id dans la route
-    // A function to get the emission information from its id in the route
-    const getEmission = async () => {
-      try {
-        const response = await axios.get(`/emissions/${this.$route.params.id}`);
-        return response.data.emission;
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    // A function to download the recorded audio as a WAV file
     const downloadWav = () => {
       if (recordedChunks.value.length > 0) {
-        const blob = new Blob(recordedChunks.value, { type: 'audio/wav' });
+        const blob = new Blob(recordedChunks.value, {type: 'audio/wav'});
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -113,31 +173,37 @@ export default {
       }
     };
 
-    // Run the connectToServer function when the component is mounted
+    const getEmission = async () => {
+      try {
+        const response = await axios.get(`http://localhost:2080/emissions/${this.$route.params.id}`);
+        return response.data.emission;
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+    };
+
     onMounted(() => {
-      connectToServer();
+      startStreaming();
     });
 
-    // Stop streaming and clean up when the component is unmounted
     onUnmounted(() => {
       stopStreaming();
     });
 
-    // Return the functions to be used in the template
-    return { startStreaming, stopStreaming, downloadWav };
+    return {stopStreaming, localStream, conversation, startStreaming, downloadWav};
   },
 };
 </script>
 
+<style scoped lang="scss">
+@import "@/assets/var";
+@import "@/assets/layout";
+@import "@/assets/fonts";
+@import "@/assets/buttons";
 
-<style scoped>
-div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #FFFFFF;
-  height: 100vh;
+input{
+  width: 25%;
 }
 
 button {
@@ -149,5 +215,103 @@ button {
   border: none;
   border-radius: 5px;
   font-size: 1rem;
+}
+
+.direct {
+  color: white;
+  background-color: #334155;
+  padding: 1.5rem;
+  @include flex(column, nowrap, 2vh, space-between);
+  &-infos-titre {
+    h1 {
+      @include text-style(2rem, inherit, bold);
+      display: inline-block;
+      margin: 0;
+    }
+    embed {
+      height: 1.5rem;
+      display: inline-block;
+      margin-right: .5em;
+    }
+  }
+  &-infos-sous-titre {
+    margin-top : .5rem;
+    margin-bottom : 2rem;
+    @include text-style(1em, inherit, 100);
+  }
+  &-infos-desc {
+    text-align: justify;
+  }
+  button {
+    @include buttonStyle($purple, $purple, white, auto, 1em, 1.5em 0em .5em 0em, 0px);
+    font-weight: 500;
+  }
+  img {
+    border-radius : 10px;
+  }
+
+
+@media screen and (min-width : 700px) and (max-width : 1024px){
+  .direct {
+    padding: 2rem;
+    @include flex(row, nowrap, 4vw, space-between);
+    &-infos-titre {
+      @include grid(1fr 8fr);
+      h1 {
+        @include text-style(4vw, inherit, bold);
+      }
+      embed {
+        height: 3vw;
+      }
+    }
+    &-infos-sous-titre {
+      @include text-style(2.5vw, inherit, 100);
+      margin-bottom: .5em
+    }
+    &-infos-desc {
+      text-align: justify;
+      @include text-style(1em, inherit, normal);
+      margin-bottom: 1em;
+    }
+    button {
+      @include buttonStyle($purple, $purple, white, auto, 1em, .5em 0em .5em 0em, 0px);
+    }
+    img {
+      width: 45vw;
+      height: auto
+    }
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .direct {
+    padding: 3rem;
+    @include flex(row, nowrap, 5vw, space-between);
+    &-infos-titre {
+      @include grid(1fr 15fr);
+      h1 {
+        @include text-style(2.5em, inherit, bold);
+      }
+      embed {
+        height: 2em;
+      }
+    }
+    &-infos-sous-titre {
+      @include text-style(1.5em, inherit, 100);
+    }
+    &-infos-desc {
+      text-align: justify;
+      @include text-style(1.2em, inherit, normal);
+      margin-bottom: 2em;
+    }
+    button {
+      @include buttonStyle($purple, $purple, white, auto, 1.2em, .5em 0em .5em 0em, 0px);
+    }
+    img {
+      width: 30vw;
+      height: auto;
+    }
+  }
+}
 }
 </style>
