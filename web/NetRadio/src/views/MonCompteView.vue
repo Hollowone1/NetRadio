@@ -79,11 +79,13 @@ export default {
               this.$api.get(emission.links.users.href)
                   .then((response2) => {
                     emission.user = `${response2.data.user[0].nom} ${response2.data.user[0].prenom}`
+                    emission.email = response2.data.user[0].email
                   })
                   .catch((error) => {
                     console.log(error)
                   });
             });
+            console.log("emissions", this.emissions)
           })
           .catch((error) => {
             console.log(error)
@@ -111,7 +113,18 @@ export default {
     updateEmission() {
       this.showPopupEmission = false;
       this.showPopUpNewEmission = false;
-      this.getEmissions()
+      console.log(this.emissionToDisplay)
+      const index = this.emissions.findIndex(emission => this.emissionToDisplay.id === 3);
+      this.$api.get(`/emissions/${this.emissionToDisplay.id}`)
+          .then((response) => {
+            if (index !== -1) {
+              this.emissions.splice(index, 1, response.emission);
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      //this.getEmissions()
     },
     displayUser(email) {
       this.userToDisplay = this.users.find(user => user.email === email);
@@ -375,13 +388,13 @@ export default {
         <div class="mon-direct">
           <section class="direct">
             <div id="container">
-    
+
             <div class="direct-infos">
               <div class="direct-infos-titre">
                 <embed src="/icons/direct.svg"/>
                 <h1>{{ emission.titre }}</h1>
               </div>
-              <h2 id="title">Enregistrer votre émission en direct</h2> 
+              <h2 id="title">Enregistrer votre émission en direct</h2>
                 <form id="create">
                   <input
                     type="text"
