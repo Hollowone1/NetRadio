@@ -99,12 +99,38 @@ export default {
     margin: .5em 0em .5em 0em;
   }
 
-  .header-boutons-connecter, .header-boutons-deconnecter {
 
+
+  @media (min-width: 768px) {
+  .header-boutons-connecter, .header-boutons-deconnecter {
+    @include buttonStyle($purple, $purple, white, auto, 1em, .5em 0em .5em 0em, 0px);
+    font-weight: 500;
+    font-size: 1em;
+    margin: .5em 0em .5em 0em;
+    padding-bottom: 1em;
+    padding-top:1em;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-boutons-connecter, .header-boutons-deconnecter {
     @include buttonStyle($purple, $purple, white, auto, 1em, .5em 0em .5em 0em, 0px);
     font-weight: 500;
     margin-right: 10px;
+    font-size: 0.8em;
   }
+}
+
+@media (max-width: 420px) {
+  .header-boutons-connecter, .header-boutons-deconnecter {
+    @include buttonStyle($purple, $purple, white, auto, 1em, .5em 0em .5em 0em, 0px);
+    font-weight: 500;
+    margin-right: 10px;
+    font-size: 0.6em;
+  }
+}
+
+  
 
   .search {
 
@@ -147,10 +173,7 @@ export default {
     margin-right: 10px;
   }
 
-  .header-boutons-connecter {
-    font-size: 0.8em;
-    padding: 5px 10px;
-  }
+
 
   .search {
     width: 100%;
