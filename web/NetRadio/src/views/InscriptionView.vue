@@ -1,6 +1,9 @@
 <script>
 import {mapState, mapActions} from "pinia";
 import {useUserStore} from "@/stores/user.js";
+import {toast} from "vue3-toastify";
+import ToastOptions from "../toasts/toastOptions.js";
+
 export default {
   data() {
     return {
@@ -19,10 +22,12 @@ export default {
       const passwordRegex = /^(?=.*[A-Z])[a-zA-Z\d]{8,}$/
 
       if (!emailRegex.test(this.mail)) {
+        toast.error('Format d\'email invalide.', ToastOptions)
         this.errorMessage = "Format d'email invalide.";
       }
 
       if (!passwordRegex.test(this.password)) {
+        toast.error('Mot de passe invalide. Il doit contenir 8 caractères et au moins une majuscule.', ToastOptions)
         this.errorMessage = "Mot de passe invalide. Il doit contenir 8 caractères et au moins une majuscule.";
       }
 
@@ -38,6 +43,7 @@ export default {
       }).catch(err => {
         //err.response.data.error ? this.errorMessage = err.response.data.error : this.errorMessage = null
         //err.response.data.exception[0].message ? this.errorMessage = err.response.data.exception[0].message : this.errorMessage = null
+        toast.error(`Erreur lors de l'inscription : ${err.response.data}`, ToastOptions)
         console.log(err.response.data)
       })
     },
@@ -50,7 +56,7 @@ export default {
       }).then(resp => {
         this.loginUser(resp.data)
       }).catch(err => {
-        console.log("erreur dans connexion APRÈS inscription", err)
+        toast.error(`Erreur dans connexion après l\'inscription : ${err.response.data}`, ToastOptions)
       })
     },
   }
