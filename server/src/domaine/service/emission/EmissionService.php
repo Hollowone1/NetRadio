@@ -68,6 +68,20 @@ class EmissionService implements iEmissionService
         }
     }
 
+    public function getEmissionByUser ($user)
+    {
+        try {
+            $emissionsDTO = [];
+            $emissions = Emission::where('user_mail', $user)->get();
+            foreach ($emissions as $emission) {
+                $emissionsDTO [] = $emission->toDTO();
+            }
+            return $emissionsDTO;
+        } catch (EmissionNotFoundException $e) {
+            throw new EmissionNotFoundException("Emission not found");
+        }
+    }
+
     public function postEmission($emissionDTO) : EmissionDTO
     {
             $titre = filter_var($emissionDTO->titre, FILTER_SANITIZE_SPECIAL_CHARS);

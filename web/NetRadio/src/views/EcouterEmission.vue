@@ -1,29 +1,30 @@
 <template>
   <body>
   <!-- Si l'utilisateur est un auditeur (role 1), il peut seulement écouter l'émission -->
-    <section v-if="getRoleUser() === 1" class="direct">
-      <div id="container">
-        <div class="direct-infos">
-          <div class="direct-infos-titre">
-            <embed src="/icons/direct.svg"/>
-            <h1>{{ emission.titre }}</h1>
-          </div>
-        </div>
-          <h2 id="title">Écouter l'émission en direct</h2>
-          <div id="conference">
-            <div id="remote-container"></div>
-            <div id="local-container"></div>
-          </div>
-        </div>
-    </section>
+<!--    <section v-if="getRoleUser() === 1" class="direct">-->
+<!--      <div id="container">-->
+<!--        <div class="direct-infos">-->
+<!--          <div class="direct-infos-titre">-->
+<!--            <embed src="/icons/direct.svg"/>-->
+<!--            <h1>{{ emission.titre }}</h1>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--          <h2 id="title">Écouter l'émission en direct</h2>-->
+<!--          <div id="conference">-->
+<!--            <div id="remote-container"></div>-->
+<!--            <div id="local-container"></div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--    </section>-->
 
-  <!-- Si l'utilisateur est un animateur (role 2), il peut lancer l'émission et l'écouter -->
-    <section v-else-if="getRoleUser() === 2" class="direct">
+<!--  &lt;!&ndash; Si l'utilisateur est un animateur (role 2), il peut lancer l'émission et l'écouter &ndash;&gt;-->
+<!--    <section v-if="getRoleUser() === 2" class="direct">-->
+
     <div id="container">
       <div class="direct-infos">
         <div class="direct-infos-titre">
           <embed src="/icons/direct.svg"/>
-          <h1>{{ emission.titre }}</h1>
+<!--          <h1>{{ emission.titre }}</h1>-->
         </div>
         <h2 id="title">Enregistrer votre émission en direct</h2> 
           <form id="create">
@@ -46,7 +47,7 @@
         </div>
       </div>
     </div>
-    </section>
+<!--    </section>-->
         
     
 
@@ -75,13 +76,7 @@ export default {
         .catch((error) => {
           console.log(error)
         });
-        if (this.userRole === "admin") {
-  // Permettre à l'admin de créer une émission
-  // Ajoutez ici votre logique de création d'émission
-      } else if (this.userRole === "auditeur") {
-  // Permettre à l'auditeur d'écouter une émission
-  // Ajoutez ici votre logique pour démarrer l'écoute d'une émission
-    }
+    
   },
 
 
@@ -215,13 +210,46 @@ setup() {
       return user.user.role;
     };
 
+  const startListening = async () => {
+    const session = await ua.register();
+    const conversationInstance = session.getConversation('myConversation');
+    conversation.value = conversationInstance;
+
+    conversationInstance.on("streamListChanged", (streamInfo) => {
+      if (streamInfo.listEventType === "added" && streamInfo.isRemote === true) {
+        conversationInstance.subscribeToMedia(streamInfo.streamId)
+            .then((stream) => {
+              console.log("subscribeToMedia success", stream);
+            })
+            .catch((err) => {
+              console.error("subscribeToMedia error", err);
+            });
+      }
+    });
+
+    conversationInstance
+        .on("streamAdded", (stream) => {
+          stream.addInDiv("remote-container", "remote-media-" + stream.streamId, {}, false);
+        })
+        .on("streamRemoved", (stream) => {
+          stream.removeFromDiv("remote-container", "remote-media-" + stream.streamId);
+        });
+
+    const joinResponse = await conversationInstance.join();
+    console.log("Conversation joined", joinResponse);
+  };
+
     onMounted(() => {
-      startStreaming();
-      window.addEventListener("beforeunload", beforeUnloadHandler);
+      if (getRoleUser() === 2) {
+        startStreaming();
+      } else if (getRoleUser() === 1) {
+        connectToServer();
+        startListening();
+      }
     });
 
     onUnmounted(() => {
-      stopStreaming(), window.removeEventListener("beforeunload", beforeUnloadHandler);
+      stopStreaming();
     });
 
     return {stopStreaming, localStream, conversation, startStreaming, downloadWav, getRoleUser};
