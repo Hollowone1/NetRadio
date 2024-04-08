@@ -1,7 +1,8 @@
 <script>
 import {mapActions} from "pinia";
 import {useUserStore} from "@/stores/user.js";
-
+import {toast} from "vue3-toastify";
+import ToastOptions from "../toasts/toastOptions.js";
 export default {
   emits: ['change'],
   data() {
@@ -27,6 +28,7 @@ export default {
     logOut() {
       this.logoutUser()
       this.$router.push('/connexion')
+      toast.success('Déconnexion réussie !', ToastOptions)
     }
   },
 }

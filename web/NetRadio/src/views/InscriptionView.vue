@@ -43,8 +43,7 @@ export default {
       }).catch(err => {
         //err.response.data.error ? this.errorMessage = err.response.data.error : this.errorMessage = null
         //err.response.data.exception[0].message ? this.errorMessage = err.response.data.exception[0].message : this.errorMessage = null
-        toast.error(`Erreur lors de l'inscription : ${err.response.data}`, ToastOptions)
-        console.log(err.response.data)
+        toast.error(`Erreur lors de l'inscription.`, ToastOptions)
       })
     },
     connexionAfter() {

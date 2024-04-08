@@ -5,7 +5,7 @@ const toastOptions = {
     type: "error",
     position: "bottom-right",
     transition: "flip",
-    autoClose: 1500,
+    autoClose: 3000,
     pauseOnHover: true,
     dangerouslyHTMLString: true,
 };
