@@ -149,7 +149,6 @@ export default {
       <div v-if="display === 1" class="display mon-compte">
         <div class="top">
           <h1>Mon compte</h1>
-          <button>Modifier mes informations</button>
         </div>
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
@@ -188,12 +187,12 @@ export default {
       <template v-slot:1>Mon compte</template>
       <template v-slot:2>Mes playlists</template>
       <template v-slot:3>Mon émission</template>
+      <template v-slot:4>Lancer un direct</template>
     </side-bar>
     <main>
       <div v-if="display === 1" class="display mon-compte">
         <div class="top">
           <h1>Mon compte</h1>
-          <button>Modifier mes informations</button>
         </div>
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
@@ -230,6 +229,14 @@ export default {
           <img src="/icons/editPurple.svg" alt="add icon">
         </div>
       </div>
+      <div v-if="display === 4" class="display lancer-direct">
+        <div class="top">
+          <h1>Lancer un direct</h1>
+        </div>
+        <div class="mon-direct">
+          ON LANCE LE DIRECT ICI
+        </div>
+      </div>
     </main>
   </div>
 
@@ -245,7 +252,6 @@ export default {
       <div v-if="display === 1" class="display mon-compte">
         <div class="top">
           <h1>Mon compte</h1>
-          <button>Modifier mes informations</button>
         </div>
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
