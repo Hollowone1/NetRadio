@@ -10,55 +10,36 @@ export default {
     return {
       editedUser: {
         email: this.user.email,
-        nom: this.user.nom,
-        prenom: this.user.prenom,
         role: this.user.role,
-        username: this.user.username
       },
       roles: ['Auditeur', 'Animateur', 'Administrateur']
     }
-  },
-  directives: {
-    outside: {
-      beforeMount(el, binding) {
-        el.clickOutsideEvent = function (event) {
-          if (!(el === event.target || el.contains(event.target))) {
-            console.log('click outside', binding.value)
-
-            //vnode.context.$emit('close')
-            //el.dispatchEvent(event);
-          }
-        };
-        document.addEventListener('click', el.clickOutsideEvent);
-      },
-      unmounted(el) {
-        // Remove the event listener when the bound element is unmounted
-        document.removeEventListener('click', el.clickOutsideEvent);
-      }
-    },
   },
   created() {
     const roleIndex = parseInt(this.user.role) - 1;
     this.editedUser = {
       email: this.user.email,
-      nom: this.user.nom,
-      prenom: this.user.prenom,
       role: this.roles[roleIndex], // Utiliser l'index pour accéder au rôle correspondant dans roles
-      username: this.user.username
     };
   },
   methods: {
     stopEditing() {
+      //console.log(parseInt(this.user.role) !== this.roles.indexOf(this.editedUser.role) + 1)
+      parseInt(this.user.role) !== this.roles.indexOf(this.editedUser.role) + 1 ? this.editUser() : console.log("pas de changement")
       this.$emit('edited')
-      //console.log(this.editedEmission)
-      this.editUser()
     },
     editUser() {
       this.editedUser.role = this.roles.indexOf(this.editedUser.role) + 1; // Utiliser indexOf pour récupérer l'index du rôle dans roles
-      console.log("edited User", this.editedUser);
       //faire un put sur l'API avec les valeurs du v-model
+      this.$api.put(`/users/${this.editedUser.email}`, {
+        role: this.editedUser.role
+      }).then(response => {
+        console.log("user role bien changé !", response);
+      }).catch(error => {
+        console.log(error);
+      });
     }
-  }
+  },
 }
 
 </script>
@@ -66,23 +47,23 @@ export default {
 <template>
   <div class="modal-mask">
     <div class="modal-wrapper">
-      <div v-outside class="popup-user-edit">
+      <div class="popup-user-edit">
         <div><img @click="stopEditing" src="/icons/check.svg" alt="edit icon"/></div>
         <div class="info">
-          <label for="nom">Nom :</label>
-          <input type="text" id="nom" v-model="editedUser.nom">
+          <p>Nom :</p>
+          <p>{{ user.nom }}</p>
         </div>
         <div class="info">
-          <label for="prenom">Prénom :</label>
-          <input type="text" id="prenom" v-model="editedUser.prenom">
+          <p>Prénom :</p>
+          <p>{{ user.prenom }}</p>
         </div>
         <div class="info">
-          <label for="username">Nom d'utilisateur :</label>
-          <input type="text" id="username" v-model="editedUser.username">
+          <p>Nom d'utilisateur :</p>
+          <p>{{ user.username }}</p>
         </div>
         <div class="info">
-          <label for="email">E-mail :</label>
-          <input type="email" id="email" v-model="editedUser.email"/>
+          <p>Mail :</p>
+          <p>{{ user.email }}</p>
         </div>
         <div class="info">
           <label for="role">Rôle :</label>
