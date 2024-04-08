@@ -119,10 +119,11 @@ export default {
         </div>
         <div class="infos">
           <p>{{ playlist.description }}</p>
-          <p>Sons dans la playlist : </p>
-          <ul class="son">
+          <p v-if="sounds.length > 0">Sons dans la playlist :</p>
+          <ul v-if="sounds.length > 0" class="son">
             <li v-for="sound in sounds">{{ sound.titre }} - {{ sound.nomArtiste }}</li>
           </ul>
+          <p v-else>Aucun son</p>
         </div>
       </div>
 
