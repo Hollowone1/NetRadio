@@ -76,13 +76,7 @@ export default {
         .catch((error) => {
           console.log(error)
         });
-        if (this.userRole === "admin") {
-  // Permettre à l'admin de créer une émission
-  // Ajoutez ici votre logique de création d'émission
-      } else if (this.userRole === "auditeur") {
-  // Permettre à l'auditeur d'écouter une émission
-  // Ajoutez ici votre logique pour démarrer l'écoute d'une émission
-    }
+    
   },
 
 
