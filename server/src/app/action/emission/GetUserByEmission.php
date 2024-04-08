@@ -29,11 +29,8 @@ class GetUserByEmission extends Action
             $usersRep [] = [
                 'nom' => $user->nom,
                 'prenom' => $user->prenom,
-                'links' => [
-                    'self' => [
-                        "href" => $router->urlFor('user.show', ['email' => $user->email]),
-                    ]
-                ],
+                'email' => $user->email,
+                'username' => $user->username,
             ];
         }
 

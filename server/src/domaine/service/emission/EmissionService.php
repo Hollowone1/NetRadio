@@ -120,8 +120,8 @@ class EmissionService implements iEmissionService
                 throw new EmissionNotFoundException("Emission not found");
             }
 
-        } catch (\Exception) {
-            throw new EmissionNotFoundException("Les champs sont les mêmes. Aucune modification n'a été effectuée.");
+        } catch (\Exception $e) {
+            throw new EmissionNotFoundException("Les champs sont les mêmes. Aucune modification n'a été effectuée." . $e->getMessage());
         }
     }
 }
