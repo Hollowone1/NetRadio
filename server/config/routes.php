@@ -16,6 +16,7 @@ use radio\net\app\action\emission\PutEmission;
 use radio\net\app\action\playlist\GetPlaylistByEmailUserAction;
 use radio\net\app\action\playlist\GetPlaylistByIdAction;
 use radio\net\app\action\playlist\PostPlaylist;
+use radio\net\app\action\playlist\PostSonByPlaylistAction;
 use radio\net\app\action\podcast\GetAllPodcasts;
 use radio\net\app\action\podcast\GetPodcastByEmission;
 use radio\net\app\action\podcast\GetPodcastByIdAction;
@@ -86,7 +87,8 @@ return function (App $app) {
     //playlist
     $app->group('/playlists', function ($app) {
         $app->post("[/]", PostPlaylist::class)->setName("playlist.index");
-        $app->get("/{id_playlist}[/]", GetPlaylistByIdAction::class)->setName('.playlist.show');
+        $app->get("/{id_playlist}[/]", GetPlaylistByIdAction::class)->setName('playlist.show');
+        $app->post("/{id}/son", PostSonByPlaylistAction::class)->setName('son.playlist.create');
     });
 
     // creneau

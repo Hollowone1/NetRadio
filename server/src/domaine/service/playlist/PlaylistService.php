@@ -3,6 +3,7 @@
 namespace radio\net\domaine\service\playlist;
 
 use radio\net\domaine\entities\Playlist;
+use radio\net\domaine\entities\Son;
 
 class PlaylistService implements iPlaylistService
 {
@@ -54,4 +55,29 @@ class PlaylistService implements iPlaylistService
         $playlist->save();
         return $playlist;
     }
+
+    // insert into playlistSon($idPlaylist, $idSon);
+
+    public function postSonByPlaylist ($idPlaylist, $sonDTO) {
+        $son = $this->createSon($sonDTO);
+
+        $playlist = Playlist::findOrFail($idPlaylist);
+
+        if ($playlist) {
+            $playlist->sons()->attach($son->id);
+        }
+        return $playlist;
+    }
+
+    public function createSon($sonData)
+    {
+        $son = new Son();
+        $son->titre = $sonData->titre;
+        $son->nomArtiste = $sonData->nomArtiste;
+        $son->audio = $sonData->audio;
+        $son->save();
+
+        return $son; // Retourne le son créé
+    }
+
 }

@@ -2,6 +2,8 @@
 import PopupEmission from "@/components/PopupEmission.vue";
 import PopupUtilisateur from "@/components/PopupUtilisateur.vue";
 import PopupPlaylist from "@/components/PopupPlaylist.vue";
+import Calendrier from "@/components/Calendar.vue";
+import Creneaux from "@/components/creneaux.vue";
 import Emission from '@/components/Emission.vue'
 import SideBar from "@/components/SideBarComponent.vue";
 import {mapState, mapActions} from "pinia";
@@ -11,13 +13,16 @@ import axios from "axios";
 import {ref, onMounted, onUnmounted} from "vue";
 import {UserAgent, Session} from '@apirtc/apirtc'
 
+
+
 export default {
   components: {
     PopupEmission,
     Emission,
     SideBar,
     PopupUtilisateur,
-    PopupPlaylist
+    PopupPlaylist,
+    Calendrier
   },
   data() {
     return {
@@ -52,7 +57,7 @@ export default {
         .catch((error) => {
           console.log(error.response.data.exception[0].code)
           error.response.data.exception[0].code === 401 ? (this.$router.push('/connexion'), this.logoutUser()) : null
-              //refresh le token ici
+          //refresh le token ici
         });
 
     this.user.role === '3' ? this.getUsers() : null
@@ -288,7 +293,6 @@ export default {
 }
 
 
-
 </script>
 
 <template>
@@ -296,6 +300,7 @@ export default {
     <side-bar @change="changeDisplay">
       <template v-slot:1>Mon compte</template>
       <template v-slot:2>Enregistrements</template>
+      <template v-slot:3>Calendrier</template>
     </side-bar>
     <main>
       <div v-if="display === 1" class="display mon-compte">
@@ -309,6 +314,7 @@ export default {
             <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
         </div>
+        
       </div>
       <div v-if="display === 2" class="display enregistrements">
         <h1>Vos enregistrements</h1>
@@ -329,6 +335,15 @@ export default {
             <p>PRÉSENTATEUR</p>
           </section>
         </div>
+      </div>
+      <div v-if="display === 3" class="display mon-compte">
+        <div class="top">
+          <h1>Calendrier</h1>
+        </div>
+        <div class="info">
+          <Calendrier :creneaux="creneaux" @dayclick="onDayClick"/>
+        </div>
+        
       </div>
     </main>
   </div>
@@ -389,19 +404,19 @@ export default {
           <section class="direct">
             <div id="container">
 
-            <div class="direct-infos">
-              <div class="direct-infos-titre">
-                <embed src="/icons/direct.svg"/>
-                <h1>{{ emission.titre }}</h1>
-              </div>
-              <h2 id="title">Enregistrer votre émission en direct</h2>
+              <div class="direct-infos">
+                <div class="direct-infos-titre">
+                  <embed src="/icons/direct.svg"/>
+                  <h1>{{ emission.titre }}</h1>
+                </div>
+                <h2 id="title">Enregistrer votre émission en direct</h2>
                 <form id="create">
                   <input
-                    type="text"
-                    name="conference_name"
-                    id="conference-name"
-                    placeholder="Entrez le nom de votre émission"
-                    autocomplete="off"
+                      type="text"
+                      name="conference_name"
+                      id="conference-name"
+                      placeholder="Entrez le nom de votre émission"
+                      autocomplete="off"
                   />
                   <button type="submit" id="create_conference">
                     Commencer l'émission
@@ -409,13 +424,13 @@ export default {
                   <button type="submit" @click="stopStreaming">Arrêter et sauvegarder l'émission</button>
                 </form>
 
-              <div id="conference">
-                <div id="remote-container"></div>
-                <div id="local-container"></div>
+                <div id="conference">
+                  <div id="remote-container"></div>
+                  <div id="local-container"></div>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
         </div>
       </div>
     </main>
@@ -457,6 +472,11 @@ export default {
                     :key="emission.id"></emission>
         </div>
       </div>
+
+      <div v-if="display === 3" class="display calendrier">
+        <Calendar :columns="columns" @dayclick="onDayClick"/>
+      </div>
+      
       <div v-if="display === 4" class="display users">
         <h1>Tous les utilisateurs</h1>
         <popup-utilisateur :user="userToDisplay" v-if="showPopupUser" @close="showPopupUser = false"
@@ -514,6 +534,7 @@ export default {
 .playlists {
   .top {
     @include flex(row, nowrap, .5em, space-between, center);
+
     img {
       height: 2.5em;
     }
@@ -576,10 +597,11 @@ export default {
   border-radius: 10px;
   padding: 1em .7em;
   border: 2px solid $lightGrey;
+
   .top {
     @include flex(row, nowrap, 1em, space-between, center);
     padding-bottom: .5em;
-    margin-bottom : 0;
+    margin-bottom: 0;
 
     img {
       height: 1.5em;
@@ -591,6 +613,7 @@ export default {
       text-transform: uppercase;
     }
   }
+
   p {
     @include text-style(1em, inherit, 300);
     margin: 0;
@@ -652,7 +675,7 @@ export default {
     min-height: 60vh;
 
     main {
-      flex-basis: 80vw;
+      flex-basis: 100vw;
       flex-shrink: 1;
       flex-grow: 0;
     }
