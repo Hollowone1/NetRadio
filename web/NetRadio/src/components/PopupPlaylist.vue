@@ -82,8 +82,6 @@ export default {
       this.newOne ? this.createPlaylist() : this.editPlaylist()
     },
     editPlaylist() {
-      console.log("edited Playlist", this.editedPlaylist);
-      //faire un put sur l'API avec les valeurs du v-model
       this.$emit('edited')
     },
     removeSound(id) {
@@ -145,11 +143,11 @@ export default {
         </div>
         <div class="info">
           <label for="nom">Nom de la playlist :</label>
-          <input type="text" id="nom" v-model="editedPlaylist.name">
+          <input readonly="readonly" type="text" id="nom" v-model="editedPlaylist.name">
         </div>
         <div class="info">
           <label for="description">Description :</label>
-          <input type="text" id="description" v-model="editedPlaylist.description">
+          <input readonly="readonly" type="text" id="description" v-model="editedPlaylist.description">
         </div>
         <div class="info">
           <label for="sons">Sons dans la playlist :</label>
