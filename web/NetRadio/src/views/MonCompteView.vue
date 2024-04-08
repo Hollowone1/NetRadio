@@ -2,6 +2,8 @@
 import PopupEmission from "@/components/PopupEmission.vue";
 import PopupUtilisateur from "@/components/PopupUtilisateur.vue";
 import PopupPlaylist from "@/components/PopupPlaylist.vue";
+import Calendrier from "@/components/Calendar.vue";
+import Creneaux from "@/components/creneaux.vue";
 import Emission from '@/components/Emission.vue'
 import SideBar from "@/components/SideBarComponent.vue";
 import {mapState, mapActions} from "pinia";
@@ -11,13 +13,16 @@ import axios from "axios";
 import {ref, onMounted, onUnmounted} from "vue";
 import {UserAgent, Session} from '@apirtc/apirtc'
 
+
+
 export default {
   components: {
     PopupEmission,
     Emission,
     SideBar,
     PopupUtilisateur,
-    PopupPlaylist
+    PopupPlaylist,
+    Calendrier
   },
   data() {
     return {
@@ -295,6 +300,7 @@ export default {
     <side-bar @change="changeDisplay">
       <template v-slot:1>Mon compte</template>
       <template v-slot:2>Enregistrements</template>
+      <template v-slot:3>Calendrier</template>
     </side-bar>
     <main>
       <div v-if="display === 1" class="display mon-compte">
@@ -308,6 +314,7 @@ export default {
             <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
         </div>
+        
       </div>
       <div v-if="display === 2" class="display enregistrements">
         <h1>Vos enregistrements</h1>
@@ -328,6 +335,15 @@ export default {
             <p>PRÉSENTATEUR</p>
           </section>
         </div>
+      </div>
+      <div v-if="display === 3" class="display mon-compte">
+        <div class="top">
+          <h1>Calendrier</h1>
+        </div>
+        <div class="info">
+          <Calendrier :creneaux="creneaux" @dayclick="onDayClick"/>
+        </div>
+        
       </div>
     </main>
   </div>
@@ -456,6 +472,11 @@ export default {
                     :key="emission.id"></emission>
         </div>
       </div>
+
+      <div v-if="display === 3" class="display calendrier">
+        <Calendar :columns="columns" @dayclick="onDayClick"/>
+      </div>
+      
       <div v-if="display === 4" class="display users">
         <h1>Tous les utilisateurs</h1>
         <popup-utilisateur :user="userToDisplay" v-if="showPopupUser" @close="showPopupUser = false"
@@ -654,7 +675,7 @@ export default {
     min-height: 60vh;
 
     main {
-      flex-basis: 80vw;
+      flex-basis: 100vw;
       flex-shrink: 1;
       flex-grow: 0;
     }
