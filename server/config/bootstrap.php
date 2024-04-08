@@ -18,7 +18,7 @@ $container = $build->build();
 $app = $container->get('app');
 
 //cors
-$app->add(new Cors());
+//$app->add(new Cors());
 
 //connexion à la base de données
 $container->get('db');
