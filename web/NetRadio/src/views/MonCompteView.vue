@@ -3,6 +3,7 @@ import PopupEmission from "@/components/PopupEmission.vue";
 import PopupUtilisateur from "@/components/PopupUtilisateur.vue";
 import PopupPlaylist from "@/components/PopupPlaylist.vue";
 import Calendrier from "@/components/Calendar.vue";
+import Creneaux from "@/components/creneaux.vue";
 import Emission from '@/components/Emission.vue'
 import SideBar from "@/components/SideBarComponent.vue";
 import {mapState, mapActions} from "pinia";
@@ -11,6 +12,8 @@ import {jwtDecode} from "jwt-decode";
 import axios from "axios";
 import {ref, onMounted, onUnmounted} from "vue";
 import {UserAgent, Session} from '@apirtc/apirtc'
+
+
 
 export default {
   components: {
@@ -338,7 +341,7 @@ export default {
           <h1>Calendrier</h1>
         </div>
         <div class="info">
-          <Calendrier />
+          <Calendrier :creneaux="creneaux" @dayclick="onDayClick"/>
         </div>
         
       </div>
