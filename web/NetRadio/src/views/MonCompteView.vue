@@ -47,8 +47,8 @@ export default {
     ...mapState(useUserStore, ['user', 'tokens', 'loggedIn']),
   },
   created() {
-    const mail = jwtDecode(this.tokens.access_token).upr.email
-    this.$api.get(`/users/mail/${mail}`, {
+    //const mail = jwtDecode(this.tokens.access_token).upr.email
+    this.$api.get(`/users/mail/${this.user.email}`, {
       headers: {
         Authorization: `Bearer ${this.tokens.access_token}`
       }
@@ -101,7 +101,7 @@ export default {
           })
     },
     getEmissionByUser() {
-      this.$api.get(`/emissions`)
+      this.$api.get(`/emissions?email=${this.user.email}`)
           .then((response) => {
             this.emissionsOfUser = response.data.emissions
           })
@@ -342,6 +342,7 @@ export default {
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
           <div>
+            <p><strong>Nom et prénom : </strong> {{ user.nom }} {{ user.prenom }}</p>
             <p><strong>Nom d'utilisateur : </strong> {{ user.username }}</p>
             <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
@@ -396,6 +397,7 @@ export default {
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
           <div>
+            <p><strong>Nom et prénom : </strong> {{ user.nom }} {{ user.prenom }}</p>
             <p><strong>Nom d'utilisateur : </strong>{{ user.username }} </p>
             <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
@@ -427,7 +429,7 @@ export default {
           <h1>Mes émissions</h1>
         </div>
         <div class="emissions-liste">
-          <emission :redirect="true" v-for="emission in emissionsOfUser" :emission="emission" :key="emission.id"></emission>
+          <emission v-for="emission in emissionsOfUser" :emission="emission" :key="emission.id"></emission>
         </div>
       </div>
       <div v-if="display === 4" class="display lancer-direct">
@@ -486,6 +488,7 @@ export default {
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
           <div>
+            <p><strong>Nom et prénom : </strong> {{ user.nom }} {{ user.prenom }}</p>
             <p><strong>Nom d'utilisateur : </strong>{{ user.username }} </p>
             <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
@@ -609,8 +612,6 @@ export default {
 
     p {
       @include text-style(1em, inherit, 400);
-      margin-bottom: .25em;
-      margin-top: .25em;
       text-align: center;
     }
   }
@@ -746,7 +747,7 @@ export default {
       }
 
       img {
-        height: 6em
+        height: 7em
       }
     }
   }
