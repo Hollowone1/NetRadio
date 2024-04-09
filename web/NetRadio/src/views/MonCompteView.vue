@@ -103,7 +103,7 @@ export default {
     getEmissionByUser() {
       this.$api.get(`/emissions?email=${this.user.email}`)
           .then((response) => {
-            this.emissionsOfUser = response.data.emissions
+            this.emissionsOfUser = response.data.emission
           })
           .catch((error) => {
             console.log(error)
@@ -428,9 +428,11 @@ export default {
         <div class="top">
           <h1>Mes émissions</h1>
         </div>
-        <div class="emissions-liste">
+        <div v-if="emissionsOfUser.length > 0" class="emissions-liste">
           <emission v-for="emission in emissionsOfUser" :emission="emission" :key="emission.id"></emission>
         </div>
+        <div v-else class="emissions-liste"> Pas encore d'émission ? Contactez un admnistrateur !</div>
+        <p class="info-nv">Pour créer une nouvelle émission ou modifier une existante, veuillez contacter un administrateur.</p>
       </div>
       <div v-if="display === 4" class="display lancer-direct">
         <div class="top">
@@ -542,6 +544,10 @@ export default {
 @import "@/assets/layout";
 @import "@/assets/fonts";
 @import "@/assets/buttons";
+
+.info-nv {
+  margin-top: 1em;
+}
 
 .display {
   padding: 2em 3em;
