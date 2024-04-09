@@ -29,7 +29,7 @@
     },
     async created() {
       try {
-        const response = await axios.get('http://localhost:2080/son');
+        const response = await axios.get('http://localhost:2080/sons');
         this.sounds = response.data;
       } catch (error) {
         console.error(error);
@@ -37,14 +37,14 @@
     },
     methods: {
       playSound() {
-        const audio = new Audio(`http://localhost:2080/son/${this.selectedSound.id}`);
+        const audio = new Audio(`http://localhost:2080/sons/${this.selectedSound.id}`);
         audio.play();
       },
       addSoundToPlaylist() {
         this.playlist.push(this.selectedSound);
       },
       playSoundFromPlaylist(index) {
-        const audio = new Audio(`http://localhost:2080/son/${this.playlist[index].id}`);
+        const audio = new Audio(`http://localhost:2080/sons/${this.playlist[index].id}`);
         audio.play();
       },
     },
