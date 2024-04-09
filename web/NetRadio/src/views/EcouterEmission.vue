@@ -173,7 +173,8 @@ setup() {
       formData.append('audio', blob);
       formData.append('emission_id', emission.id);
 
-      axios.post("http://localhost:2080/podcasts", formData, {
+      const response = JSON.stringify(formData);
+      axios.post("http://localhost:2080/podcasts", response, {
         headers: {
           'Content-Type': 'multipart/form-data' // Assurez-vous que le serveur accepte ce type de contenu
         }
