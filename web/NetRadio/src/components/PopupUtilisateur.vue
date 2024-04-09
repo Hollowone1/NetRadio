@@ -1,4 +1,6 @@
 <script>
+import {toast} from "vue3-toastify";
+import ToastOptions from "../toasts/toastOptions.js";
 export default {
   props: {
     user: {
@@ -24,7 +26,6 @@ export default {
   },
   methods: {
     stopEditing() {
-      //console.log(parseInt(this.user.role) !== this.roles.indexOf(this.editedUser.role) + 1)
       parseInt(this.user.role) !== this.roles.indexOf(this.editedUser.role) + 1 ? this.editUser() : console.log("pas de changement")
       this.$emit('edited')
     },
@@ -34,9 +35,9 @@ export default {
       this.$api.put(`/users/${this.editedUser.email}`, {
         role: this.editedUser.role
       }).then(response => {
-        console.log("user role bien changé !", response);
+        toast.success('Le rôle de l\'utilisation a bien été modifié !', ToastOptions)
       }).catch(error => {
-        console.log(error);
+        toast.error('Erreur lors de la modification du rôle, veuillez rééssayer.', ToastOptions)
       });
     }
   },

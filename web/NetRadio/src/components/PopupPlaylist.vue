@@ -1,7 +1,8 @@
 <script>
 import {mapState, mapActions} from "pinia";
 import {useUserStore} from "@/stores/user.js";
-
+import {toast} from "vue3-toastify";
+import ToastOptions from "../toasts/toastOptions.js";
 //TODO : véirfier si il y a vrmnt un changement dans la edtiedPlaylist avant de faire un put inutile
 export default {
   props: {
@@ -68,12 +69,15 @@ export default {
         this.$api.post(`/playlists/`, {
           name: this.newPlaylist.name,
           description: this.newPlaylist.description,
-          emailUser: this.user.email
-        })
-            .catch((error) => {
-              console.log(error)
-            });
+          emailUser: 1
+        }).then(() => {
+          toast.success('La playlist a bien été créée !', ToastOptions)
+        }).catch((error) => {
+          toast.error('Erreur lors de la création de la playlist, veuillez rééssayer.', ToastOptions)
+        });
         this.$emit('created')
+      } else {
+        toast.warning("Un ou plusieurs champs n'ont pas été remplis", ToastOptions)
       }
     },
     cancelEditing() {
@@ -81,7 +85,6 @@ export default {
       this.editedPlaylist.sounds = this.sounds
     },
     stopEditing() {
-      console.log(this.changed)
       this.newOne ? this.createPlaylist() : this.editPlaylist()
     },
     editPlaylist() {
@@ -91,29 +94,33 @@ export default {
       this.newOne ?
           this.newPlaylist.sounds = this.newPlaylist.sounds.filter(sound => sound.id !== id)
           : this.editedPlaylist.sounds = this.editedPlaylist.sounds.filter(sound => sound.id !== id)
+      //TODO : remove sound from db
     },
     addSound() {
-     if(this.changed) {
-       this.$api.post(`/playlists/${this.editedPlaylist.id}/son`, {
-         son: {
-           titre: this.addedSound.titre,
-           nomArtiste: this.addedSound.nomArtiste,
-           audio: this.addedSound.audio
-         },
-         idPlaylist: this.editedPlaylist.id
-       })
-           .catch((error) => {
-             console.log(error)
-           })
-       this.editedPlaylist.sounds.push(this.addedSound)
-       this.newSound = false
-       this.changed = false
-       this.addedSound = {
-         titre: "",
-         nomArtiste: "",
-         audio: ""
-       }
-     }
+      if (this.changed) {
+        this.$api.post(`/playlists/${this.editedPlaylist.id}/son`, {
+          son: {
+            titre: this.addedSound.titre,
+            nomArtiste: this.addedSound.nomArtiste,
+            audio: this.addedSound.audio
+          },
+          idPlaylist: this.editedPlaylist.id
+        }).then(() => {
+          toast.success('Le son a bien été ajouté à la playlist !', ToastOptions)
+        }).catch(() => {
+          toast.error("Erreur lors de l'ajout du son, veuillez rééssayer.", ToastOptions)
+        })
+        this.editedPlaylist.sounds.push(this.addedSound)
+        this.newSound = false
+        this.changed = false
+        this.addedSound = {
+          titre: "",
+          nomArtiste: "",
+          audio: ""
+        }
+      } else {
+        toast.warning("Un ou plusieurs champs n'ont pas été remplis", ToastOptions)
+      }
     }
   },
   watch: {
