@@ -47,8 +47,8 @@ export default {
     ...mapState(useUserStore, ['user', 'tokens', 'loggedIn']),
   },
   created() {
-    //const mail = jwtDecode(this.tokens.access_token).upr.email
-    this.$api.get(`/users/mail/${this.user.email}`, {
+    const mail = jwtDecode(this.tokens.access_token).upr.email
+    this.$api.get(`/users/mail/${mail}`, {
       headers: {
         Authorization: `Bearer ${this.tokens.access_token}`
       }
@@ -57,8 +57,11 @@ export default {
           this.setUser(response.data.user)
         })
         .catch((error) => {
-          console.log(error.response.data.exception[0].code)
-          error.response.data.exception[0].code === 401 ? (this.$router.push('/connexion'), this.logoutUser()) : null
+          console.log(error.response.data.exception)
+          if (error.response.data.exception[0].code === 401) {
+            this.$router.push('/connexion')
+            this.logoutUser()
+          }
           //refresh le token ici
         });
 
@@ -110,7 +113,11 @@ export default {
           })
     },
     getPlaylists() {
-      this.$api.get(`/users/${this.user.email}/playlists`)
+      this.$api.get(`/users/${this.user.email}/playlists`, {
+        headers: {
+          Authorization: `Bearer ${this.tokens.access_token}`
+        }
+      })
           .then((response) => {
             this.playlists = response.data.playlists
           })
