@@ -2,7 +2,7 @@
 import PopupEmission from "@/components/PopupEmission.vue";
 import PopupUtilisateur from "@/components/PopupUtilisateur.vue";
 import PopupPlaylist from "@/components/PopupPlaylist.vue";
-import Calendrier from "@/components/Calendar.vue";
+import Calendar from "@/components/Calendar.vue";
 import Creneaux from "@/components/creneaux.vue";
 import Emission from '@/components/Emission.vue'
 import SideBar from "@/components/SideBarComponent.vue";
@@ -22,7 +22,7 @@ export default {
     SideBar,
     PopupUtilisateur,
     PopupPlaylist,
-    Calendrier
+    Calendar
   },
   data() {
     return {
@@ -373,7 +373,7 @@ export default {
           <h1>Calendrier</h1>
         </div>
         <div class="info">
-          <Calendrier :creneaux="creneaux" @dayclick="onDayClick"/>
+          <Calendar :creneaux="creneaux" @dayclick="onDayClick"/>
         </div>
 
       </div>
