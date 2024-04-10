@@ -375,7 +375,7 @@ export default {
         <div class="info">
           <Calendrier :creneaux="creneaux" @dayclick="onDayClick"/>
         </div>
-
+        <Creneaux :selectedDate="selectedDate" />
       </div>
     </main>
   </div>
@@ -509,6 +509,7 @@ export default {
 
       <div v-if="display === 3" class="display calendrier">
         <Calendar :columns="columns" @dayclick="onDayClick"/>
+        
       </div>
 
       <div v-if="display === 4" class="display users">
