@@ -137,13 +137,21 @@ export default {
     updateEmission() {
       this.showPopupEmission = false;
       this.showPopUpNewEmission = false;
-      console.log(this.emissionToDisplay)
       const index = this.emissions.findIndex(emission => emission.id === this.emissionToDisplay.id);
+      console.log("emission à modifier", this.emissions[index])
       this.$api.get(`/emissions/${this.emissionToDisplay.id}`)
           .then((response) => {
             if (index !== -1) {
-              this.emissions.splice(index, 1, response.emission);
+              this.emissions.splice(index, 1, response.data.emission)
             }
+            this.$api.get(this.emissions[index].links.users.href)
+                .then((response2) => {
+                  this.emissions[index].user = `${response2.data.user[0].nom} ${response2.data.user[0].prenom}`
+                  this.emissions[index].email = response2.data.user[0].email
+                })
+                .catch((error) => {
+                  toast.error("Erreur lors de la récupération des présentateurs.", ToastOptions)
+                });
           })
           .catch(() => {
             toast.error("Erreur lors de la mise à jour des émissions.", ToastOptions)

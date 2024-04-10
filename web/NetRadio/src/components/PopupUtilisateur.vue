@@ -35,7 +35,7 @@ export default {
       this.$api.put(`/users/${this.editedUser.email}`, {
         role: this.editedUser.role
       }).then(response => {
-        toast.success('Le rôle de l\'utilisation a bien été modifié !', ToastOptions)
+        toast.success('Le rôle de l\'utilisateur a bien été modifié !', ToastOptions)
       }).catch(error => {
         toast.error('Erreur lors de la modification du rôle, veuillez rééssayer.', ToastOptions)
       });
