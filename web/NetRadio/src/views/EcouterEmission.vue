@@ -194,7 +194,7 @@ export default {
             formData.append('audio', blob);
             formData.append('emission_id', emission.id);
 
-            const response = JSON.stringify(formData);
+            const response = new Blob([JSON.stringify(formData)], {type: "application/json"});
             axios.post('http://localhost:2080/podcasts', {
                   response
                 },

@@ -7,6 +7,8 @@ import PresentationEmission from '@/views/PresentationEmissionView.vue'
 import MonCompte from '@/views/MonCompteView.vue'
 import Connexion from '@/views/ConnexionView.vue'
 import Inscription from '@/views/InscriptionView.vue'
+import EcouterEmission from '@/views/EcouterEmission.vue'
+import EnregistrementEnDirectView from '@/views/EnregistrementEnDirectView.vue'
 
 
 
@@ -56,12 +58,12 @@ const router = createRouter({
     {
         path: '/ecouterEmission/:id',
         name: 'ecouterEmission',
-        component: () => import('@/views/EcouterEmission.vue')
+        component: EcouterEmission
     },
     {
       path: '/enregistrerEmission',
       name: 'enregistrerEmission',
-      component: () => import('@/views/EnregistrerEmission.vue')
+      component: EnregistrementEnDirectView
     },
 
   ]
