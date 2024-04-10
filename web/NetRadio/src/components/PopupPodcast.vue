@@ -31,7 +31,6 @@ export default {
         document.addEventListener('click', el.clickOutsideEvent);
       },
       unmounted(el) {
-        // Remove the event listener when the bound element is unmounted
         document.removeEventListener('click', el.clickOutsideEvent);
       }
     },
@@ -40,12 +39,8 @@ export default {
     stopEditing() {
       this.edit = false
       this.$emit('edited')
-      //console.log(this.editedEmission)
       this.editEmission()
     },
-    editEmission() {
-      //faire un put sur l'API avec les valeurs du v-model
-    }
   }
 }
 
