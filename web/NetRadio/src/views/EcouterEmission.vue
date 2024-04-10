@@ -117,6 +117,18 @@ export default {
         const audio = new Audio(`${this.$api}/sons/${this.playlist[index].id}`);
         audio.play();
       },
+      getEmission  ()  {
+      let promise = new Promise((resolve, reject) => {
+        this.$api.get(`/emissions/${this.emission.id}`)
+            .then((resp) => {
+              resolve(resp.data.emission)
+            })
+            .catch((error) => {
+              reject(error)
+            })
+      });
+      return promise
+    }
     },
 
 
@@ -202,21 +214,6 @@ export default {
 
       isStreaming.value = true;
     };
-
-    const getEmission = async () => {
-      let promise = new Promise((resolve, reject) => {
-        this.$api.get(`/emissions/${this.emission.id}`)
-            .then((resp) => {
-              resolve(resp.data.emission)
-            })
-            .catch((error) => {
-              reject(error)
-            })
-      });
-      return await promise
-    };
-
-
       const stopStreaming = async () => {
         if (mediaRecorder.value && isStreaming.value) {
           mediaRecorder.value.stop();
