@@ -13,40 +13,39 @@
   
   <script setup>
   import { ref, onMounted } from 'vue';
-  //import { api } from '@/plugin/api';
+  import axios from 'axios';
   import { shuffle } from 'lodash';
   import { computed } from 'vue';
-
   
- 
   const props = defineProps({
-  selectedDate: Object,
-})
+    selectedDate: Object,
+  });
+  
+  const creneaux = ref([]);
+  const currentDate = computed(() => props.selectedDate);
+  
+  async function fetchData() {
+  try {
+    const response = await axios.get('http://localhost:2080/creneaux');
+    const creneauxData = response.data.creneaux;
 
-  // On récupère les données de l'API
-      const creneaux = ref([]);
-      const currentDate = computed(() => props.selectedDate);
+    if (!creneauxData) {
+      throw new Error('Aucune donnée de créneaux trouvée.');
+    }
+
+    const shuffledCreneaux = shuffle(creneauxData.slice(0, 5));
+    creneaux.value = shuffledCreneaux;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des créneaux :', error);
+    errorMessage.value = error.message;
+  }
+}
 
   
-      const fetchData = async () => {
-        try {
-          const response = await this.$api.get('/creneaux', {
-            params: {
-              type: 'resource',
-            },
-          });
-          const creneauxData = response.data.creneaux;
-          const shuffledCreneaux = shuffle(creneauxData).slice(0, 5);
-          creneaux.value = shuffledCreneaux;
-        } catch (error) {
-          console.error('Error fetching ', error);
-        }
-      };
+  onMounted(fetchData);
   
-      onMounted(fetchData);
-
-
   </script>
+  
   
   <style scoped>
   a {
