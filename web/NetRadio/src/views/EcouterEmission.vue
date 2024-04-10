@@ -53,7 +53,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import {ref, onMounted, onUnmounted} from "vue";
 import {UserAgent, Session} from '@apirtc/apirtc'
 import {useUserStore} from "@/stores/user.js";
@@ -168,7 +167,8 @@ export default {
 
     const getEmission = async () => {
       try {
-        const response = await axios.get(`http://localhost:2080/emissions/${route.params.id}`);
+        const response = this.$api.get(`/emissions/1`);
+        console.log(response);
         return response.data.emission;
       } catch (error) {
         console.error(error);
@@ -195,7 +195,7 @@ export default {
             formData.append('emission_id', emission.id);
 
             const response = new Blob([JSON.stringify(formData)], {type: "application/json"});
-            axios.post('http://localhost:2080/podcasts', {
+            this.$api.post('/podcasts', {
                   response
                 },
                 {
