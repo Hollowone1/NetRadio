@@ -176,7 +176,7 @@ setup() {
       const response = JSON.stringify(formData);
       axios.post("http://localhost:2080/podcasts", response, {
         headers: {
-          'Content-Type': 'multipart/form-data' // Assurez-vous que le serveur accepte ce type de contenu
+          'Content-Type': 'Application/json' // Assurez-vous que le serveur accepte ce type de contenu
         }
       })
         .then((response) => {
