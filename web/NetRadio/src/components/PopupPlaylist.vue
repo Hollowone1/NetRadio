@@ -202,7 +202,7 @@ export default {
   <div v-else class="modal-mask">
     <div class="modal-wrapper">
       <div class="popup-playlist-create">
-        <div>
+        <div class="top">
           <div @click="cancelCreating" class="cancel">Annuler</div>
           <img @click="stopEditing" src="/icons/check.svg" alt="edit icon"/>
         </div>
@@ -262,24 +262,25 @@ a {
   border: 3px solid $purple;
   border-radius: 10px;
   padding: 1em;
-  margin: 0px auto;
+  margin: 0 auto;
+}
+.top {
+
+  @include flex(row, nowrap, 1em, space-between, center);
+  padding-bottom: .5em;
+
+  img {
+    height: 2em;
+  }
+
+  h3 {
+    margin: 0;
+    @include text-style(1.5em, $lightBlack, 500);
+  }
 }
 
 .popup-playlist {
-  .top {
 
-    @include flex(row, nowrap, 1em, space-between, center);
-    padding-bottom: .5em;
-
-    img {
-      height: 2em;
-    }
-
-    h3 {
-      margin: 0;
-      @include text-style(1.5em, $lightBlack, 500);
-    }
-  }
 
   .infos {
     @include flex(column, nowrap, .5em, start);
