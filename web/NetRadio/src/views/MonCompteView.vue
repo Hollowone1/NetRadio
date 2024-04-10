@@ -12,6 +12,8 @@ import {jwtDecode} from "jwt-decode";
 import axios from "axios";
 import {ref, onMounted, onUnmounted} from "vue";
 import {UserAgent, Session} from '@apirtc/apirtc'
+import {toast} from "vue3-toastify";
+import ToastOptions from "../toasts/toastOptions.js";
 
 
 
@@ -80,7 +82,7 @@ export default {
             this.users = response.data.users
           })
           .catch((error) => {
-            console.log(error)
+            toast.error("Erreur lors de la récupération des utilisateurs.", ToastOptions)
           })
     },
     getEmissions() {
