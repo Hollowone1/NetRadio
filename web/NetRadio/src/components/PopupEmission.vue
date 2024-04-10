@@ -177,7 +177,7 @@ export default {
       <div class="popup">
 
         <div class="popup-emission-create">
-          <div>
+          <div class="buttons-top">
             <div @click="cancelCreating" class="cancel">Annuler</div>
             <img @click="stopPopup" src="/icons/check.svg" alt="edit icon"/>
           </div>
@@ -246,7 +246,8 @@ $widthPopupEm: 30em;
   border: 3px solid $purple;
   border-radius: 10px;
   padding: 1em;
-  margin: 0px auto;
+  margin: 0 auto;
+  overflow: auto;
 }
 
 .popup-emission {
@@ -291,7 +292,7 @@ $widthPopupEm: 30em;
   }
 }
 
-.popup-emission-edit {
+.popup-emission-edit, .popup-emission-create {
   @include flex(column, nowrap, 1em, start, flex-start);
 
   div {
@@ -325,6 +326,15 @@ $widthPopupEm: 30em;
     outline: none !important;
   }
 
+
+
+  .theme {
+    margin-bottom: 0;
+  }
+
+}
+
+.popup-emission-edit {
   div:nth-child(1) {
     position: relative;
     height: 0;
@@ -334,11 +344,21 @@ $widthPopupEm: 30em;
       height: 2em;
     }
   }
+}
 
-  .theme {
-    margin-bottom: 0;
+.popup-emission-create {
+  .buttons-top {
+    width: 100%;
+    @include flex(row, nowrap, 1em, space-between, center);
+
+    .cancel {
+      //@include button-style(1em, $darkGrey, 500, $lightGrey, 1.5em, 1em);
+    }
+
+    img {
+      height: 2em;
+    }
   }
-
 }
 
 </style>
