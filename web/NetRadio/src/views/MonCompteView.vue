@@ -111,7 +111,7 @@ export default {
             this.emissionsOfUser = response.data.emission
           })
           .catch((error) => {
-            toast.error("Erreur lors de la récupération de vos émissions.", ToastOptions)
+            toast.error("Vous n'avez pas d'émission ou il y a une erreur lors de la récupération.", ToastOptions)
           })
     },
     getPlaylists() {
@@ -411,8 +411,7 @@ export default {
         <div v-if="emissionsOfUser.length > 0" class="emissions-liste">
           <emission v-for="emission in emissionsOfUser" :emission="emission" :key="emission.id"></emission>
         </div>
-        <div v-else class="emissions-liste"> Pas encore d'émission ? Contactez un admnistrateur !</div>
-        <p class="info-nv">Pour créer une nouvelle émission ou modifier une existante, veuillez contacter un
+        <p v-else class="info-nv">Pour créer une nouvelle émission ou modifier une existante, veuillez contacter un
           administrateur.</p>
       </div>
       <div v-if="display === 4" class="display lancer-direct">
