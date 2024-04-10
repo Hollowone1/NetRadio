@@ -46,21 +46,6 @@
         <div id="local-container"></div>
       </div>
     </div>
-    <div>
-      <h1>Sélectionnez votre son pour la playlist</h1>
-      <select v-model="selectedSound" @change="playSound">
-        <option v-for="sound in sounds" :key="sound.id" :value="sound">
-          {{ sound.titre }}
-        </option>
-      </select>
-      <button @click="addSoundToPlaylist">Ajouter à la playlist</button>
-      <h2>Playlist</h2>
-      <ul>
-        <li v-for="(sound, index) in playlist" :key="index">
-          {{ sound.titre }} - <button @click="playSoundFromPlaylist(index)">Jouer</button>
-        </li>
-      </ul>
-    </div>
   </div>
   <!--    </section>-->
 
@@ -73,15 +58,13 @@ import {UserAgent, Session} from '@apirtc/apirtc'
 import {useUserStore} from "@/stores/user.js";
 import {useRoute} from "vue-router";
 import {mapState} from "pinia";
+import axios from "axios";
 
 export default {
   data() {
     return {
       emission: [],
-      userRole: null,
-      sounds: [],
-      selectedSound: {},
-      playlist: [],
+      userRole: null
     }
   },
 
@@ -90,46 +73,14 @@ export default {
   },
 
   created() {
-    this.$api.get("/emissions")
-        .then((response) => {
-          this.emission = response.data.emission.find(emission => emission.onDirect === true)
-        })
-        .catch((error) => {
-          console.log(error)
-        });
-    this.$api.get('/sons')
-        .then((response) => {
-        this.sounds = response.data;
-        })
-        .catch((error) => {
-        console.error(error);
-        });
+    // axios.get("http://localhost:2080/emissions")
+    //     .then((response) => {
+    //       this.emission = response.data.emission.find(emission => emission.onDirect === true)
+    //     })
+    //     .catch((error) => {
+    //       console.log(error)
+    //     });
   },
-  methods: {
-      playSound() {
-        const audio = new Audio(`${this.$api}/sons/${this.selectedSound.id}`);
-        audio.play();
-      },
-      addSoundToPlaylist() {
-        this.playlist.push(this.selectedSound);
-      },
-      playSoundFromPlaylist(index) {
-        const audio = new Audio(`${this.$api}/sons/${this.playlist[index].id}`);
-        audio.play();
-      },
-      getEmission  ()  {
-      let promise = new Promise((resolve, reject) => {
-        this.$api.get(`/emissions/${this.emission.id}`)
-            .then((resp) => {
-              resolve(resp.data.emission)
-            })
-            .catch((error) => {
-              reject(error)
-            })
-      });
-      return promise
-    }
-    },
 
 
   setup() {
@@ -214,46 +165,65 @@ export default {
 
       isStreaming.value = true;
     };
-      const stopStreaming = async () => {
-        if (mediaRecorder.value && isStreaming.value) {
-          mediaRecorder.value.stop();
-          isStreaming.value = false;
 
-          const blob = new Blob(recordedChunks.value, {type: "audio/wav"});
-          const emission = await getEmission();
-          if (emission) {
-            const formData = new FormData();
-            formData.append('titre', emission.titre);
-            formData.append('date', emission.date);
-            formData.append('duree', emission.duree);
-            formData.append('description', emission.description);
-            formData.append('photo', emission.photo);
-            formData.append('audio', blob);
-            formData.append('emission_id', emission.id);
+    const getEmission = async () => {
+      try {
+        console.log(route.params.id)
+        const response = await axios.get(`http://localhost:2080/emissions/${route.params.id}`);
+        return response.data.emission;
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+    };
 
-            const response = new Blob([JSON.stringify(formData)], {type: "application/json"});
-            this.$api.post('/podcasts', {
-                  response
-                },
-                {
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${tokens.access_token}`
-                  }
+
+    const stopStreaming = async () => {
+      if (mediaRecorder.value && isStreaming.value) {
+        mediaRecorder.value.stop();
+        isStreaming.value = false;
+
+        const blob = new Blob(recordedChunks.value, {type: "audio/wav"});
+        const emission = await getEmission();
+        console.log(emission);
+        if (emission) {
+
+          const currentDate = new Date();
+          const year = currentDate.getFullYear();
+          const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+          const day = ('0' + currentDate.getDate()).slice(-2);
+
+          const formattedDate = `${year}-${month}-${day}`;
+
+          axios.post('http://localhost:2080/podcasts', JSON.stringify({
+                "titre": emission.titre,
+                "description": emission.description,
+                "duree": "00:00:00",
+                "date": formattedDate,
+                "audio": "blob",
+                "photo": emission.photo,
+                "emission_id": emission.id
+              }),
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${tokens.access_token}`
+                  // "Access-Control-Allow-Origin": "*"
                 }
-            )
-                .then((response) => {
-                  console.log(response);
-                  downloadWav(blob);
-                  window.removeEventListener("beforeunload", beforeUnloadHandler);
-                })
-                .catch((error) => {
-                  console.error("Error creating podcast:", error);
-                  window.removeEventListener("beforeunload", beforeUnloadHandler);
-                });
-          }
+              }
+          )
+              .then((response) => {
+                console.log(response);
+                downloadWav(blob);
+                window.removeEventListener("beforeunload", beforeUnloadHandler);
+              })
+              .catch((error) => {
+                console.error("Error creating podcast:", error);
+                window.removeEventListener("beforeunload", beforeUnloadHandler);
+              });
         }
-      };
+      }
+    };
 
 
     const beforeUnloadHandler = (event) => {

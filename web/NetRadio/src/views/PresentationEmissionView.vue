@@ -1,6 +1,7 @@
 <script>
 import EnDirect from "@/components/EnDirect.vue";
-
+import {toast} from "vue3-toastify";
+import ToastOptions from "../toasts/toastOptions.js";
 export default {
   data() {
     return {
@@ -21,11 +22,11 @@ export default {
                 this.emission.user = `${response2.data.user[0].nom} ${response2.data.user[0].prenom}`
               })
               .catch((error2) => {
-                console.log(error2.response.data)
+                toast.error('Erreur lors de la récupération du présentateur.', ToastOptions)
               });
         })
         .catch((error) => {
-          console.log(error)
+          toast.error('Erreur lors de la récupération de l\'émission.', ToastOptions)
         });
 
     this.$api.get(`/emissions/${this.$route.params.id}/podcasts`)
@@ -37,7 +38,7 @@ export default {
           })
         })
         .catch((error) => {
-          console.log(error)
+          toast.error('Erreur lors de la récupération des podcasts.', ToastOptions)
         });
   },
   methods: {
