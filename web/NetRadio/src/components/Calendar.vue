@@ -6,7 +6,7 @@
   
   <script setup>
   import { useScreens } from 'vue-screen-utils';
-  import { ref } from 'vue'
+  import { ref } from 'vue';
 
   
   const { mapCurrent } = useScreens({ xs: '1080px', sm: '1080px', md: '768px', lg: '1024px' });

@@ -177,27 +177,7 @@ export default {
       this.getPlaylists()
     },
 
-    getCreneaux () {
-      // BUT ici est de récupérer les créneaux
-      this.$api.get('/creneaux')
-          .then((response) => {
-            this.creneaux = response.data.emission
-            this.creneaux.forEach(emission => {
-              this.$api.get(emission.links.users.href)
-                  .then((response2) => {
-                    emission.user = `${response2.data.user[0].nom} ${response2.data.user[0].prenom}`
-                    emission.email = response2.data.user[0].email
-                  })
-                  .catch((error) => {
-                    console.log(error)
-                  });
-            });
-            console.log("creneaux", this.creneaux)
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-    } },
+     },
 
 
  
@@ -210,6 +190,13 @@ export default {
     const mediaRecorder = ref(null);
     const isStreaming = ref(false);
     const recordedChunks = ref([]);
+    const selectedDate = ref(null);
+
+    const onDayClick = (date) => {
+      selectedDate.value = date; // Mettre à jour la date sélectionnée
+    };
+
+    
 
     const ua = new UserAgent({
       uri: "apzkey:myDemoApiKey",
@@ -529,6 +516,8 @@ export default {
 
       <div v-if="display === 3" class="display calendrier">
         <Calendar :columns="columns" @dayclick="onDayClick"/>
+        <Creneaux :selectedDate="selectedDate" :creneaux="creneaux" />
+
         
       </div>
 
