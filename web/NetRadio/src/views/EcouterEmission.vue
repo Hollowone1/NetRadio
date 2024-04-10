@@ -58,6 +58,7 @@ import {UserAgent, Session} from '@apirtc/apirtc'
 import {useUserStore} from "@/stores/user.js";
 import {useRoute} from "vue-router";
 import {mapState} from "pinia";
+import axios from "axios";
 
 export default {
   data() {
@@ -72,13 +73,13 @@ export default {
   },
 
   created() {
-    this.$api.get("/emissions")
-        .then((response) => {
-          this.emission = response.data.emission.find(emission => emission.onDirect === true)
-        })
-        .catch((error) => {
-          console.log(error)
-        });
+    // axios.get("http://localhost:2080/emissions")
+    //     .then((response) => {
+    //       this.emission = response.data.emission.find(emission => emission.onDirect === true)
+    //     })
+    //     .catch((error) => {
+    //       console.log(error)
+    //     });
   },
 
 
@@ -166,16 +167,14 @@ export default {
     };
 
     const getEmission = async () => {
-      let promise = new Promise((resolve, reject) => {
-        this.$api.get(`/emissions/${this.emission.id}`)
-            .then((resp) => {
-              resolve(resp.data.emission)
-            })
-            .catch((error) => {
-              reject(error)
-            })
-      });
-      return await promise
+      try {
+        console.log(route.params.id)
+        const response = await axios.get(`http://localhost:2080/emissions/${route.params.id}`);
+        return response.data.emission;
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
     };
 
 
@@ -187,23 +186,35 @@ export default {
           const blob = new Blob(recordedChunks.value, {type: "audio/wav"});
           const emission = await getEmission();
           if (emission) {
-            const formData = new FormData();
-            formData.append('titre', emission.titre);
-            formData.append('date', emission.date);
-            formData.append('duree', emission.duree);
-            formData.append('description', emission.description);
-            formData.append('photo', emission.photo);
-            formData.append('audio', blob);
-            formData.append('emission_id', emission.id);
+            // const formData = new FormData();
 
-            const response = new Blob([JSON.stringify(formData)], {type: "application/json"});
-            this.$api.post('/podcasts', {
+            const emission2 = {
+              titre: "titre",
+              date: "date",
+              duree: "duree",
+              description: "description",
+              photo: "photo",
+              audio: "audio",
+              emission_id: "emission_id"
+            }
+            // formData.append('titre', emission.titre);
+            // formData.append('date', emission.date);
+            // formData.append('duree', emission.duree);
+            // formData.append('description', emission.description);
+            // formData.append('photo', emission.photo);
+            // formData.append('audio', blob);
+            // formData.append('emission_id', emission.id);
+
+            const response = JSON.stringify(emission2);
+
+            axios.post('http://localhost:2080/podcasts', {
                   response
                 },
                 {
                   headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${tokens.access_token}`
+                    Authorization: `Bearer ${tokens.access_token}`,
+                    "Access-Control-Allow-Origin": "*"
                   }
                 }
             )
