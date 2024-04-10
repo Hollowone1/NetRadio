@@ -179,27 +179,11 @@ export default {
       this.showPopUpNewPlaylist = false;
       this.getPlaylists()
     },
-    getCreneaux() {
-      this.$api.get('/creneaux')
-          .then((response) => {
-            this.creneaux = response.data.emission
-            this.creneaux.forEach(emission => {
-              this.$api.get(emission.links.users.href)
-                  .then((response2) => {
-                    emission.user = `${response2.data.user[0].nom} ${response2.data.user[0].prenom}`
-                    emission.email = response2.data.user[0].email
-                  })
-                  .catch((error) => {
-                    toast.error("Erreur lors de la récupération des présentateurs.", ToastOptions)
-                  });
-            });
-          })
-          .catch((error) => {
-            toast.error("Erreur lors de la récupération des créneaux.", ToastOptions)
-          })
-    }
-  },
 
+     },
+
+
+ 
 
   setup() {
     const localStream = ref(null);
@@ -209,6 +193,13 @@ export default {
     const mediaRecorder = ref(null);
     const isStreaming = ref(false);
     const recordedChunks = ref([]);
+    const selectedDate = ref(null);
+
+    const onDayClick = (date) => {
+      selectedDate.value = date; // Mettre à jour la date sélectionnée
+    };
+
+    
 
     const ua = new UserAgent({
       uri: "apzkey:myDemoApiKey",
@@ -494,7 +485,9 @@ export default {
 
       <div v-if="display === 3" class="display calendrier">
         <Calendar :columns="columns" @dayclick="onDayClick"/>
+        <Creneaux :selectedDate="selectedDate" :creneaux="creneaux" />
 
+        
       </div>
 
       <div v-if="display === 4" class="display users">
