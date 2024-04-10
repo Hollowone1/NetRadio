@@ -12,7 +12,8 @@ import {jwtDecode} from "jwt-decode";
 import axios from "axios";
 import {ref, onMounted, onUnmounted} from "vue";
 import {UserAgent, Session} from '@apirtc/apirtc'
-
+import {toast} from "vue3-toastify";
+import ToastOptions from "../toasts/toastOptions.js";
 
 
 export default {
@@ -39,7 +40,7 @@ export default {
       emissions: [],
       users: [],
       playlists: [],
-      creneaux : [],
+      creneaux: [],
       roles: ['Auditeur', 'Animateur', 'Administrateur'],
       emissionsOfUser: [],
     }
@@ -58,7 +59,7 @@ export default {
           this.setUser(response.data.user)
         })
         .catch((error) => {
-          console.log(error.response.data.exception)
+          //console.log(error.response.data.exception)
           if (error.response.data.exception[0].code === 401) {
             this.$router.push('/connexion')
             this.logoutUser()
@@ -73,7 +74,7 @@ export default {
 
 
   },
-  
+
   methods: {
     ...mapActions(useUserStore, ['setUser', 'logoutUser']),
     getUsers() {
@@ -82,7 +83,7 @@ export default {
             this.users = response.data.users
           })
           .catch((error) => {
-            console.log(error)
+            toast.error("Erreur lors de la récupération des utilisateurs.", ToastOptions)
           })
     },
     getEmissions() {
@@ -96,13 +97,12 @@ export default {
                     emission.email = response2.data.user[0].email
                   })
                   .catch((error) => {
-                    console.log(error)
+                    toast.error("Erreur lors de la récupération des présentateurs.", ToastOptions)
                   });
             });
-            console.log("emissions", this.emissions)
           })
           .catch((error) => {
-            console.log(error)
+            toast.error("Erreur lors de la récupération des émissions.", ToastOptions)
           })
     },
     getEmissionByUser() {
@@ -111,7 +111,7 @@ export default {
             this.emissionsOfUser = response.data.emission
           })
           .catch((error) => {
-            console.log(error)
+            toast.error("Vous n'avez pas d'émission ou il y a une erreur lors de la récupération.", ToastOptions)
           })
     },
     getPlaylists() {
@@ -124,7 +124,7 @@ export default {
             this.playlists = response.data.playlists
           })
           .catch((error) => {
-            console.log(error.response.data)
+            toast.error("Erreur lors de la récupération de vos playlists.", ToastOptions)
           })
     },
     changeDisplay(number) {
@@ -137,27 +137,30 @@ export default {
     updateEmission() {
       this.showPopupEmission = false;
       this.showPopUpNewEmission = false;
-      console.log(this.emissionToDisplay)
       const index = this.emissions.findIndex(emission => emission.id === this.emissionToDisplay.id);
       this.$api.get(`/emissions/${this.emissionToDisplay.id}`)
           .then((response) => {
             if (index !== -1) {
-              this.emissions.splice(index, 1, response.emission);
+              this.emissions.splice(index, 1, response.data.emission)
             }
+            this.$api.get(this.emissions[index].links.users.href)
+                .then((response2) => {
+                  this.emissions[index].user = `${response2.data.user[0].nom} ${response2.data.user[0].prenom}`
+                  this.emissions[index].email = response2.data.user[0].email
+                })
+                .catch((error) => {
+                  toast.error("Erreur lors de la récupération des présentateurs.", ToastOptions)
+                });
           })
-          .catch((error) => {
-            console.log(error)
+          .catch(() => {
+            toast.error("Erreur lors de la mise à jour des émissions.", ToastOptions)
           })
-      //this.getEmissions()
     },
-    
-
     displayUser(email) {
       this.userToDisplay = this.users.find(user => user.email === email);
       this.showPopupUser = true;
     },
     updateUser() {
-      console.log("updateUser donc edited!")
       this.showPopupUser = false;
       this.getUsers()
     },
@@ -331,8 +334,6 @@ export default {
   <div class="view" v-if="user.role === `1`">
     <side-bar @change="changeDisplay">
       <template v-slot:1>Mon compte</template>
-      <template v-slot:2>Enregistrements</template>
-      <template v-slot:3>Calendrier</template>
     </side-bar>
     <main>
       <div v-if="display === 1" class="display mon-compte">
@@ -347,38 +348,6 @@ export default {
             <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
         </div>
-
-      </div>
-      <div v-if="display === 2" class="display enregistrements">
-        <h1>Vos enregistrements</h1>
-        <div class="podcasts">
-          <h2>Podcasts</h2>
-          <section class="podcast">
-            <div class="podcast-info">
-              <p>Nom de l'émission</p>
-              <p>Titre du podcast</p>
-            </div>
-            <embed src="/icons/play.svg">
-          </section>
-        </div>
-        <div class="emissions">
-          <h2>Émissions</h2>
-          <section class="emission">
-            <p>Le titre de l'émission</p>
-            <p>PRÉSENTATEUR</p>
-          </section>
-        </div>
-      </div>
-      <div v-if="display === 3" class="display mon-compte">
-        <div class="top">
-          <h1>Calendrier</h1>
-        </div>
-        <div class="info">
-          <Calendar :creneaux="creneaux" @dayclick="onDayClick"/>
-        </div>
-        <Creneaux :selectedDate="selectedDate" />
-        <creneaux v-for="creneaux in creneaux" :Creneaux="creneaux" :key="creneaux.id"></creneaux>
-
       </div>
     </main>
   </div>
@@ -433,8 +402,8 @@ export default {
         <div v-if="emissionsOfUser.length > 0" class="emissions-liste">
           <emission v-for="emission in emissionsOfUser" :emission="emission" :key="emission.id"></emission>
         </div>
-        <div v-else class="emissions-liste"> Pas encore d'émission ? Contactez un admnistrateur !</div>
-        <p class="info-nv">Pour créer une nouvelle émission ou modifier une existante, veuillez contacter un administrateur.</p>
+        <p v-else class="info-nv">Pour créer une nouvelle émission ou modifier une existante, veuillez contacter un
+          administrateur.</p>
       </div>
       <div v-if="display === 4" class="display lancer-direct">
         <div class="top">

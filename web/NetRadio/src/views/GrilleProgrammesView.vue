@@ -66,7 +66,7 @@ export default {
                 });
           })
           .catch((error) => {
-            console.log(error);
+            toast.error('Erreur lors de la récupération des créneaux', ToastOptions)
           });
     },
     getCreneauHeure(heure) {

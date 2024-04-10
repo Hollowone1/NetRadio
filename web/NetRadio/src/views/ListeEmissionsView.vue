@@ -2,6 +2,8 @@
 import EnDirect from '@/components/EnDirect.vue'
 import Emission from '@/components/Emission.vue'
 import {isNull} from "lodash";
+import {toast} from "vue3-toastify";
+import ToastOptions from "../toasts/toastOptions.js";
 
 export default {
   components: {
@@ -40,7 +42,7 @@ export default {
           this.displayThemes = themes;
         })
         .catch((error) => {
-          console.log(error)
+          toast.error('Erreur lors de la récupération des émissions', ToastOptions)
         });
   },
   methods: {

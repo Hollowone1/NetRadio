@@ -1,6 +1,7 @@
 <script>
 import {toast} from "vue3-toastify";
 import ToastOptions from "../toasts/toastOptions.js";
+
 export default {
   emits: ['close', 'edited', 'created'],
   props: {
@@ -18,7 +19,7 @@ export default {
   data() {
     return {
       edit: false,
-      newEmission : {
+      newEmission: {
         titre: "",
         user: "",
         theme: "",
@@ -41,10 +42,10 @@ export default {
       this.$emit('close')
       this.newEmission = {
         titre: "",
-            user: "",
-            theme: "",
-            description: "",
-            photo: ""
+        user: "",
+        theme: "",
+        description: "",
+        photo: ""
       }
     },
     stopPopup() {
@@ -72,7 +73,7 @@ export default {
           theme: this.editedEmission.theme,
           description: this.editedEmission.description,
           photo: this.editedEmission.photo,
-          onDirect : 0,
+          onDirect: 0,
           user: this.editedEmission.user
         }).then(() => {
           toast.success('L\'émission a bien été modifiée !', ToastOptions)
@@ -82,7 +83,6 @@ export default {
       } else {
         toast.warning("Un ou plusieurs champs n'ont pas été remplis", ToastOptions)
       }
-
     },
     createEmission() {
       if (this.changed) {
@@ -91,13 +91,12 @@ export default {
           theme: this.newEmission.theme,
           description: this.newEmission.description,
           photo: this.newEmission.photo,
-          onDirect : 0,
+          onDirect: 0,
           user: this.newEmission.user
         }).then(() => {
           toast.success('L\'émission a bien été créée !', ToastOptions)
           this.changed = false
         }).catch((err) => {
-          console.log(err)
           toast.error('Erreur lors de la création de l\'émission, veuillez rééssayer.', ToastOptions)
         })
         this.changed = false
@@ -139,7 +138,7 @@ export default {
             <p><strong>Présentateur / animateur :</strong> {{ emission.email }}</p>
             <p>{{ emission.theme }}</p>
             <p>{{ emission.description }}</p>
-            <p>Photo : <a :href="emission.photo">{{emission.photo}}</a></p>
+            <p>Photo : <a :href="emission.photo">{{ emission.photo }}</a></p>
           </div>
         </div>
 
@@ -178,7 +177,7 @@ export default {
       <div class="popup">
 
         <div class="popup-emission-create">
-          <div>
+          <div class="buttons-top">
             <div @click="cancelCreating" class="cancel">Annuler</div>
             <img @click="stopPopup" src="/icons/check.svg" alt="edit icon"/>
           </div>
@@ -217,7 +216,7 @@ export default {
 @import "@/assets/fonts";
 @import "@/assets/buttons";
 
-$widthPopup : 60vw;
+$widthPopup: 60vw;
 $widthPopupEm: 30em;
 
 .modal-mask {
@@ -238,7 +237,7 @@ $widthPopupEm: 30em;
 }
 
 .popup {
-  width:$widthPopup;
+  width: $widthPopup;
   max-width: calc($widthPopupEm * 1.5);
   min-width: calc($widthPopupEm / 1.5);
 
@@ -247,7 +246,8 @@ $widthPopupEm: 30em;
   border: 3px solid $purple;
   border-radius: 10px;
   padding: 1em;
-  margin: 0px auto;
+  margin: 0 auto;
+  overflow: auto;
 }
 
 .popup-emission {
@@ -267,6 +267,7 @@ $widthPopupEm: 30em;
 
   .infos {
     @include flex(column, nowrap, .5em, start);
+
     a {
       color: $grey;
     }
@@ -274,6 +275,7 @@ $widthPopupEm: 30em;
     p:nth-child(1) {
 
       @include text-style(1.1em, inherit, inherit);
+
       strong {
         @include text-style(1em, inherit, 500);
       }
@@ -290,19 +292,23 @@ $widthPopupEm: 30em;
   }
 }
 
-.popup-emission-edit {
+.popup-emission-edit, .popup-emission-create {
   @include flex(column, nowrap, 1em, start, flex-start);
+
   div {
     @include flex(column, nowrap, .5em, start, flex-start);
   }
+
   label {
     @include text-style(1.2em, $lightBlack, 500);
   }
-  textarea{
+
+  textarea {
     min-height: 6em;
   }
+
   input, textarea {
-    width:calc($widthPopup - 1em);
+    width: calc($widthPopup - 1em);
     max-width: calc($widthPopupEm * 1.5);
     min-width: calc($widthPopupEm / 1.5);
     resize: none;
@@ -314,22 +320,45 @@ $widthPopupEm: 30em;
     padding: .3em .5em;
     @include text-style(.95em, $darkGrey, 300);
   }
+
   input:focus, textarea:focus {
     @include text-style(.95em, black, 350);
     outline: none !important;
   }
-  div:nth-child(1){
-    position: relative;
-    height: 0;
-    align-self: flex-end;
-    img {
-      height: 2em;
-    }
-  }
+
+
+
   .theme {
     margin-bottom: 0;
   }
 
+}
+
+.popup-emission-edit {
+  div:nth-child(1) {
+    position: relative;
+    height: 0;
+    align-self: flex-end;
+
+    img {
+      height: 2em;
+    }
+  }
+}
+
+.popup-emission-create {
+  .buttons-top {
+    width: 100%;
+    @include flex(row, nowrap, 1em, space-between, center);
+
+    .cancel {
+      //@include button-style(1em, $darkGrey, 500, $lightGrey, 1.5em, 1em);
+    }
+
+    img {
+      height: 2em;
+    }
+  }
 }
 
 </style>
