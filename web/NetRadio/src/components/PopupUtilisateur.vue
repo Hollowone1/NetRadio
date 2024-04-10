@@ -21,7 +21,7 @@ export default {
     const roleIndex = parseInt(this.user.role) - 1;
     this.editedUser = {
       email: this.user.email,
-      role: this.roles[roleIndex], // Utiliser l'index pour accéder au rôle correspondant dans roles
+      role: this.roles[roleIndex],
     };
   },
   methods: {
@@ -30,8 +30,7 @@ export default {
       this.$emit('edited')
     },
     editUser() {
-      this.editedUser.role = this.roles.indexOf(this.editedUser.role) + 1; // Utiliser indexOf pour récupérer l'index du rôle dans roles
-      //faire un put sur l'API avec les valeurs du v-model
+      this.editedUser.role = this.roles.indexOf(this.editedUser.role) + 1;
       this.$api.put(`/users/${this.editedUser.email}`, {
         role: this.editedUser.role
       }).then(response => {
