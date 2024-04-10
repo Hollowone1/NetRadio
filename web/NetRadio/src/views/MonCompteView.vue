@@ -346,8 +346,6 @@ export default {
   <div class="view" v-if="user.role === `1`">
     <side-bar @change="changeDisplay">
       <template v-slot:1>Mon compte</template>
-      <template v-slot:2>Enregistrements</template>
-      <template v-slot:3>Calendrier</template>
     </side-bar>
     <main>
       <div v-if="display === 1" class="display mon-compte">
@@ -362,38 +360,6 @@ export default {
             <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
         </div>
-
-      </div>
-      <div v-if="display === 2" class="display enregistrements">
-        <h1>Vos enregistrements</h1>
-        <div class="podcasts">
-          <h2>Podcasts</h2>
-          <section class="podcast">
-            <div class="podcast-info">
-              <p>Nom de l'émission</p>
-              <p>Titre du podcast</p>
-            </div>
-            <embed src="/icons/play.svg">
-          </section>
-        </div>
-        <div class="emissions">
-          <h2>Émissions</h2>
-          <section class="emission">
-            <p>Le titre de l'émission</p>
-            <p>PRÉSENTATEUR</p>
-          </section>
-        </div>
-      </div>
-      <div v-if="display === 3" class="display mon-compte">
-        <div class="top">
-          <h1>Calendrier</h1>
-        </div>
-        <div class="info">
-          <Calendar :creneaux="creneaux" @dayclick="onDayClick"/>
-        </div>
-        <Creneaux :selectedDate="selectedDate"/>
-        <creneaux v-for="creneaux in creneaux" :Creneaux="creneaux" :key="creneaux.id"></creneaux>
-
       </div>
     </main>
   </div>
