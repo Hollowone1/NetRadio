@@ -13,7 +13,7 @@
   
   <script setup>
   import { ref, onMounted } from 'vue';
-  import { $api } from '@/plugin/api';
+  //import { api } from '@/plugin/api';
   import { shuffle } from 'lodash';
   import { computed } from 'vue';
 
@@ -30,7 +30,7 @@
   
       const fetchData = async () => {
         try {
-          const response = await $api.get('/creneaux', {
+          const response = await this.$api.get('/creneaux', {
             params: {
               type: 'resource',
             },

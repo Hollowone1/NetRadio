@@ -2,7 +2,7 @@
 import PopupEmission from "@/components/PopupEmission.vue";
 import PopupUtilisateur from "@/components/PopupUtilisateur.vue";
 import PopupPlaylist from "@/components/PopupPlaylist.vue";
-import Calendrier from "@/components/Calendar.vue";
+import Calendar from "@/components/Calendar.vue";
 import Creneaux from "@/components/creneaux.vue";
 import Emission from '@/components/Emission.vue'
 import SideBar from "@/components/SideBarComponent.vue";
@@ -22,7 +22,7 @@ export default {
     SideBar,
     PopupUtilisateur,
     PopupPlaylist,
-    Calendrier
+    Calendar
   },
   data() {
     return {
@@ -57,8 +57,11 @@ export default {
           this.setUser(response.data.user)
         })
         .catch((error) => {
-          console.log(error.response.data.exception[0].code)
-          error.response.data.exception[0].code === 401 ? (this.$router.push('/connexion'), this.logoutUser()) : null
+          console.log(error.response.data.exception)
+          if (error.response.data.exception[0].code === 401) {
+            this.$router.push('/connexion')
+            this.logoutUser()
+          }
           //refresh le token ici
         });
 
@@ -101,16 +104,20 @@ export default {
           })
     },
     getEmissionByUser() {
-      this.$api.get(`/emissions`)
+      this.$api.get(`/emissions?email=${this.user.email}`)
           .then((response) => {
-            this.emissionsOfUser = response.data.emissions
+            this.emissionsOfUser = response.data.emission
           })
           .catch((error) => {
             console.log(error)
           })
     },
     getPlaylists() {
-      this.$api.get(`/users/${this.user.email}/playlists`)
+      this.$api.get(`/users/${this.user.email}/playlists`, {
+        headers: {
+          Authorization: `Bearer ${this.tokens.access_token}`
+        }
+      })
           .then((response) => {
             this.playlists = response.data.playlists
           })
@@ -342,6 +349,7 @@ export default {
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
           <div>
+            <p><strong>Nom et prénom : </strong> {{ user.nom }} {{ user.prenom }}</p>
             <p><strong>Nom d'utilisateur : </strong> {{ user.username }}</p>
             <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
@@ -373,7 +381,7 @@ export default {
           <h1>Calendrier</h1>
         </div>
         <div class="info">
-          <Calendrier :creneaux="creneaux" @dayclick="onDayClick"/>
+          <Calendar :creneaux="creneaux" @dayclick="onDayClick"/>
         </div>
 
       </div>
@@ -396,6 +404,7 @@ export default {
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
           <div>
+            <p><strong>Nom et prénom : </strong> {{ user.nom }} {{ user.prenom }}</p>
             <p><strong>Nom d'utilisateur : </strong>{{ user.username }} </p>
             <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
@@ -426,9 +435,11 @@ export default {
         <div class="top">
           <h1>Mes émissions</h1>
         </div>
-        <div class="emissions-liste">
-          <emission :redirect="true" v-for="emission in emissionsOfUser" :emission="emission" :key="emission.id"></emission>
+        <div v-if="emissionsOfUser.length > 0" class="emissions-liste">
+          <emission v-for="emission in emissionsOfUser" :emission="emission" :key="emission.id"></emission>
         </div>
+        <div v-else class="emissions-liste"> Pas encore d'émission ? Contactez un admnistrateur !</div>
+        <p class="info-nv">Pour créer une nouvelle émission ou modifier une existante, veuillez contacter un administrateur.</p>
       </div>
       <div v-if="display === 4" class="display lancer-direct">
         <div class="top">
@@ -486,6 +497,7 @@ export default {
         <div class="info">
           <img src="/icons/profile.svg" alt="profile">
           <div>
+            <p><strong>Nom et prénom : </strong> {{ user.nom }} {{ user.prenom }}</p>
             <p><strong>Nom d'utilisateur : </strong>{{ user.username }} </p>
             <p><strong>Email :</strong> {{ user.email }}</p>
           </div>
@@ -539,6 +551,10 @@ export default {
 @import "@/assets/layout";
 @import "@/assets/fonts";
 @import "@/assets/buttons";
+
+.info-nv {
+  margin-top: 1em;
+}
 
 .display {
   padding: 2em 3em;
@@ -609,8 +625,6 @@ export default {
 
     p {
       @include text-style(1em, inherit, 400);
-      margin-bottom: .25em;
-      margin-top: .25em;
       text-align: center;
     }
   }
@@ -746,7 +760,7 @@ export default {
       }
 
       img {
-        height: 6em
+        height: 7em
       }
     }
   }

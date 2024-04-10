@@ -57,7 +57,12 @@ const router = createRouter({
         path: '/ecouterEmission/:id',
         name: 'ecouterEmission',
         component: () => import('@/views/EcouterEmission.vue')
-    }
+    },
+    {
+      path: '/enregistrerEmission',
+      name: 'enregistrerEmission',
+      component: () => import('@/views/EnregistrerEmission.vue')
+    },
 
   ]
 })

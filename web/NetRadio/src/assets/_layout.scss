@@ -1,28 +1,28 @@
 body {
-    margin: 0;
-    padding: 0;
-  }
-  
-  @mixin width($width) {
-    width: $width;
-    margin-left: auto;
-    margin-right: auto;
-  }
+  margin: 0;
+  padding: 0;
+}
+
+@mixin width($width) {
+  width: $width;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 @mixin flex($dir : column, $wrap : wrap, $gap : 0, $justify : center, $align : stretch) {
-    display: flex;
-    flex-direction: $dir;
-    flex-wrap: $wrap;
-    justify-content: $justify;
-    gap : $gap;
-    align-items: $align;
-  }
+  display: flex;
+  flex-direction: $dir;
+  flex-wrap: $wrap;
+  justify-content: $justify;
+  gap: $gap;
+  align-items: $align;
+}
 
 @mixin grid($columns : 1fr, $rows : auto, $gap : 0, $justify : center, $align : center) {
-    display: grid;
-    grid-template-columns: $columns;
-    grid-template-rows: $rows;
-    gap : $gap;
-    justify-content: $justify;
-    align-items: $align;
-  }
+  display: grid;
+  grid-template-columns: $columns;
+  grid-template-rows: $rows;
+  gap: $gap;
+  justify-content: $justify;
+  align-items: $align;
+}
