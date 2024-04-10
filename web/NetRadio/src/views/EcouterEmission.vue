@@ -46,6 +46,21 @@
         <div id="local-container"></div>
       </div>
     </div>
+    <div>
+      <h1>Sélectionnez votre son pour la playlist</h1>
+      <select v-model="selectedSound" @change="playSound">
+        <option v-for="sound in sounds" :key="sound.id" :value="sound">
+          {{ sound.name }}
+        </option>
+      </select>
+      <button @click="addSoundToPlaylist">Ajouter à la playlist</button>
+      <h2>Playlist</h2>
+      <ul>
+        <li v-for="(sound, index) in playlist" :key="index">
+          {{ sound.name }} - <button @click="playSoundFromPlaylist(index)">Jouer</button>
+        </li>
+      </ul>
+    </div>
   </div>
   <!--    </section>-->
 
@@ -63,7 +78,10 @@ export default {
   data() {
     return {
       emission: [],
-      userRole: null
+      userRole: null,
+      sounds: [],
+      selectedSound: {},
+      playlist: [],
     }
   },
 
@@ -79,7 +97,26 @@ export default {
         .catch((error) => {
           console.log(error)
         });
+        try {
+        const response =  this.$api.get('/sons');
+        this.sounds = response.data;
+      } catch (error) {
+        console.error(error);
+      }
   },
+  methods: {
+      playSound() {
+        const audio = new Audio(`${this.api}/sons/${this.selectedSound.id}`);
+        audio.play();
+      },
+      addSoundToPlaylist() {
+        this.playlist.push(this.selectedSound);
+      },
+      playSoundFromPlaylist(index) {
+        const audio = new Audio(`${this.api}/sons/${this.playlist[index].id}`);
+        audio.play();
+      },
+    },
 
 
   setup() {
