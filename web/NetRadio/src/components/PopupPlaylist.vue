@@ -69,7 +69,7 @@ export default {
         this.$api.post(`/playlists/`, {
           name: this.newPlaylist.name,
           description: this.newPlaylist.description,
-          emailUser: 1
+          emailUser: this.user.email
         }).then(() => {
           toast.success('La playlist a bien été créée !', ToastOptions)
         }).catch((error) => {

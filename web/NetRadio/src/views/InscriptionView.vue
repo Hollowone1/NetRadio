@@ -37,7 +37,7 @@ export default {
         password: this.password.trim(),
         nom: this.nom.trim(),
         prenom: this.prenom.trim()
-      }).then(resp => {
+      }).then((resp) => {
         this.connexionAfter()
         this.$router.push('/')
       }).catch(err => {
