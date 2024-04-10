@@ -2,7 +2,8 @@
 import EnDirect from '@/components/EnDirect.vue'
 import Podcast from '@/components/Podcast.vue'
 import SearchBar from "@/components/SearchBar.vue";
-
+import {toast} from "vue3-toastify";
+import ToastOptions from "../toasts/toastOptions.js";
 export default {
   components: {
     EnDirect,
@@ -31,7 +32,7 @@ export default {
           this.remainingPodcasts = this.allPodcasts.slice(0, -6)
         })
         .catch((error) => {
-          console.log(error)
+          toast.error('Erreur lors de la récupération des podcasts', ToastOptions)
         });
   },
   methods: {

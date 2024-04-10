@@ -59,7 +59,7 @@ export default {
           this.setUser(response.data.user)
         })
         .catch((error) => {
-          console.log(error.response.data.exception)
+          //console.log(error.response.data.exception)
           if (error.response.data.exception[0].code === 401) {
             this.$router.push('/connexion')
             this.logoutUser()
@@ -138,7 +138,6 @@ export default {
       this.showPopupEmission = false;
       this.showPopUpNewEmission = false;
       const index = this.emissions.findIndex(emission => emission.id === this.emissionToDisplay.id);
-      console.log("emission à modifier", this.emissions[index])
       this.$api.get(`/emissions/${this.emissionToDisplay.id}`)
           .then((response) => {
             if (index !== -1) {
@@ -181,7 +180,6 @@ export default {
       this.getPlaylists()
     },
     getCreneaux() {
-      // BUT ici est de récupérer les créneaux
       this.$api.get('/creneaux')
           .then((response) => {
             this.creneaux = response.data.emission
@@ -192,13 +190,12 @@ export default {
                     emission.email = response2.data.user[0].email
                   })
                   .catch((error) => {
-                    console.log(error)
+                    toast.error("Erreur lors de la récupération des présentateurs.", ToastOptions)
                   });
             });
-            console.log("creneaux", this.creneaux)
           })
           .catch((error) => {
-            console.log(error)
+            toast.error("Erreur lors de la récupération des créneaux.", ToastOptions)
           })
     }
   },

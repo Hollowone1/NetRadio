@@ -3,7 +3,8 @@ import EnDirect from '@/components/EnDirect.vue'
 import Emission from '@/components/Emission.vue'
 import Podcast from '@/components/Podcast.vue'
 import Creneaux from '@/components/creneaux.vue'
-import  axios  from 'axios'
+import {toast} from "vue3-toastify";
+import ToastOptions from "../toasts/toastOptions.js";
 export default {
   components: {
     EnDirect,
@@ -36,12 +37,12 @@ export default {
                   emission.user = `${response2.data.user[0].nom} ${response2.data.user[0].prenom}`
                 })
                 .catch((error) => {
-                  console.log(error)
+                  toast.error('Erreur lors de la récupération des présentateurs', ToastOptions)
                 });
           });
         })
         .catch((error) => {
-          console.log(error)
+          toast.error('Erreur lors de la récupération des émissions', ToastOptions)
         });
 
     this.$api.get("/podcasts?sort=date")
@@ -49,7 +50,7 @@ export default {
           this.podcasts = response.data.podcasts.slice(0, 6)
         })
         .catch((error) => {
-          console.log(error)
+          toast.error('Erreur lors de la récupération des podcasts', ToastOptions)
         });
   },
 }

@@ -97,7 +97,6 @@ export default {
           toast.success('L\'émission a bien été créée !', ToastOptions)
           this.changed = false
         }).catch((err) => {
-          console.log(err)
           toast.error('Erreur lors de la création de l\'émission, veuillez rééssayer.', ToastOptions)
         })
         this.changed = false

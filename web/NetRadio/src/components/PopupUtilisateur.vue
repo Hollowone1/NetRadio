@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     stopEditing() {
-      parseInt(this.user.role) !== this.roles.indexOf(this.editedUser.role) + 1 ? this.editUser() : console.log("pas de changement")
+      parseInt(this.user.role) !== this.roles.indexOf(this.editedUser.role) + 1 ? this.editUser() : null
       this.$emit('edited')
     },
     editUser() {
