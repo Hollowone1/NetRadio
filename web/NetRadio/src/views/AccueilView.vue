@@ -27,7 +27,7 @@ export default {
     },
   },
   created() {
-    axios.get("http://localhost:2080/emissions")
+    this.$api.get("/emissions")
         .then((response) => {
           this.emissions = response.data.emission.slice(0, 6)
           this.emissions.forEach(emission => {
@@ -44,7 +44,7 @@ export default {
           console.log(error)
         });
 
-    axios.get("http://localhost:2080/podcasts?sort=date")
+    this.$api.get("/podcasts?sort=date")
         .then((response) => {
           this.podcasts = response.data.podcasts.slice(0, 6)
         })
