@@ -178,58 +178,52 @@ export default {
     };
 
 
-      const stopStreaming = async () => {
-        if (mediaRecorder.value && isStreaming.value) {
-          mediaRecorder.value.stop();
-          isStreaming.value = false;
+    const stopStreaming = async () => {
+      if (mediaRecorder.value && isStreaming.value) {
+        mediaRecorder.value.stop();
+        isStreaming.value = false;
 
-          const blob = new Blob(recordedChunks.value, {type: "audio/wav"});
-          const emission = await getEmission();
-          if (emission) {
-            // const formData = new FormData();
+        const blob = new Blob(recordedChunks.value, {type: "audio/wav"});
+        const emission = await getEmission();
+        console.log(emission);
+        if (emission) {
 
-            const emission2 = {
-              titre: "titre",
-              date: "date",
-              duree: "duree",
-              description: "description",
-              photo: "photo",
-              audio: "audio",
-              emission_id: "emission_id"
-            }
-            // formData.append('titre', emission.titre);
-            // formData.append('date', emission.date);
-            // formData.append('duree', emission.duree);
-            // formData.append('description', emission.description);
-            // formData.append('photo', emission.photo);
-            // formData.append('audio', blob);
-            // formData.append('emission_id', emission.id);
+          const currentDate = new Date();
+          const year = currentDate.getFullYear();
+          const month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+          const day = ('0' + currentDate.getDate()).slice(-2);
 
-            const response = JSON.stringify(emission2);
+          const formattedDate = `${year}-${month}-${day}`;
 
-            axios.post('http://localhost:2080/podcasts', {
-                  response
-                },
-                {
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${tokens.access_token}`,
-                    "Access-Control-Allow-Origin": "*"
-                  }
+          axios.post('http://localhost:2080/podcasts', JSON.stringify({
+                "titre": emission.titre,
+                "description": emission.description,
+                "duree": "00:00:00",
+                "date": formattedDate,
+                "audio": "blob",
+                "photo": emission.photo,
+                "emission_id": emission.id
+              }),
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${tokens.access_token}`
+                  // "Access-Control-Allow-Origin": "*"
                 }
-            )
-                .then((response) => {
-                  console.log(response);
-                  downloadWav(blob);
-                  window.removeEventListener("beforeunload", beforeUnloadHandler);
-                })
-                .catch((error) => {
-                  console.error("Error creating podcast:", error);
-                  window.removeEventListener("beforeunload", beforeUnloadHandler);
-                });
-          }
+              }
+          )
+              .then((response) => {
+                console.log(response);
+                downloadWav(blob);
+                window.removeEventListener("beforeunload", beforeUnloadHandler);
+              })
+              .catch((error) => {
+                console.error("Error creating podcast:", error);
+                window.removeEventListener("beforeunload", beforeUnloadHandler);
+              });
         }
-      };
+      }
+    };
 
 
     const beforeUnloadHandler = (event) => {
