@@ -24,7 +24,8 @@ export default {
     SideBar,
     PopupUtilisateur,
     PopupPlaylist,
-    Calendar
+    Calendar,
+    Creneaux
   },
   data() {
     return {
@@ -74,6 +75,7 @@ export default {
 
 
   },
+  
   methods: {
     ...mapActions(useUserStore, ['setUser', 'logoutUser']),
     getUsers() {
@@ -150,6 +152,8 @@ export default {
           })
       //this.getEmissions()
     },
+    
+
     displayUser(email) {
       this.userToDisplay = this.users.find(user => user.email === email);
       this.showPopupUser = true;
@@ -195,8 +199,10 @@ export default {
           .catch((error) => {
             console.log(error)
           })
-    }
-  },
+    } },
+
+
+ 
 
   setup() {
     const localStream = ref(null);
@@ -385,6 +391,8 @@ export default {
         <div class="info">
           <Calendar :creneaux="creneaux" @dayclick="onDayClick"/>
         </div>
+        <Creneaux :selectedDate="selectedDate" />
+        <creneaux v-for="creneaux in creneaux" :Creneaux="creneaux" :key="creneaux.id"></creneaux>
 
       </div>
     </main>
@@ -523,6 +531,7 @@ export default {
 
       <div v-if="display === 3" class="display calendrier">
         <Calendar :columns="columns" @dayclick="onDayClick"/>
+        
       </div>
 
       <div v-if="display === 4" class="display users">
