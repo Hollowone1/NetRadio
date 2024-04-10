@@ -113,13 +113,6 @@ export default {
   padding: 1em;
 }
 
-
-body {
-  margin: 0;
-  padding: 0;
-}
-
-
 p {
   text-align: justify;
 }

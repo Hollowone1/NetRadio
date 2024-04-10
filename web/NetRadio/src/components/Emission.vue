@@ -1,4 +1,3 @@
-
 <script>
 
 export default {
@@ -8,10 +7,10 @@ export default {
       type: Object,
       required: true
     },
-    edit : {
-      type : Boolean,
-      required : false,
-      default : false
+    edit: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     redirect: {
       type: Boolean,
@@ -19,18 +18,32 @@ export default {
       default: true
     }
   },
-  methods : {
+  methods: {
     redirectToPage(id) {
       this.redirect ? this.$router.push(`/emissions/${id}`) : null;
     }
   },
-  directives : {
-    image : {
+  directives: {
+    image: {
       mounted(el, binding) {
-        el.style.background =  `linear-gradient(transparent,black), url('${binding.value}')`;
+        el.style.background = `linear-gradient(transparent, black), url('${binding.value}')`;
+        el.style.transition = 'background 0.5s ease';
+        el.style.backgroundSize = 'cover';
+
+        el.addEventListener('mouseenter', function () {
+          el.style.background = `linear-gradient(rgba(0,0,0,0.25), black), url('${binding.value}')`;
+          el.style.backgroundSize = 'cover';
+        });
+
+        el.addEventListener('mouseleave', function () {
+          el.style.background = `linear-gradient(transparent, black), url('${binding.value}')`;
+          el.style.backgroundSize = 'cover';
+
+        });
       }
     }
   }
+
 
 };
 </script>

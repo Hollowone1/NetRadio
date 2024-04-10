@@ -34,7 +34,8 @@ p {
   background-color: $lightGrey;
   border-radius: 10px;
   padding: 3em 1em 1em;
-  background-position:center top;
+  background-position:center center;
+  background-size: cover;
   color: white;
   @include flex(column, nowrap, 1em, space-between, flex-start);
 
