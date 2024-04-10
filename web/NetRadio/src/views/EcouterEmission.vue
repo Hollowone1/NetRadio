@@ -166,14 +166,16 @@ export default {
     };
 
     const getEmission = async () => {
-      try {
-        const response = this.$api.get(`/emissions/1`);
-        console.log(response);
-        return response.data.emission;
-      } catch (error) {
-        console.error(error);
-        return null;
-      }
+      let promise = new Promise((resolve, reject) => {
+        this.$api.get(`/emissions/${this.emission.id}`)
+            .then((resp) => {
+              resolve(resp.data.emission)
+            })
+            .catch((error) => {
+              reject(error)
+            })
+      });
+      return await promise
     };
 
 
