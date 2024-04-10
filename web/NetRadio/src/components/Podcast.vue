@@ -1,4 +1,6 @@
 <script>
+import {toast} from "vue3-toastify";
+import ToastOptions from "../toasts/toastOptions.js";
 export default {
   props: {
     podcast: {
@@ -12,14 +14,12 @@ export default {
     }
   },
   created() {
-    //console.log(this.podcast.links.emission)
     this.$api.get(`${this.podcast.links.emission.href}`)
         .then((response) => {
           this.emission = response.data.emission
-          //console.log(this.emission)
         })
         .catch((error) => {
-          console.log(error)
+          toast.error(`Erreur lors de la récupération de l'émission associée au podcast ${this.podcast.titre}`, ToastOptions)
         });
   }
 };

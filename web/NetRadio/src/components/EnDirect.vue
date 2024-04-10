@@ -1,4 +1,6 @@
 <script>
+import {toast} from "vue3-toastify";
+import ToastOptions from "../toasts/toastOptions.js";
 export default {
   data() {
     return {
@@ -11,7 +13,7 @@ export default {
           this.emission = response.data.emission.find(emission => emission.onDirect === true)
         })
         .catch((error) => {
-          console.log(error)
+          toast.error('Erreur lors de la récupération de l\'émission en direct', ToastOptions)
         });
   },
   methods: {
