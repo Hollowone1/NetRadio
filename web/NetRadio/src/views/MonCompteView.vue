@@ -16,7 +16,6 @@ import {toast} from "vue3-toastify";
 import ToastOptions from "../toasts/toastOptions.js";
 
 
-
 export default {
   components: {
     PopupEmission,
@@ -41,7 +40,7 @@ export default {
       emissions: [],
       users: [],
       playlists: [],
-      creneaux : [],
+      creneaux: [],
       roles: ['Auditeur', 'Animateur', 'Administrateur'],
       emissionsOfUser: [],
     }
@@ -75,7 +74,7 @@ export default {
 
 
   },
-  
+
   methods: {
     ...mapActions(useUserStore, ['setUser', 'logoutUser']),
     getUsers() {
@@ -98,13 +97,12 @@ export default {
                     emission.email = response2.data.user[0].email
                   })
                   .catch((error) => {
-                    console.log(error)
+                    toast.error("Erreur lors de la récupération des présentateurs.", ToastOptions)
                   });
             });
-            console.log("emissions", this.emissions)
           })
           .catch((error) => {
-            console.log(error)
+            toast.error("Erreur lors de la récupération des émissions.", ToastOptions)
           })
     },
     getEmissionByUser() {
@@ -113,7 +111,7 @@ export default {
             this.emissionsOfUser = response.data.emission
           })
           .catch((error) => {
-            console.log(error)
+            toast.error("Erreur lors de la récupération de vos émissions.", ToastOptions)
           })
     },
     getPlaylists() {
@@ -126,7 +124,7 @@ export default {
             this.playlists = response.data.playlists
           })
           .catch((error) => {
-            console.log(error.response.data)
+            toast.error("Erreur lors de la récupération de vos playlists.", ToastOptions)
           })
     },
     changeDisplay(number) {
@@ -147,19 +145,15 @@ export default {
               this.emissions.splice(index, 1, response.emission);
             }
           })
-          .catch((error) => {
-            console.log(error)
+          .catch(() => {
+            toast.error("Erreur lors de la mise à jour des émissions.", ToastOptions)
           })
-      //this.getEmissions()
     },
-    
-
     displayUser(email) {
       this.userToDisplay = this.users.find(user => user.email === email);
       this.showPopupUser = true;
     },
     updateUser() {
-      console.log("updateUser donc edited!")
       this.showPopupUser = false;
       this.getUsers()
     },
@@ -178,8 +172,7 @@ export default {
       this.showPopUpNewPlaylist = false;
       this.getPlaylists()
     },
-
-    getCreneaux () {
+    getCreneaux() {
       // BUT ici est de récupérer les créneaux
       this.$api.get('/creneaux')
           .then((response) => {
@@ -199,10 +192,9 @@ export default {
           .catch((error) => {
             console.log(error)
           })
-    } },
+    }
+  },
 
-
- 
 
   setup() {
     const localStream = ref(null);
@@ -391,7 +383,7 @@ export default {
         <div class="info">
           <Calendar :creneaux="creneaux" @dayclick="onDayClick"/>
         </div>
-        <Creneaux :selectedDate="selectedDate" />
+        <Creneaux :selectedDate="selectedDate"/>
         <creneaux v-for="creneaux in creneaux" :Creneaux="creneaux" :key="creneaux.id"></creneaux>
 
       </div>
@@ -449,7 +441,8 @@ export default {
           <emission v-for="emission in emissionsOfUser" :emission="emission" :key="emission.id"></emission>
         </div>
         <div v-else class="emissions-liste"> Pas encore d'émission ? Contactez un admnistrateur !</div>
-        <p class="info-nv">Pour créer une nouvelle émission ou modifier une existante, veuillez contacter un administrateur.</p>
+        <p class="info-nv">Pour créer une nouvelle émission ou modifier une existante, veuillez contacter un
+          administrateur.</p>
       </div>
       <div v-if="display === 4" class="display lancer-direct">
         <div class="top">
@@ -531,7 +524,7 @@ export default {
 
       <div v-if="display === 3" class="display calendrier">
         <Calendar :columns="columns" @dayclick="onDayClick"/>
-        
+
       </div>
 
       <div v-if="display === 4" class="display users">
