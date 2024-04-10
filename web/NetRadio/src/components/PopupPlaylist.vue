@@ -90,12 +90,6 @@ export default {
     editPlaylist() {
       this.$emit('edited')
     },
-    removeSound(id) {
-      this.newOne ?
-          this.newPlaylist.sounds = this.newPlaylist.sounds.filter(sound => sound.id !== id)
-          : this.editedPlaylist.sounds = this.editedPlaylist.sounds.filter(sound => sound.id !== id)
-      //TODO : remove sound from db
-    },
     addSound() {
       if (this.changed) {
         this.$api.post(`/playlists/${this.editedPlaylist.id}/son`, {
@@ -191,7 +185,6 @@ export default {
           <div v-for="sound in editedPlaylist.sounds">
             <p>{{ sound.titre }} - {{ sound.nomArtiste }} (<a
                 :href="sound.audio">{{ sound.audio }}</a>)</p>
-            <img @click="removeSound(sound.id)" src="/icons/poubelle.svg" alt="delete icon"/>
           </div>
         </div>
       </div>
