@@ -91,11 +91,9 @@ export default {
         audioContext.value = new (window.AudioContext || window.webkitAudioContext)();
         mediaStreamSource.value = audioContext.value.createMediaStreamSource(stream);
         mediaRecorder.value = new MediaRecorder(stream);
-        // console.log(mediaStreamSource.value);
         mediaRecorder.value.ondataavailable = (event) => {
           if (event.data.size > 0) {
             recordedChunks.value.push(event.data);
-            // console.log(event.data);
           }
         };
       } catch (error) {

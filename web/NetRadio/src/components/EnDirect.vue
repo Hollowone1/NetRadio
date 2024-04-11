@@ -1,10 +1,12 @@
 <script>
 import {toast} from "vue3-toastify";
 import ToastOptions from "../toasts/toastOptions.js";
+import {useUserStore} from "@/stores/user.js";
 export default {
   data() {
     return {
       emission: [],
+      userRole: useUserStore().user.role
     }
   },
   created() {
@@ -34,7 +36,8 @@ export default {
       </div>
       <p class="direct-infos-sous-titre">EN DIRECT</p>
       <p class="direct-infos-desc">{{ emission.description }}</p>
-      <button class="direct-infos-ecouter" @click="redirectToDirect()">Écouter</button>
+      <button v-if="userRole === '1'" class="direct-infos-ecouter" @click="redirectToDirect()">Écouter</button>
+      <button v-else class="direct-infos-ecouter" @click="redirectToDirect()">Lancer le direct</button>
     </div>
     <img class="direct-image" :src="emission.photo" alt="image de l'émission en direct">
   </section>
