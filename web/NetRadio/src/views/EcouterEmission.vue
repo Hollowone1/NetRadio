@@ -17,7 +17,11 @@
   <!--    </section>-->
 
   <!--  &lt;!&ndash; Si l'utilisateur est un animateur (role 2), il peut lancer l'émission et l'écouter &ndash;&gt;-->
+
+
   <!--    <section v-if="getRoleUser() === 2" class="direct">-->
+
+  <audio id="audio" controls></audio>
 
   <div id="container">
     <div class="direct-infos">
@@ -110,9 +114,11 @@ export default {
         audioContext.value = new (window.AudioContext || window.webkitAudioContext)();
         mediaStreamSource.value = audioContext.value.createMediaStreamSource(stream);
         mediaRecorder.value = new MediaRecorder(stream);
+        // console.log(mediaStreamSource.value);
         mediaRecorder.value.ondataavailable = (event) => {
           if (event.data.size > 0) {
             recordedChunks.value.push(event.data);
+            // console.log(event.data);
           }
         };
       } catch (error) {
@@ -184,6 +190,23 @@ export default {
         isStreaming.value = false;
 
         const blob = new Blob(recordedChunks.value, {type: "audio/wav"});
+        let url = window.URL.createObjectURL(blob);
+        url = url.replace("blob:", "");
+
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = "recording.wav";
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+
+
+
+        // récupérer la balise audio avec l'id audio
+        const audio = document.getElementById("audio");
+        audio.src = url;
+
         const emission = await getEmission();
         console.log(emission);
         if (emission) {
@@ -200,7 +223,7 @@ export default {
                 "description": emission.description,
                 "duree": "00:00:00",
                 "date": formattedDate,
-                "audio": "blob",
+                "audio": "audioURL",
                 "photo": emission.photo,
                 "emission_id": emission.id
               }),
@@ -214,7 +237,7 @@ export default {
           )
               .then((response) => {
                 console.log(response);
-                downloadWav(blob);
+                // downloadWav(blob);
                 window.removeEventListener("beforeunload", beforeUnloadHandler);
               })
               .catch((error) => {
@@ -233,16 +256,16 @@ export default {
       }
     };
 
-    const downloadWav = (blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.style.display = "none";
-      a.href = url;
-      a.download = "recording.wav";
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-    };
+    // const downloadWav = (blob) => {
+    //   const url = window.URL.createObjectURL(blob);
+    //   const a = document.createElement("a");
+    //   a.style.display = "none";
+    //   a.href = url;
+    //   a.download = "recording.wav";
+    //   document.body.appendChild(a);
+    //   a.click();
+    //   window.URL.revokeObjectURL(url);
+    // };
 
 
     const userStore = useUserStore();
@@ -295,7 +318,7 @@ export default {
       window.removeEventListener("beforeunload", beforeUnloadHandler);
     });
 
-    return {stopStreaming, localStream, conversation, startStreaming, downloadWav, getRoleUser};
+    return {stopStreaming, localStream, conversation, startStreaming, getRoleUser};
   },
 };
 </script>
