@@ -1,49 +1,20 @@
 <template>
-  <!-- Si l'utilisateur est un auditeur (role 1), il peut seulement écouter l'émission -->
-  <!--    <section v-if="getRoleUser() === 1" class="direct">-->
-  <!--      <div id="container">-->
-  <!--        <div class="direct-infos">-->
-  <!--          <div class="direct-infos-titre">-->
-  <!--            <embed src="/icons/direct.svg"/>-->
-  <!--            <h1>{{ emission.titre }}</h1>-->
-  <!--          </div>-->
-  <!--        </div>-->
-  <!--          <h2 id="title">Écouter l'émission en direct</h2>-->
-  <!--          <div id="conference">-->
-  <!--            <div id="remote-container"></div>-->
-  <!--            <div id="local-container"></div>-->
-  <!--          </div>-->
-  <!--        </div>-->
-  <!--    </section>-->
-
-  <!--  &lt;!&ndash; Si l'utilisateur est un animateur (role 2), il peut lancer l'émission et l'écouter &ndash;&gt;-->
-
-
-  <!--    <section v-if="getRoleUser() === 2" class="direct">-->
-
   <audio id="audio" controls></audio>
 
   <div id="container">
     <div class="direct-infos">
       <div class="direct-infos-titre">
         <embed src="/icons/direct.svg"/>
-        <!--          <h1>{{ emission.titre }}</h1>-->
+                  <h1>{{ emission.titre }}</h1>
       </div>
-      <h2 id="title">Enregistrer votre émission en direct</h2>
 
+      <h2 v-if="getUserRole() === '1'" id="title">Ecouter votre émission en direct</h2>
+      <h2 v-else id="title">Enregistrer votre émission en direct</h2>
 
-      <form id="create">
-        <input
-            type="text"
-            name="conference_name"
-            id="conference-name"
-            placeholder="Entrez le nom de votre émission"
-            autocomplete="off"
-        />
-        <button type="button" @click="startStreaming">Commencer l'émission</button>
-        <!-- a peut etre remettre en submit -->
-        <button type="button" @click="stopStreaming">Arrêter et sauvegarder l'émission</button>
-      </form>
+      <button v-if="getUserRole() === '1'" type="button" @click="startStreaming">Écouter l'émission</button>
+      <button v-else type="button" @click="startStreaming">Commencer l'émission</button>
+
+      <button v-if="getUserRole() !== '1'" type="button" @click="stopStreaming">Arrêter et sauvegarder l'émission</button>
 
       <div id="conference">
         <div id="remote-container"></div>
@@ -51,8 +22,6 @@
       </div>
     </div>
   </div>
-  <!--    </section>-->
-
 
 </template>
 
@@ -71,19 +40,26 @@ export default {
       userRole: null
     }
   },
+  methods: {
+    getUserRole() {
+      console.log(this.user);
+      return this.user.role
+    }
+  },
 
   computed: {
     ...mapState(useUserStore, ['user', 'tokens', 'loggedIn']),
   },
 
   created() {
-    // axios.get("http://localhost:2080/emissions")
-    //     .then((response) => {
-    //       this.emission = response.data.emission.find(emission => emission.onDirect === true)
-    //     })
-    //     .catch((error) => {
-    //       console.log(error)
-    //     });
+    let route = useRoute();
+    this.$api.get(`/emissions/${route.params.id}`)
+        .then((response) => {
+          this.emission = response.data.emission;
+        })
+        .catch((error) => {
+          console.log(error)
+        });
   },
 
 
@@ -100,6 +76,7 @@ export default {
 
     let tokens = ref({access_token: null});
     onMounted(() => {
+      // this.userRole = useUserStore().user.role;
       tokens.access_token = useUserStore().tokens.access_token;
     });
 
@@ -136,6 +113,7 @@ export default {
         if (streamInfo.listEventType === "added" && streamInfo.isRemote === true) {
           conversationInstance.subscribeToMedia(streamInfo.streamId)
               .then((stream) => {
+                // recordedChunks.value.push((stream.getStream(streamInfo.streamId))); // TODO: peut etre faire quelque chose de ce style
                 console.log("subscribeToMedia success", stream);
               })
               .catch((err) => {
@@ -188,24 +166,16 @@ export default {
       if (mediaRecorder.value && isStreaming.value) {
         mediaRecorder.value.stop();
         isStreaming.value = false;
-
         const blob = new Blob(recordedChunks.value, {type: "audio/wav"});
+
         let url = window.URL.createObjectURL(blob);
-        url = url.replace("blob:", "");
+        // url = url.replace("blob:", "");
 
-        const a = document.createElement("a");
-        a.style.display = "none";
-        a.href = url;
-        a.download = "recording.wav";
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-
-
-
-        // récupérer la balise audio avec l'id audio
         const audio = document.getElementById("audio");
         audio.src = url;
+
+        const currentDate = new Date();
+        const fileName = `recording-${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}_${currentDate.getHours()}-${currentDate.getMinutes()}-${currentDate.getSeconds()}.wav`;
 
         const emission = await getEmission();
         console.log(emission);
@@ -223,7 +193,7 @@ export default {
                 "description": emission.description,
                 "duree": "00:00:00",
                 "date": formattedDate,
-                "audio": "audioURL",
+                "audio": fileName,
                 "photo": emission.photo,
                 "emission_id": emission.id
               }),
@@ -237,7 +207,7 @@ export default {
           )
               .then((response) => {
                 console.log(response);
-                // downloadWav(blob);
+                downloadWav(blob);
                 window.removeEventListener("beforeunload", beforeUnloadHandler);
               })
               .catch((error) => {
@@ -256,16 +226,26 @@ export default {
       }
     };
 
-    // const downloadWav = (blob) => {
-    //   const url = window.URL.createObjectURL(blob);
-    //   const a = document.createElement("a");
-    //   a.style.display = "none";
-    //   a.href = url;
-    //   a.download = "recording.wav";
-    //   document.body.appendChild(a);
-    //   a.click();
-    //   window.URL.revokeObjectURL(url);
-    // };
+    const downloadWav = (blob) => {
+      const url = window.URL.createObjectURL(blob);
+      // Création du lien de téléchargement
+      const downloadLink = document.createElement('a');
+      downloadLink.href = url;
+      const currentDate = new Date();
+      const fileName = `recording-${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}_${currentDate.getHours()}-${currentDate.getMinutes()}-${currentDate.getSeconds()}.wav`;
+      downloadLink.download = fileName;
+      downloadLink.innerHTML = 'Télécharger le podcast'; // Texte du lien
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+
+      // const a = document.createElement("a");
+      // a.style.display = "none";
+      // a.href = url;
+      // a.download = "recording.wav";
+      // document.body.appendChild(a);
+      // a.click();
+      // window.URL.revokeObjectURL(url);
+    };
 
 
     const userStore = useUserStore();
