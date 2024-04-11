@@ -2,9 +2,7 @@
   <footer>
     <div class="ftl1">
       <router-link to="/"><img class="ft-logo" src="/icons/logo.png" alt="Logo NET RADIO"></router-link>
-      <div class="ft-boutons">
-        <input class="search" type="search" src="/icons/search.svg" placeholder="Search for...">
-      </div>
+
     </div>
     <div class="bordure"></div>
     <div class="copyrights">copyrights @ idk</div>

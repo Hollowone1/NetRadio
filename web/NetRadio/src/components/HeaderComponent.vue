@@ -27,7 +27,6 @@ export default {
     <div class="header">
       <router-link to="/"><img class="header-logo" src="/icons/logo.png" alt="Logo NET RADIO"></router-link>
       <div class="header-boutons">
-        <input class="search" type="search" src="/icons/search.svg" placeholder="Rechercher ...">
         <router-link to="/mon-compte" v-if="loggedIn"><img class="header-user-co" src="/icons/user.svg" alt="user icon"/></router-link>
         <router-link v-else to="/connexion"><button class="header-boutons-connecter" >Se connecter</button></router-link>
       </div>
